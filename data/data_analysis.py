@@ -1,16 +1,17 @@
 import os, glob, pandas, numpy
 import seaborn
 import matplotlib.pyplot as plt
+from scipy.stats import ttest_ind
+
 seaborn.set_context(context='talk')
 seaborn.set_style('white')
 
 
 def parse_data(data_file):
-
     data = pandas.read_excel(data_file, sheet='data')
 
     data = data.drop(['Original Description', 'New Description', 'Time (min)', 'Donor'], axis=1)
-    data['Time (h)'] = data['Time (h)']*-1
+    data['Time (h)'] = data['Time (h)'] * -1
     # data['Time (h)'] = data['Time (min)'] + 4320
     # data['Time (min)'] = (data['Time (min)'] + 4320) / 60
 
@@ -54,6 +55,7 @@ def plot_raw_gapdh(data):
     plt.savefig(fname, dpi=150, bbox_inches='tight')
     plt.show()
 
+
 def plot_raw_data(data):
     assert 'GAPDH' in data.columns
     print(data)
@@ -69,28 +71,6 @@ def plot_raw_data(data):
     plt.savefig(fname, dpi=150, bbox_inches='tight')
     plt.show()
 
-def PlotErkAt1_25(data_raw):
-
-    df = data_raw.sort_values('Raw Data').copy()
-    erk = df.xs('ERK-pT202', level=1)
-    erk = erk.xs(1.25, level='Time (h)')
-    erk = erk.xs('T_A_1.25', level='Condition ID')
-    # erk = numpy.log10(erk)
-    erk = erk.reset_index()
-    print(erk)
-
-    fig = plt.subplot(211)
-    ax1 = plt.subplot(2, 1, 1)
-    seaborn.barplot(data=erk, x='Donor ID', y='Raw Data')
-    seaborn.despine(ax=ax1, top=True, right=True)
-    plt.title('ERK')
-    ax2 = plt.subplot(2, 1, 2)
-    seaborn.barplot(data=erk, x='Donor ID', y='GAPDH')
-    plt.title('GAPDH')
-    seaborn.despine(ax=ax2, top=True, right=True)
-    #
-    plt.suptitle("ERK-pT202 in AZD Minus Everolimus \nfor 1.25h")
-    plt.show()
 
 def normalise(data_raw):
     """
@@ -127,7 +107,11 @@ def normalise(data_raw):
     mk.reset_index(x, inplace=True)
     mk = mk.drop(x, axis=1)
 
+    azd = azd.drop('Time (h)', axis=1)
+    mk = mk.drop('Time (h)', axis=1)
+
     return azd, mk
+
 
 # fname = os.path.join(working_directory, 'df.xlsx')
 
@@ -145,7 +129,7 @@ def barplots(data_normed, save_dir=None):
     colors = ["red", "gold", "limegreen"]
     cmap = matplotlib.colors.ListedColormap(colors)
     for a in antibodies:
-    # a = 'Akt-pT308'
+        # a = 'Akt-pT308'
         df = data_normed.loc[a]
         df = df.reset_index()
         fig = plt.figure()
@@ -154,7 +138,7 @@ def barplots(data_normed, save_dir=None):
             x='Condition ID',
             y='Normed to average',
             data=df,
-            palette=['yellow']*2+['white']*1+['red']*4+['green']*4,
+            palette=['yellow'] * 2 + ['white'] * 1 + ['red'] * 4 + ['green'] * 4,
             linewidth=2,
             edgecolor='black',
             errcolor='black',
@@ -162,7 +146,7 @@ def barplots(data_normed, save_dir=None):
             capsize=0.2
 
             # hue='AZD'
-            )
+        )
         plt.title(a)
         plt.xticks(rotation=90)
         # plt.legend(loc=(1, 0.1))
@@ -176,10 +160,37 @@ def barplots(data_normed, save_dir=None):
 
     plt.show()
 
-    #
-    # fname = os.path.join(working_directory, 'akt_df.xlsx')
-    # df = df.set_index(['Donor ID', 'Condition ID'])
-    # df.to_excel(fname)
+
+def t_test(data, antibody1, condition1, antibody2, condition2):
+    data1 = data.xs((antibody1, condition1), level=(0, 2))['Normed to average'].dropna()
+    data2 = data.xs((antibody2, condition2), level=(0, 2))['Normed to average'].dropna()
+    print(antibody1, data1)
+    print(antibody2, data2)
+    return ttest_ind(data1, data2)
+
+
+def plot_erk_repeats_by_condition(erk_azd_data, save_dir=None):
+    """
+    I've noticed that biological repeat 3 from erk antibody
+    in the AZD dataset may be an anomoly. This function plots some graphs
+    to show what I mean.
+    :param erk_azd_data:
+    :return:
+    """
+    erk_azd = azd.xs(['ERK-pT202'])
+    erk_azd = erk_azd.reset_index()
+    if save_dir is not None:
+        os.makedirs(save_dir) if not os.path.isdir(save_dir) else None
+    for label, df in erk_azd.groupby('Condition ID'):
+        fig = plt.figure()
+        seaborn.barplot(data=df, x='Condition ID', y='Normed to average', hue='Donor ID')
+        seaborn.despine(fig, top=True, right=True)
+        plt.xticks(rotation=90)
+        plt.xlabel('')
+        plt.title('AZD, ERK, {}'.format(label))
+        fname = os.path.join(save_dir, "{}.png".format(label))
+        plt.legend(loc=(1, 0.1))
+        fig.savefig(fname, dpi=150, bbox_inches='tight')
 
 
 if __name__ == '__main__':
@@ -188,79 +199,39 @@ if __name__ == '__main__':
     graph_dir = os.path.join(working_directory, 'Graphs')
     azd_data_file = os.path.join(working_directory, 'azd.xlsx')
     mk_data_file = os.path.join(working_directory, 'mk.xlsx')
+    temp_file = os.path.join(working_directory, 'temp_df.xlsx')
 
     data_raw = parse_data(data_file)
     data_raw.to_excel(os.path.join(working_directory, 'data.xlsx'))
 
     azd, mk = normalise(data_raw)
-    print(azd)
-    # azd.to_excel(azd_data_file)
-    # mk.to_excel(mk_data_file)
-    # azd = pandas.read_excel(azd_data_file)
-    # mk = pandas.read_excel(mk_data_file)
-
 
     azd_average_dir = os.path.join(graph_dir, 'AZD')
     mk_average_dir = os.path.join(graph_dir, 'MK')
+
+    ## wait until you have agreement that this repeat should be removed
+    ## before including it in the parse data function.
+    azd.loc['ERK-pT202', 3] = numpy.nan
+    # print(azd.loc['ERK-pT202', 3] )
     # barplots(azd, azd_average_dir)
     # barplots(mk, mk_average_dir)
+    # print(mk)
+    # smad2_d = (mk.xs((), level=(0, 2)))
 
-    print(azd)
+    smad2 = 'SMAD2-pS465-467'
+    erk = 'ERK-pT202'
+    # erk_plots_dir = os.path.join(graph_dir, 'AzdErkPlots')
+    # plot_repeats_by_condition(azd, erk_plots_dir)
 
-
-
-
-    # # print(data_raw)
-    #
-    #
-    #
-    #     # print(df)
-    # plt.show()
-
-    # print(df.to_excel(fname))
-        # print(df2['Norm Data'].median())
-        # df2 = df2.reset_index()
-        # plt.figure()
-        # seaborn.barplot(x='Condition ID', y='Norm Data', data=df2)
-    # plt.show()
-    #
-
-
-    # data_norm = pandas.DataFrame(data_raw['Raw Data'] / data_raw['GAPDH'])
-    # data_norm.columns = ['Data Norm']
-    # print(data_norm)
-    # print(data_norm.pivot_table(values='Data Norm', index=['Antibody', 'Donor ID'], columns=['Condition ID']))
-    # data_norm = data_norm.unstack(level='Condition ID')
-    # smad2 = data_norm.loc['SMAD2-pS465-467']
-    # print(smad2)
-
-    # data_norm = data_norm.reset_index()
-    # smad2 = data_norm[data_norm['Antibody'] == 'SMAD2-pS465-467']
-
-    # smad2 = smad2.unstack(level='Condition ID')
-    # print(smad2)
-
-    # fig = plt.figure()
-    # seaborn.barplot(data=smad2, x='Condition ID', y='Data Norm', units='Donor ID')
-    # plt.xticks(rotation=90)
-    # plt.show()
-
-    '''
-    Plot distributions for each gel
-    '''
-
-    # plot_raw_gapdh(data_raw)
-
-    # plot_raw_data(data_raw)
-    # print(data_raw)
-    # print(data_raw.loc['Condition ID' == 'T_A_1.25'])
-    # df = data_raw.xs('T_A_1.25', level=2)
-    # df = df.sort_values('Raw Data')
+    t_test()
 
 
 
-    # PlotErkAt1_25(data_raw)
-    # print(df)
+
+
+
+
+
 
 
 
