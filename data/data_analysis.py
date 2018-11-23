@@ -110,6 +110,10 @@ def normalise(data_raw):
     azd = azd.drop('Time (h)', axis=1)
     mk = mk.drop('Time (h)', axis=1)
 
+    ## wait until you have agreement that this repeat should be removed
+    ## before including it in the parse data function.
+    azd.loc['ERK-pT202', 3] = numpy.nan
+
     return azd, mk
 
 
@@ -164,8 +168,8 @@ def barplots(data_normed, save_dir=None):
 def t_test(data, antibody1, condition1, antibody2, condition2):
     data1 = data.xs((antibody1, condition1), level=(0, 2))['Normed to average'].dropna()
     data2 = data.xs((antibody2, condition2), level=(0, 2))['Normed to average'].dropna()
-    print(antibody1, data1)
-    print(antibody2, data2)
+    # print(antibody1, data1)
+    # print(antibody2, data2)
     return ttest_ind(data1, data2)
 
 
@@ -209,22 +213,29 @@ if __name__ == '__main__':
     azd_average_dir = os.path.join(graph_dir, 'AZD')
     mk_average_dir = os.path.join(graph_dir, 'MK')
 
-    ## wait until you have agreement that this repeat should be removed
-    ## before including it in the parse data function.
-    azd.loc['ERK-pT202', 3] = numpy.nan
+
+
+
     # print(azd.loc['ERK-pT202', 3] )
-    # barplots(azd, azd_average_dir)
+    barplots(azd, azd_average_dir)
     # barplots(mk, mk_average_dir)
     # print(mk)
     # smad2_d = (mk.xs((), level=(0, 2)))
 
     smad2 = 'SMAD2-pS465-467'
     erk = 'ERK-pT202'
+
     # erk_plots_dir = os.path.join(graph_dir, 'AzdErkPlots')
     # plot_repeats_by_condition(azd, erk_plots_dir)
 
-    t_test()
-
+    # res = t_test(azd, erk, 'T', erk, 'T_E')
+    # print(res)
+    # res = t_test(azd, erk, 'T_A_E_1.25', erk, 'T_A_E_72')
+    # print(res)
+    # res = t_test(azd, erk, 'T_A_1.25', erk, 'T_A_72')
+    # print(res)
+    # res = t_test(azd, erk, 'T_E', erk, 'T_A_E_72')
+    # print(res)
 
 
 
