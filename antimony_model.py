@@ -266,8 +266,8 @@ def load_model(copasi_filename, ant):
 # print functions_str+kholo_str
 # kho = load_model(kholo_file2, functions_str+kholo_str)
 
-m = load_model(comb_file, functions_str+vilar_string+kholo_str+comb_str)
-m.open()
+# m = load_model(comb_file, functions_str+vilar_string+kholo_str+comb_str)
+# m.open()
 # vilar.open()
 # kho.open()
 
