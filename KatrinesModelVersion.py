@@ -50,15 +50,16 @@ def cross_talk_model_antstr():
         
         //TGFb module
         R1:                 => TGFbR            ; Cell * kTGFbRProd                             ;
-        R2: TGFbR           =>                  ; Cell * kTGFbRDeg      *TGFbR                  ;     
-        R4: TGFbR_a         => TGFbR            ; Cell * kTGFbOff       *TGFbR_a                ;
+        R2: TGFbR           =>                  ; Cell * kTGFbRDeg      *TGFbR                  ;    
+        R3: TGFbR + TGFb    => TGFbR_a          ; Cell * kTGFbOn        *TGFb                   ;
+        R4: TGFbR_a         => TGFbR + TGFb     ; Cell * kTGFbOff       *TGFbR_a                ;
         R5: Smad2           => pSmad2           ; Cell * kSmad2Phos     *Smad2      *TGFbR_a    ;
         R6: pSmad2          => Smad2            ; Cell * kSmad2Dephos   *pSmad2                 ;
         
         //MEK module                   //
         R7_1:   Mek      => pMek     ;   Cell * kMekPhosByPI3K      *Mek    *pPI3K   ;
         R7_2:   Mek      => pMek     ;   Cell * kMekPhosByTGFbR_a   *Mek    *TGFbR_a ;
-        R7_3:   Mek      => pMek     ;   Cell * kMekPhosByIGFR      *Mek    *pGFR    ;
+        R7_3:   Mek      => pMek     ;   Cell * kMekPhosByGFR      *Mek    *pGFR    ;
         R8_1:   pMek     => Mek      ;   Cell * kMekDephosByAkt     *pMek   *pAkt    ;
         R8_2:   pMek     => Mek      ;   Cell * kMekDephosByAZD     *pMek   *AZD     ; 
         R9 :    Erk      => pErk     ;   Cell * kErkPhosByMek       *Erk    *pMek    ;
@@ -66,9 +67,9 @@ def cross_talk_model_antstr():
         
         
         //PI3K Module
-        R11:        GFR     => pGFR     ;   Cell *(kIGFRPhos_kcat       * GrowthFactors * GFR /(kIGFRPhos_km^kIGFRPhos_h + GFR^kIGFRPhos_h))
-        R12:        pGFR    => GFR      ;   Cell *  kIGFRDephos         *pGFR                    ;
-        R13_1:      PI3K    => pPI3K    ;   Cell *  kPI3KPhosByIGFR     *PI3K       *pGFR        ;
+        R11:        GFR     => pGFR     ;   Cell *(kGFRPhos_kcat       * GrowthFactors * GFR /(kGFRPhos_km^kGFRPhos_h + GFR^kGFRPhos_h))
+        R12:        pGFR    => GFR      ;   Cell *  kGFRDephos         *pGFR                    ;
+        R13_1:      PI3K    => pPI3K    ;   Cell *  kPI3KPhosByGFR     *PI3K       *pGFR        ;
         R13_2:      PI3K    => pPI3K    ;   Cell *  kPI3KPhosByMek      *PI3K       *pMek        ;
         R14_1:      pPI3K   => PI3K     ;   Cell *  kPI3KDephosByS6K    *pPI3K      *pS6K        ;
         R14_2:      pPI3K   => PI3K     ;   Cell *  kPI3KDephosByErk    *pPI3K      *pErk        ;
@@ -82,12 +83,10 @@ def cross_talk_model_antstr():
         R19_2:      S6K     => pS6K     ;   Cell *  kS6KPhosByErk       *S6K        *pErk        ;
         R20:        pS6K    => S6K      ;   Cell *  kS6KDephos          *pS6K                    ;
         
-        kTGFbOn_kcat        = 50
-        kTGFbOn_km          = 35
-        kTGFbOn_h           = 2
+        kTGFbOn             = 0.04
         kTGFbRProd          = 0.1
         kTGFbRDeg           = 0.001
-        kTGFbOff            = 0.01
+        kTGFbOff            = 0.02
         kSmad2Phos          = 0.01
         kSmad2Dephos        = 0.01
         kTGFbOff            = 0.01
@@ -96,18 +95,17 @@ def cross_talk_model_antstr():
           
         kMekPhosByPI3K      = 0.01    
         kMekPhosByTGFbR_a   = 0.01        
-        kMekPhosByIGFR      = 0.01    
+        kMekPhosByGFR       = 0.01    
         kMekDephosByAkt     = 0.01    
         kMekDephosByAZD     = 0.01    
         kErkPhosByMek       = 0.01    
         kErkDephos          = 0.01
         
-        kIGFRPhos_kcat      = 10
-        kIGFRPhos_km        = 25
-        kIGFRPhos_h         = 2
-        kIGFRDephos         = 0.1
-        
-        kPI3KPhosByIGFR     = 0.01    
+        kGFRPhos_kcat      = 10
+        kGFRPhos_km        = 25
+        kGFRPhos_h         = 2
+        kGFRDephos         = 1
+        kPI3KPhosByGFR     = 0.01    
         kPI3KPhosByMek      = 0.01    
         kPI3KDephosByS6K    = 0.01        
         kPI3KDephosByErk    = 0.01      
@@ -260,8 +258,8 @@ if __name__ == '__main__':
 
 
     # dose_response_for_growth_factors()
-    # mod = load_model_with_pyco(functions_antstr()+cross_talk_model_antstr(), copasi_filename)
-    # mod.open()
+    mod = load_model_with_pyco(cross_talk_model_antstr(), copasi_filename)
+    mod.open()
 
     # mod = te.loada(functions_antstr() + cross_talk_model_antstr())
     # odes = te.utils.misc.getODEsFromModel(mod)
