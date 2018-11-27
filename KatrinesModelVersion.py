@@ -21,11 +21,11 @@ def functions_antstr():
     """
     return """
     function Hill(kcat, E, S, Shalve, h)
-        kcat*E*(S/Shalve)^h / (1 + (S/Shalve)^h)
+        (kcat*E*(S/Shalve)^h / (1 + (S/Shalve)^h))
     end
     
     function HillWithKcat(kcat, E, S, km, h)
-        kcat*E*S^h / (km^h + S^h)
+        (kcat*E*S^h) / (km^h + S^h)
     end
     
     function MM( km, S, Vmax)
@@ -105,11 +105,8 @@ def cross_talk_model_antstr():
         
         // TGFb module
         // Note: TGFb is consumed in this process
-        R1:                 => TGFbR            ; Cell * MA0(       kTGFbRProd                       );
-        R2: TGFbR           =>                  ; Cell * MA1(       kTGFbRDeg,      TGFbR            );     
-        //R3: TGFbR + TGFb    => TGFbR_a          ; Cell * MA2(       kTGFbOn,        TGFbR,  TGFb     );
-        R3: TGFbR           => TGFbR_a          ; Cell *   HillWithKcat(kTGFbOn_kcat, TGFb, TGFbR, kTGFbOn_halve, kTGFbOn_h);
-        R4: TGFbR_a         => TGFbR     ; Cell * MA1(       kTGFbOff,       TGFbR_a          );
+        R3: TGFbR           => TGFbR_a          ; Cell * HillWithKcat(kTGFbOn_kcat, TGFb, TGFbR, kTGFbOn_halve, kTGFbOn_h);
+        R4: TGFbR_a         => TGFbR            ; Cell * MA1(       kTGFbOff,       TGFbR_a          );
         R5: Smad2           => pSmad2           ; Cell * MA1Mod(    kSmad2Phos,     Smad2,  TGFbR_a  );
         R6: pSmad2          => Smad2            ; Cell * MA1(       kSmad2Dephos,   pSmad2           );
         
@@ -124,8 +121,7 @@ def cross_talk_model_antstr():
         
         
         //PI3K Module
-        //R11:        GFR    => pGFR      ;   Cell *(kIGFRPhos_kcat  * GrowthFactors * GFR /(kIGFRPhos_km^kIGFRPhos_h + GFR^kIGFRPhos_h))
-        R11:        GFR    => pGFR      ;   Cell * HillWithKcat(kIGFRPhos_kcat, GrowthFactors, GFR, kIGFRPhos_km, kIGFRPhos_h )
+        R11:        GFR    => pGFR      ;   Cell * (kIGFRPhos_kcat*GrowthFactors*GFR^kIGFRPhos_h /(kIGFRPhos_km^kIGFRPhos_h + GFR^kIGFRPhos_h ) )
         R12:        pGFR   => GFR       ;   Cell * MA1(     kIGFRDephos,        pGFR                    );
         R13_1:      PI3K    => pPI3K    ;   Cell * MA1Mod(  kPI3KPhosByIGFR,    PI3K,       pGFR        );
         R13_2:      PI3K    => pPI3K    ;   Cell * MA1Mod(  kPI3KPhosByMek,     PI3K,       pMek        );
@@ -319,8 +315,8 @@ if __name__ == '__main__':
 
 
     # dose_response_for_growth_factors()
-    mod = load_model_with_pyco(functions_antstr()+cross_talk_model_antstr(), copasi_filename)
-    mod.open()
+    # mod = load_model_with_pyco(functions_antstr()+cross_talk_model_antstr(), copasi_filename)
+    # mod.open()
 
     # mod = te.loada(functions_antstr() + cross_talk_model_antstr())
     # odes = te.utils.misc.getODEsFromModel(mod)
@@ -328,14 +324,14 @@ if __name__ == '__main__':
 
     # sbml = te.antimonyToSBML(functions_antstr() + cross_talk_model_antstr())
     # print(sbml)
-    # i = 'GFR'
-    # j = 'pGFR'
+    i = 'GFR'
+    j = 'pGFR'
     # pmid_for_IGF_data = 'PMID: 26217307'
-    # fig = dose_response(cross_talk_model_antstr(), 'GrowthFactors', 0.1, 1000, 100, [i, j])
-    # plt.title('Dose Response of {} and \n{} to GrowthFactors'.format(i, j))
-    # fname = os.path.join(graphs_directory, 'GrowthFactorsDoseResponse{}.png'.format(i))
-    # fig.savefig(fname, dpi=150, bbox_inches='tight')
-    # plt.show()
+    fig = dose_response(functions_antstr()+cross_talk_model_antstr(), 'GrowthFactors', 0.1, 1000, 100, [i, j])
+    plt.title('Dose Response of {} and \n{} to GrowthFactors'.format(i, j))
+    fname = os.path.join(graphs_directory, 'GrowthFactorsDoseResponse{}.png'.format(i))
+    fig.savefig(fname, dpi=150, bbox_inches='tight')
+    plt.show()
 
     # print(te.getVersionInfo())
     # model_string,
