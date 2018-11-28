@@ -52,6 +52,7 @@ def cross_talk_model_antstr():
         R1:                 => TGFbR            ; Cell * kTGFbRProd                             ;
         R2: TGFbR           =>                  ; Cell * kTGFbRDeg      *TGFbR                  ;    
         R3: TGFbR + TGFb    => TGFbR_a          ; Cell * kTGFbOn        *TGFb                   ;
+        R4: TGFb            =>                  ; Cell * TGFb                                   ;
         R4: TGFbR_a         => TGFbR + TGFb     ; Cell * kTGFbOff       *TGFbR_a                ;
         R5: Smad2           => pSmad2           ; Cell * kSmad2Phos     *Smad2      *TGFbR_a    ;
         R6: pSmad2          => Smad2            ; Cell * kSmad2Dephos   *pSmad2                 ;
