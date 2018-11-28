@@ -26,6 +26,7 @@ def cross_talk_model_antstr():
         var TGFbR_a     in Cell  
         var Smad2       in Cell  
         var pSmad2      in Cell  
+        var Smad7       in Cell
         var Mek         in Cell
         var pMek        in Cell  
         var Erk         in Cell
@@ -41,6 +42,7 @@ def cross_talk_model_antstr():
         var S6K         in Cell
         var pS6K        in Cell  
         
+        
         var TGFb             in Cell
         var AZD              in Cell
         var GrowthFactors    in Cell
@@ -52,47 +54,54 @@ def cross_talk_model_antstr():
         R1:                 => TGFbR            ; Cell * kTGFbRProd                             ;
         R2: TGFbR           =>                  ; Cell * kTGFbRDeg      *TGFbR                  ;    
         R3: TGFbR + TGFb    => TGFbR_a          ; Cell * kTGFbOn        *TGFb                   ;
-        R4: TGFb            =>                  ; Cell * TGFb                                   ;
-        R4: TGFbR_a         => TGFbR + TGFb     ; Cell * kTGFbOff       *TGFbR_a                ;
-        R5: Smad2           => pSmad2           ; Cell * kSmad2Phos     *Smad2      *TGFbR_a    ;
-        R6: pSmad2          => Smad2            ; Cell * kSmad2Dephos   *pSmad2                 ;
+        R4: TGFb            =>                  ; Cell * kTGFRemoval    *TGFb                   ;
+        R5: TGFbR_a         => TGFbR + TGFb     ; Cell * kTGFbOff       *TGFbR_a                ;
+        R6: Smad2           => pSmad2           ; Cell * kSmad2Phos     *Smad2      *TGFbR_a    ;
+        R7: pSmad2          => Smad2            ; Cell * kSmad2Dephos   *pSmad2                 ;
+        Rx8:                => Smad7            ; Cell * kSmad7Prod     *pSmad2                 ;
+        Rx9: Smad7          =>                  ; Cell * kSmad7Deg      *Smad7                  ;
+        Rx10: TGFbR_a + Smad7 =>                  ; Cell * kTGFbRDegBySmad7   *TGFbR_a    *Smad7  ;
         
         //MEK module                   //
-        R7_1:   Mek      => pMek     ;   Cell * kMekPhosByPI3K      *Mek    *pPI3K   ;
-        R7_2:   Mek      => pMek     ;   Cell * kMekPhosByTGFbR_a   *Mek    *TGFbR_a ;
-        R7_3:   Mek      => pMek     ;   Cell * kMekPhosByGFR      *Mek    *pGFR    ;
-        R8_1:   pMek     => Mek      ;   Cell * kMekDephosByAkt     *pMek   *pAkt    ;
-        R8_2:   pMek     => Mek      ;   Cell * kMekDephosByAZD     *pMek   *AZD     ; 
-        R9 :    Erk      => pErk     ;   Cell * kErkPhosByMek       *Erk    *pMek    ;
-        R10:    pErk     => Erk      ;   Cell * kErkDephos          *pErk
+        R8_1:   Mek      => pMek     ;   Cell * kMekPhosByPI3K      *Mek    *pPI3K   ;
+        R8_2:   Mek      => pMek     ;   Cell * kMekPhosByTGFbR_a   *Mek    *TGFbR_a ;
+        R8_3:   Mek      => pMek     ;   Cell * kMekPhosByGFR      *Mek    *pGFR    ;
+        R9_1:   pMek     => Mek      ;   Cell * kMekDephosByAkt     *pMek   *pAkt    ;
+        R9_2:   pMek     => Mek      ;   Cell * kMekDephosByAZD     *pMek   *AZD     ; 
+        R10 :    Erk      => pErk     ;   Cell * kErkPhosByMek       *Erk    *pMek    ;
+        R11:    pErk     => Erk      ;   Cell * kErkDephos          *pErk
         
         
         //PI3K Module
-        R11:        GFR     => pGFR     ;   Cell *(kGFRPhos_kcat       * GrowthFactors * GFR /(kGFRPhos_km^kGFRPhos_h + GFR^kGFRPhos_h))
-        R12:        pGFR    => GFR      ;   Cell *  kGFRDephos         *pGFR                    ;
-        R13_1:      PI3K    => pPI3K    ;   Cell *  kPI3KPhosByGFR     *PI3K       *pGFR        ;
-        R13_2:      PI3K    => pPI3K    ;   Cell *  kPI3KPhosByMek      *PI3K       *pMek        ;
-        R14_1:      pPI3K   => PI3K     ;   Cell *  kPI3KDephosByS6K    *pPI3K      *pS6K        ;
-        R14_2:      pPI3K   => PI3K     ;   Cell *  kPI3KDephosByErk    *pPI3K      *pErk        ;
-        R15:        Akt     => pAkt     ;   Cell *  kAktPhos            *Akt        *pPI3K       ;
-        R16:        pAkt    => Akt      ;   Cell *  kAktDephos          *pAkt       *MK2206      ;
-        R17_1:      mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByAkt    *mTORC1     *pAkt        ;
-        R17_2:      mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByErk    *mTORC1     *pErk        ;
-        R18_1:      pmTORC1 => mTORC1   ;   Cell *  kmTORC1DephosByEv   *pmTORC1    *Everolimus  ;
-        R18_2:      pmTORC1 => mTORC1   ;   Cell *  kmTORC1Dephos       *pmTORC1                 ;
-        R19_1:      S6K     => pS6K     ;   Cell *  kS6KPhosBymTORC1    *S6K        *pmTORC1     ;
-        R19_2:      S6K     => pS6K     ;   Cell *  kS6KPhosByErk       *S6K        *pErk        ;
-        R20:        pS6K    => S6K      ;   Cell *  kS6KDephos          *pS6K                    ;
+        R12:        GFR     => pGFR     ;   Cell *(kGFRPhos_kcat       * GrowthFactors * GFR /(kGFRPhos_km^kGFRPhos_h + GFR^kGFRPhos_h))
+        R13:        pGFR    => GFR      ;   Cell *  kGFRDephos         *pGFR                    ;
+        R14_1:      PI3K    => pPI3K    ;   Cell *  kPI3KPhosByGFR     *PI3K       *pGFR        ;
+        R14_2:      PI3K    => pPI3K    ;   Cell *  kPI3KPhosByMek      *PI3K       *pMek        ;
+        R15_1:      pPI3K   => PI3K     ;   Cell *  kPI3KDephosByS6K    *pPI3K      *pS6K        ;
+        R15_2:      pPI3K   => PI3K     ;   Cell *  kPI3KDephosByErk    *pPI3K      *pErk        ;
+        R16:        Akt     => pAkt     ;   Cell *  kAktPhos            *Akt        *pPI3K       ;
+        R17:        pAkt    => Akt      ;   Cell *  kAktDephos          *pAkt       *MK2206      ;
+        R18_1:      mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByAkt    *mTORC1     *pAkt        ;
+        R18_2:      mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByErk    *mTORC1     *pErk        ;
+        R19_1:      pmTORC1 => mTORC1   ;   Cell *  kmTORC1DephosByEv   *pmTORC1    *Everolimus  ;
+        R19_2:      pmTORC1 => mTORC1   ;   Cell *  kmTORC1Dephos       *pmTORC1                 ;
+        R20_1:      S6K     => pS6K     ;   Cell *  kS6KPhosBymTORC1    *S6K        *pmTORC1     ;
+        R20_2:      S6K     => pS6K     ;   Cell *  kS6KPhosByErk       *S6K        *pErk        ;
+        R21:        pS6K    => S6K      ;   Cell *  kS6KDephos          *pS6K                    ;
         
         kTGFbOn             = 0.04
+        kTGFbOff            = 0.02
         kTGFbRProd          = 0.1
         kTGFbRDeg           = 0.001
-        kTGFbOff            = 0.02
+        kTGFRemoval         = 0.1
         kSmad2Phos          = 0.01
         kSmad2Dephos        = 0.01
         kTGFbOff            = 0.01
         kSmad2Phos          = 0.01
         kSmad2Dephos        = 0.01  
+        kSmad7Prod          = 0.01
+        kSmad7Deg           = 0.01
+        kTGFbRDegBySmad7    = 0.01
           
         kMekPhosByPI3K      = 0.01    
         kMekPhosByTGFbR_a   = 0.01        
@@ -120,7 +129,7 @@ def cross_talk_model_antstr():
         kS6KPhosByErk       = 0.001    
         kS6KDephos          = 0.01
     
-        TGFb                    = 0
+        TGFb                    = 1
         AZD                     = 0
         GrowthFactors           = 100
         MK2206                  = 0
@@ -130,6 +139,7 @@ def cross_talk_model_antstr():
         TGFbR_a                 = 0
         Smad2                   = 100
         pSmad2                  = 0
+        Smad7                   = 0
         Mek                     = 100
         pMek                    = 0
         Erk                     = 100
