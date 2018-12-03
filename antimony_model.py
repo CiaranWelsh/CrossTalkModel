@@ -86,19 +86,19 @@ model TGFbModel()
   species R2_EE in Cell;
 
   // Reactions:
-  v1: R2 + R1   => LRC          ; Cell*MA3(ka, R1, R2, ligand);
-  v2: LRC       =>              ; Cell*MA1(kcd, LRC);
-  v3: LRC       =>              ; Cell*MA1(klid, LRC);
-  v4: LRC       => LRC_EE       ; Cell*MA1(ki, LRC);
-  v5:           => R1           ; Cell*MA0(pRI);
-  v6: R1        =>              ; Cell*MA1(R1, kcd);
-  v7: R1        => R1_EE        ; Cell*MA1(R1, ki);
-  v8: R1_EE     => R1           ; Cell*MA1(R1_EE, kr);
-  v9: LRC_EE    => R1 + R2      ; Cell*MA1(kr, LRC_EE);
-  v10:          => R2           ; Cell*MA0(pRII);
-  v11: R2       =>              ; Cell*MA1(R2, kcd);
-  v12: R2       => R2_EE        ; Cell*MA1(R2, ki);
-  v13: R2_EE    => R2           ; Cell*MA1(R2_EE, kr);
+  TGF_1: R2 + R1   => LRC          ; Cell*MA3(ka, R1, R2, ligand);
+  TGF_2: LRC       =>              ; Cell*MA1(kcd, LRC);
+  TGF_3: LRC       =>              ; Cell*MA1(klid, LRC);
+  TGF_4: LRC       => LRC_EE       ; Cell*MA1(ki, LRC);
+  TGF_5:           => R1           ; Cell*MA0(pRI);
+  TGF_6: R1        =>              ; Cell*MA1(R1, kcd);
+  TGF_7: R1        => R1_EE        ; Cell*MA1(R1, ki);
+  TGF_8: R1_EE     => R1           ; Cell*MA1(R1_EE, kr);
+  TGF_9: LRC_EE    => R1 + R2      ; Cell*MA1(kr, LRC_EE);
+  TGF_10:          => R2           ; Cell*MA0(pRII);
+  TGF_11: R2       =>              ; Cell*MA1(R2, kcd);
+  TGF_12: R2       => R2_EE        ; Cell*MA1(R2, ki);
+  TGF_13: R2_EE    => R2           ; Cell*MA1(R2_EE, kr);
 
   // Events:
   //event_0000001: at 0 after time >= 2500: ligand = 0.01;
@@ -259,7 +259,7 @@ def load_model(copasi_filename, ant):
         )
     return mod
 
-# tgf = load_model(copasi_filename, functions_str+tgfb_antimony_str)
+# tgf = load_model(copasi_filTGF_ename, functions_str+tgfb_antimony_str)
 # vilar = model.Model(vilar_file, )
 # kho = model.Model(kholo_file)
 # vilar = load_model(vilar_file2, functions_str+vilar_string)

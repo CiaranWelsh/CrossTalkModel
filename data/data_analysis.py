@@ -217,13 +217,14 @@ if __name__ == '__main__':
 
 
     # print(azd.loc['ERK-pT202', 3] )
-    barplots(azd, azd_average_dir)
+    # barplots(azd, azd_average_dir)
     # barplots(mk, mk_average_dir)
     # print(mk)
     # smad2_d = (mk.xs((), level=(0, 2)))
 
     smad2 = 'SMAD2-pS465-467'
     erk = 'ERK-pT202'
+    akt = 'Akt-pT308'
 
     # erk_plots_dir = os.path.join(graph_dir, 'AzdErkPlots')
     # plot_repeats_by_condition(azd, erk_plots_dir)
@@ -236,6 +237,17 @@ if __name__ == '__main__':
     # print(res)
     # res = t_test(azd, erk, 'T_E', erk, 'T_A_E_72')
     # print(res)
+    # print(t_test(mk, erk, 'T_M_72', erk, 'T'))
+    # print(t_test(mk, erk, 'T_M_48', erk, 'T'))
+    # print(t_test(mk, erk, 'T_M_24', erk, 'T'))
+    # print(t_test(mk, erk, 'T_M_1.25', erk, 'T'))
+    # print(t_test(mk, akt, 'D', akt, 'T'))
+    x = mk.xs('mTOR-pS2448')['Normed to average']
+    x = x.unstack(level=1)
+    x = x.describe()
+
+    plt.show()
+
 
 
 
