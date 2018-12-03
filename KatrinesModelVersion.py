@@ -11,6 +11,53 @@ import matplotlib.pyplot as plt
 seaborn.set_style('white')
 seaborn.set_context('talk', font_scale=1)
 
+"""
+These are arguments for the conditions simulation functions. 
+    :param GF: starting amount of GrowthFactors
+    :param TGF: starting amount of tgf
+    :param pretreatment: either 'AZD', or 'MK2206'. This is added as an event at the time specified by pretreatment time
+    :param pretreatment_time: The time at which the variable specified by 'pretreatment' is added
+    :param EV: Starting amount of EVerolimus
+    :param serum_starve_event: Boolean, whether to remove serum, aka GrowthFactors by event
+    :param TGFb_event: Boolean. Whether to add 1 unit TGF at t=-45min (71.75h)
+    :param open_with_copasi: open the model with copasi
+"""
+
+AZD_CONDITIONS = OrderedDict()
+AZD_CONDITIONS['D']             =   [100,   0,  None,           None,       0,  True,   False]
+AZD_CONDITIONS['T']             =   [100,   0,  None,           None,       1,  True,   True]
+AZD_CONDITIONS['T_E']           =   [100,   0,  None,           None,       1,  True,   True]
+AZD_CONDITIONS['T_A_E_0']       =   [100,   0,  "AZD",           0.0,       1,  True,   True]
+AZD_CONDITIONS['T_A_E_24']      =   [100,   0,  "AZD",           24,        1,  True,   True]
+AZD_CONDITIONS['T_A_E_48']      =   [100,   0,  "AZD",           48.0,      1,  True,   True]
+AZD_CONDITIONS['T_A_E_70.75']   =   [100,   0,  "AZD",           70.75,     1,  True,   True]
+AZD_CONDITIONS['T_A_0']         =   [100,   0,  "AZD",           0.0,       0,  True,   True]
+AZD_CONDITIONS['T_A_24']        =   [100,   0,  "AZD",           24,        0,  True,   True]
+AZD_CONDITIONS['T_A_48']        =   [100,   0,  "AZD",           48.0,      0,  True,   True]
+AZD_CONDITIONS['T_A_70.75']     =   [100,   0,  "AZD",           70.75,     0,  True,   True]
+
+MK_CONDITIONS = OrderedDict()
+MK_CONDITIONS['D']            =     [100, 0, None,      None,   0, True, False]
+MK_CONDITIONS['T']            =     [100, 0, None,      None,   1, True, True]
+MK_CONDITIONS['T_E']          =     [100, 0, None,      None,   1, True, True]
+MK_CONDITIONS['T_M_E_0']      =     [100, 0, "MK2206",  0.0,    1, True, True]
+MK_CONDITIONS['T_M_E_24']     =     [100, 0, "MK2206",  24.0,   1, True, True]
+MK_CONDITIONS['T_M_E_48']     =     [100, 0, "MK2206",  48.0,   1, True, True]
+MK_CONDITIONS['T_M_E_70.75']  =     [100, 0, "MK2206",  70.75,  1, True, True]
+MK_CONDITIONS['T_M_0']        =     [100, 0, "MK2206",  0.0,    0, True, True]
+MK_CONDITIONS['T_M_24']       =     [100, 0, "MK2206",  24.0,   0, True, True]
+MK_CONDITIONS['T_M_48']       =     [100, 0, "MK2206",  48.0,   0, True, True]
+MK_CONDITIONS['T_M_70.75']    =     [100, 0, "MK2206",  70.75,  0, True, True]
+
+
+MODEL_SPECIES = ['TGFb', 'TGFbR', 'TGFbR_a', 'Smad2',
+                 'pSmad2', 'Smad7', 'Mek', 'pMek',
+                 'Erk', 'pErk', 'GFR', 'pGFR', 'PI3K',
+                 'pPI3K', 'Akt', 'pAkt', 'mTORC1',
+                 'pmTORC1', 'S6K', 'pS6K']
+
+MODEL_SPECIES += ['Everolimus', 'MK2206', 'AZD', 'GrowthFactors']
+
 
 def cross_talk_model_antstr():
     """
@@ -117,7 +164,7 @@ def cross_talk_model_antstr():
         kMekPhosByTGFbR_a   = 0.01        
         kMekPhosByGFR       = 0.01    
         kMekDephosByAkt     = 0.01    
-        kMekDephosByAZD     = 0.01    
+        kMekDephosByAZD     = 10   
         kErkPhosByMek       = 0.01    
         kErkDephos          = 0.01
         
@@ -139,7 +186,7 @@ def cross_talk_model_antstr():
         kS6KPhosByErk       = 0.001    
         kS6KDephos          = 0.01
     
-        TGFb                    = 1
+        TGFb                    = 0
         AZD                     = 0
         GrowthFactors           = 100
         MK2206                  = 0
@@ -322,69 +369,72 @@ def add_AZD_event(model_string, time):
 def simulate_condition(model_string, GF=0, TGF=0, pretreatment=None,
                        pretreatment_time=None, EV=0,
                        serum_starve_event=False, TGFb_event=False, open_with_copasi=False):
+    """
+    :param model_string: antimony model string
+    :param GF: starting amount of GrowthFactors
+    :param TGF: starting amount of tgf
+    :param pretreatment: either 'AZD', or 'MK2206'. This is added as an event at the time specified by pretreatment time
+    :param pretreatment_time: The time at which the variable specified by 'pretreatment' is added
+    :param EV: Starting amount of EVerolimus
+    :param serum_starve_event: Boolean, whether to remove serum, aka GrowthFactors by event
+    :param TGFb_event: Boolean. Whether to add 1 unit TGF at t=-45min (71.75h)
+    :param open_with_copasi: open the model with copasi
+    :return:
+    """
     if serum_starve_event:
         model_string = add_serum_starve_event(model_string)
 
     if TGFb_event:
         model_string = add_TGFb_event(model_string)
     if pretreatment is not None:
-        if pretreatment == 'AZD':
-            model_string = add_AZD_event(model_string, pretreatment_time)
-        elif pretreatment == 'MK2206':
-            model_string = add_MK_event(model_string, pretreatment_time)
-        else:
-            raise ValueError
+        if pretreatment_time != 0:
+            if pretreatment == 'AZD':
+                model_string = add_AZD_event(model_string, pretreatment_time)
+            elif pretreatment == 'MK2206':
+                model_string = add_MK_event(model_string, pretreatment_time)
+            else:
+                raise ValueError
 
     mod = te.loada(model_string)
-    mod.TGFb = TGF
-    mod.GrowthFactors = GF
-    # mod.AZD = AZD
-    # mod.MK = MK
+    mod.model['init([TGFb])'] = TGF
     mod.Everolimus = EV
+    mod.GrowthFactors = GF
 
-    ## Add 1 to intervals for 0 indexed python
-    res = mod.simulate(0, 72, 73)
-    colnames = []
-    for i in res.colnames:
-        if i != "time":
-            colnames.append(i[1:-1])
-        else:
-            colnames.append(i)
-    df = pandas.DataFrame(res, columns=colnames)
+    if pretreatment_time == 0:
+        if pretreatment == 'AZD':
+            mod.AZD = 1
+        elif pretreatment == 'MK2206':
+            mod.MK2206 = 1
 
     if open_with_copasi:
-        copasi_mod = load_model_with_pyco(model_string, copasi_filename)
+        ## has to be the modified model NOT model string
+        copasi_mod = load_model_with_pyco(mod.getCurrentAntimony(), copasi_filename)
+        tasks.TimeCourse(copasi_mod, start=0, end=72, step_size=1, intervals=73, run=False)
         copasi_mod.open()
 
+    ## Add 1 to intervals for 0 indexed python
+    res = mod.simulate(0, 72, 73, ['time'] + MODEL_SPECIES)
+
+    df = pandas.DataFrame(res, columns=['time'] + MODEL_SPECIES)
     return df
 
 
-def simulate_azd_conditions_and_plot(y):
+
+def simulate_conditions(y, type='AZD'):
     """
     Takes output from simulation and plot
     :param df:
     :return:
-
-    model_string, GF=0, TGF=0, pretreatment=None,
-                       pretreatment_time=None, EV=0,
-                       serum_starve_event=False, TGFb_event=False
-
-
     """
-    conditions = OrderedDict({
-        # 'NULL':         [0  , 0, None   , None,     0, False, False],
-        'D': [100, 1, None, None, 0, True, False],
-        'T': [100, 1, None, None, 0, True, True],
-        'T_E': [100, 1, None, None, 1, True, True],
-        'T_A_E_0': [100, 1, "AZD", 0.0, 1, True, True],
-        'T_A_E_24': [100, 1, "AZD", 24, 1, True, True],
-        'T_A_E_48': [100, 1, "AZD", 48.0, 1, True, True],
-        'T_A_E_70.75': [100, 1, "AZD", 70.75, 1, True, True],
-        'T_A_0': [100, 1, "AZD", 0.0, 0, True, True],
-        'T_A_24': [100, 1, "AZD", 24, 0, True, True],
-        'T_A_48': [100, 1, "AZD", 48.0, 0, True, True],
-        'T_A_70.75': [100, 1, "AZD", 70.75, 0, True, True],
-    })
+    if type not in ['AZD', 'MK2206']:
+        raise ValueError
+
+    if type == 'AZD':
+        conditions = AZD_CONDITIONS
+    elif type == 'MK2206':
+        conditions = MK_CONDITIONS
+    else:
+        raise ValueError
 
     dct = OrderedDict()
     for k, v in conditions.items():
@@ -403,70 +453,21 @@ def simulate_azd_conditions_and_plot(y):
     fig = plt.figure()
     seaborn.barplot(x='Condition', y=y, data=df,
                     palette=['yellow'] * 2 + ['white'] * 1 + ['red'] * 4 + ['green'] * 4,
+                    edgecolor='black', linewidth=2,
+                    order=MK_CONDITIONS.keys() if type == 'MK2206' else AZD_CONDITIONS.keys()
                     )
     seaborn.despine(fig, top=True, right=True)
     plt.xticks(rotation=90)
 
-    azd_dir = os.path.join(graphs_directory, 'AZDSimulations')
-    os.makedirs(azd_dir) if not os.path.isdir(azd_dir) else None
-    fname = os.path.join(azd_dir, "{}.png".format(y))
+    if type == 'AZD':
+        dire = os.path.join(graphs_directory, 'AZDSimulations')
+    else:
+        dire = os.path.join(graphs_directory, 'MKSimulations')
+    os.makedirs(dire) if not os.path.isdir(dire) else None
+    fname = os.path.join(dire, "{}.png".format(y))
     fig.savefig(fname, dpi=150, bbox_inches='tight')
 
 
-def simulate_mk_conditions_and_plot(y):
-    """
-    Takes output from simulation and plot
-    :param df:
-    :return:
-
-    model_string, GF=0, TGF=0, pretreatment=None,
-                       pretreatment_time=None, EV=0,
-                       serum_starve_event=False, TGFb_event=False
-
-
-    """
-    conditions = OrderedDict({
-        # 'NULL':         [0  , 0, None   , None,     0, False, False],
-        'D': [100, 1, None, None, 0, True, False],
-        'T': [100, 1, None, None, 0, True, True],
-        'T_E': [100, 1, None, None, 1, True, True],
-        'T_M_E_0': [100, 1, "MK2206", 0.0, 1, True, True],
-        'T_M_E_24': [100, 1, "MK2206", 24.0, 1, True, True],
-        'T_M_E_48': [100, 1, "MK2206", 48.0, 1, True, True],
-        'T_M_E_70.75': [100, 1, "MK2206", 70.75, 1, True, True],
-        'T_M_0': [100, 1, "MK2206", 0.0, 0, True, True],
-        'T_M_24': [100, 1, "MK2206", 24.0, 0, True, True],
-        'T_M_48': [100, 1, "MK2206", 48.0, 0, True, True],
-        'T_M_70.75': [100, 1, "MK2206", 70.75, 0, True, True],
-    })
-
-    dct = OrderedDict()
-    for k, v in conditions.items():
-        df = simulate_condition(cross_talk_model_antstr(), *conditions[k])
-        dct[k] = df[df['time'] == 72.0]
-
-    df = pandas.concat(dct)
-    df.index = df.index.droplevel(1)
-    df = df.drop('time', axis=1)
-    df = df.reset_index()
-    df = df.rename(columns={'index': 'Condition'})
-
-    if y not in df.columns:
-        raise ValueError('The variable "{}" does not appear in your model'.format(y))
-
-    fig = plt.figure()
-    seaborn.barplot(x='Condition', y=y, data=df,
-                    palette=['yellow'] * 2 + ['white'] * 1 + ['red'] * 4 + ['green'] * 4,
-                    )
-    seaborn.despine(fig, top=True, right=True)
-    plt.xticks(rotation=90)
-
-    mk_dir = os.path.join(graphs_directory, 'MKSimulations')
-    os.makedirs(mk_dir) if not os.path.isdir(mk_dir) else None
-    fname = os.path.join(mk_dir, "{}.png".format(y))
-    fig.savefig(fname, dpi=150, bbox_inches='tight')
-
-    # plt.show()
 
 def plot_all():
     """
@@ -480,8 +481,63 @@ def plot_all():
                      'pmTORC1', 'S6K', 'pS6K']
 
     for i in model_species:
-        simulate_azd_conditions_and_plot(i)
-        # simulate_mk_conditions_and_plot(i)
+        simulate_conditions(i, 'AZD')
+        simulate_conditions(i, 'MK2206')
+
+def simulate_timecourse(type='MK2206'):
+    """
+    Events are used throughout the simulations.
+    This function is for visualising the model inputs
+    to visualise whether the events are correctly configured.
+    :return:
+    """
+    if type not in ['AZD', 'MK2206']:
+        raise ValueError
+
+    if type == 'AZD':
+        conditions = AZD_CONDITIONS
+    elif type == 'MK2206':
+        conditions = MK_CONDITIONS
+    else:
+        raise ValueError
+
+    dct = OrderedDict()
+    for k, v in conditions.items():
+        df = simulate_condition(cross_talk_model_antstr(), *conditions[k])
+        dct[k] = df
+    print(dct)
+
+    df = pandas.concat(dct)
+    df.index = df.index.droplevel(1)
+    df = df.set_index('time', append=True)
+    df.index = df.index.rename(['condition', 'time'])
+
+    return df
+
+
+def plot_timecourse(vars, condition=None):
+    df = simulate_timecourse()
+    for i in vars:
+        if i not in df.columns:
+            raise ValueError("Variable '{}' is not in '{}'".format(i, df.columns))
+    df = df[vars]
+
+    df = df.reset_index()
+
+    if condition is None:
+        condition = df['condition'].unique()
+
+    # df = df[df['condition'] == 'T_M_E_70.75']
+    # ax = plt.subplot(len(vars), 1, 1)
+    for c in condition:
+        for v in range(1, len(vars)):
+            fig = plt.figure()
+            plt.plot(df['time'], df[vars[v]], label=vars[v])
+            seaborn.despine(fig=fig, top=True, right=True)
+            plt.title("{} in {}".format(vars[v], c))
+            plt.xlabel('Time(h)')
+            plt.ylabel('nmol L$^{-1}$')
+    plt.show()
 
 
 
@@ -526,52 +582,27 @@ if __name__ == '__main__':
     # plot_condition(df)
     # plot_azd()
 
-    # mod = te.loada(cross_talk_model_antstr())
-    #
-    # print(mod.getFloatingSpeciesIds())
 
-    # for i in sorted(dir(mod)):
-    #     print(i)
+    print(MK_CONDITIONS.keys())
+    #['D', 'T_M_E_48', 'T', 'T_M_E_0', 'T_M_70.75', 'T_M_E_24',
+    # 'T_M_E_70.75', 'T_M_0', 'T_E', 'T_M_24', 'T_M_48']
 
-    azd_conditions = OrderedDict({
-        # 'NULL':         [0  , 0, None   , None,     0, False, False],
-        'D': [100, 1, None, None, 0, True, False],
-        'T': [100, 1, None, None, 0, True, True],
-        'T_E': [100, 1, None, None, 1, True, True],
-        'T_A_0': [100, 1, "AZD", 0.0, 0, True, True],
-        'T_A_24': [100, 1, "AZD", 24.0, 0, True, True],
-        'T_A_48': [100, 1, "AZD", 48.0, 0, True, True],
-        'T_A_70.75': [100, 1, "AZD", 70.75, 0, True, True],
-        'T_A_E_0': [100, 1, "AZD", 0.0, 1, True, True],
-        'T_A_E_24': [100, 1, "AZD", 24.0, 1, True, True],
-        'T_A_E_48': [100, 1, "AZD", 48.0, 1, True, True],
-        'T_A_E_70.75': [100, 1, "AZD", 70.75, 1, True, True],
-    })
 
-    simulate_condition(cross_talk_model_antstr(), *azd_conditions['T_E'],
-                       open_with_copasi=True)
+    # simulate_condition(cross_talk_model_antstr(), *MK_CONDITIONS['T_E'],
+    #                    open_with_copasi=True)
 
-    mk_conditions = OrderedDict({
-        # 'NULL':         [0  , 0, None   , None,     0, False, False],
-        'D': [100, 1, None, None, 0, True, False],
-        'T': [100, 1, None, None, 0, True, True],
-        'T_E': [100, 1, None, None, 1, True, True],
-        'T_M_0': [100, 1, "MK2206", 0.0, 0, True, True],
-        'T_M_24': [100, 1, "MK2206", 24.0, 0, True, True],
-        'T_M_48': [100, 1, "MK2206", 48.0, 0, True, True],
-        'T_M_70.75': [100, 1, "MK2206", 70.75, 0, True, True],
-        'T_M_E_0': [100, 1, "MK2206", 0.0, 1, True, True],
-        'T_M_E_24': [100, 1, "MK2206", 24.0, 1, True, True],
-        'T_M_E_48': [100, 1, "MK2206", 48.0, 1, True, True],
-        'T_M_E_70.75': [100, 1, "MK2206", 70.75, 1, True, True],
-    })
 
     # plot_all()
 
+    simulate_conditions('pErk', 'AZD')
+    plt.show()
 
 
 
 
+    # simulate_timecourse()
+    # plot_timecourse(['TGFb', 'MK2206', 'Everolimus', 'AZD', 'GrowthFactors'],
+    #                 ['D'])
 
 
 
