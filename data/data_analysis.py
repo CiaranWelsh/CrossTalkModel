@@ -242,9 +242,12 @@ if __name__ == '__main__':
     # print(t_test(mk, erk, 'T_M_24', erk, 'T'))
     # print(t_test(mk, erk, 'T_M_1.25', erk, 'T'))
     # print(t_test(mk, akt, 'D', akt, 'T'))
-    x = mk.xs('mTOR-pS2448')['Normed to average']
-    x = x.unstack(level=1)
-    x = x.describe()
+    # x = x.unstack(level=1)
+    # x = x.describe()
+
+    x = mk.xs('PRAS40-pS183')#['Normed to average']
+    # x = mk.xs('mTOR-pS2448')['Normed to average']
+    print (x)
 
     plt.show()
 
