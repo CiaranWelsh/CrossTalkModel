@@ -1,0 +1,1142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by COPASI version 4.24 (Build 197) on 2018-11-26 12:21 with libSBML version 5.17.0. -->
+<sbml xmlns="http://www.sbml.org/sbml/level2/version4" level="2" version="4">
+  <model metaid="COPASI0" id="TGFbModule" name="TGFbModule">
+    <annotation>
+      <COPASI xmlns="http://www.copasi.org/static/sbml">
+        <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+          <rdf:Description rdf:about="#COPASI0">
+            <dcterms:created>
+              <rdf:Description>
+                <dcterms:W3CDTF>2018-11-26T11:48:31Z</dcterms:W3CDTF>
+              </rdf:Description>
+            </dcterms:created>
+          </rdf:Description>
+        </rdf:RDF>
+      </COPASI>
+    </annotation>
+    <listOfFunctionDefinitions>
+      <functionDefinition id="Function_for_R5_1" name="Function for R5_1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> Mek </ci>
+            </bvar>
+            <bvar>
+              <ci> kMekPhosByPI3K </ci>
+            </bvar>
+            <bvar>
+              <ci> pPI3K </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kMekPhosByPI3K </ci>
+              <ci> Mek </ci>
+              <ci> pPI3K </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R5_2" name="Function for R5_2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> Mek </ci>
+            </bvar>
+            <bvar>
+              <ci> TGFbR_a </ci>
+            </bvar>
+            <bvar>
+              <ci> kMekPhosByTGFbR_a </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kMekPhosByTGFbR_a </ci>
+              <ci> Mek </ci>
+              <ci> TGFbR_a </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R5_3" name="Function for R5_3">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> Mek </ci>
+            </bvar>
+            <bvar>
+              <ci> kMekPhosByIGFR </ci>
+            </bvar>
+            <bvar>
+              <ci> pIGFR </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kMekPhosByIGFR </ci>
+              <ci> Mek </ci>
+              <ci> pIGFR </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R6_2" name="Function for R6_2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> AZD </ci>
+            </bvar>
+            <bvar>
+              <ci> kMekDephosByAZD </ci>
+            </bvar>
+            <bvar>
+              <ci> pMek </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kMekDephosByAZD </ci>
+              <ci> pMek </ci>
+              <ci> AZD </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R9" name="Function for R9">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> GrowthFactors </ci>
+            </bvar>
+            <bvar>
+              <ci> IGFR </ci>
+            </bvar>
+            <bvar>
+              <ci> kIGFRPhos </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kIGFRPhos </ci>
+              <ci> IGFR </ci>
+              <ci> GrowthFactors </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R11_1" name="Function for R11_1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> PI3K </ci>
+            </bvar>
+            <bvar>
+              <ci> kPI3KPhosByIGFR </ci>
+            </bvar>
+            <bvar>
+              <ci> pIGFR </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kPI3KPhosByIGFR </ci>
+              <ci> PI3K </ci>
+              <ci> pIGFR </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R6_1" name="Function for R6_1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> kMekDephosByAkt </ci>
+            </bvar>
+            <bvar>
+              <ci> pAkt </ci>
+            </bvar>
+            <bvar>
+              <ci> pMek </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kMekDephosByAkt </ci>
+              <ci> pMek </ci>
+              <ci> pAkt </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R11_2" name="Function for R11_2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> PI3K </ci>
+            </bvar>
+            <bvar>
+              <ci> kPI3KPhosByMek </ci>
+            </bvar>
+            <bvar>
+              <ci> pMek </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kPI3KPhosByMek </ci>
+              <ci> PI3K </ci>
+              <ci> pMek </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R12_1" name="Function for R12_1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> kPI3KDephosByS6K </ci>
+            </bvar>
+            <bvar>
+              <ci> pPI3K </ci>
+            </bvar>
+            <bvar>
+              <ci> pS6K </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kPI3KDephosByS6K </ci>
+              <ci> pPI3K </ci>
+              <ci> pS6K </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R3" name="Function for R3">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> Smad2 </ci>
+            </bvar>
+            <bvar>
+              <ci> TGFbR_a </ci>
+            </bvar>
+            <bvar>
+              <ci> kSmad2Phos </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kSmad2Phos </ci>
+              <ci> Smad2 </ci>
+              <ci> TGFbR_a </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R12_2" name="Function for R12_2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> PI3K </ci>
+            </bvar>
+            <bvar>
+              <ci> kPI3KDephosByErk </ci>
+            </bvar>
+            <bvar>
+              <ci> pErk </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kPI3KDephosByErk </ci>
+              <ci> PI3K </ci>
+              <ci> pErk </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R7" name="Function for R7">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> Erk </ci>
+            </bvar>
+            <bvar>
+              <ci> kErkPhosByMek </ci>
+            </bvar>
+            <bvar>
+              <ci> pMek </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kErkPhosByMek </ci>
+              <ci> Erk </ci>
+              <ci> pMek </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R14" name="Function for R14">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> Akt </ci>
+            </bvar>
+            <bvar>
+              <ci> MK2206 </ci>
+            </bvar>
+            <bvar>
+              <ci> kAktDephos </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kAktDephos </ci>
+              <ci> Akt </ci>
+              <ci> MK2206 </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R13" name="Function for R13">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> Akt </ci>
+            </bvar>
+            <bvar>
+              <ci> kAktPhos </ci>
+            </bvar>
+            <bvar>
+              <ci> pPI3K </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kAktPhos </ci>
+              <ci> Akt </ci>
+              <ci> pPI3K </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition metaid="COPASI6" id="K_M_S" name="K*M*S">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI6">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2018-11-26T11:59:42Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> K </ci>
+            </bvar>
+            <bvar>
+              <ci> M </ci>
+            </bvar>
+            <bvar>
+              <ci> S </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> K </ci>
+              <ci> M </ci>
+              <ci> S </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R15_1" name="Function for R15_1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> kmTORC1PhosByAkt </ci>
+            </bvar>
+            <bvar>
+              <ci> mTORC1 </ci>
+            </bvar>
+            <bvar>
+              <ci> pAkt </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kmTORC1PhosByAkt </ci>
+              <ci> mTORC1 </ci>
+              <ci> pAkt </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R17_1" name="Function for R17_1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> S6K </ci>
+            </bvar>
+            <bvar>
+              <ci> kS6KPhosBymTORC1 </ci>
+            </bvar>
+            <bvar>
+              <ci> pmTORC1 </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kS6KPhosBymTORC1 </ci>
+              <ci> S6K </ci>
+              <ci> pmTORC1 </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R16" name="Function for R16">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> Everolimus </ci>
+            </bvar>
+            <bvar>
+              <ci> kmTORC1DePhos </ci>
+            </bvar>
+            <bvar>
+              <ci> pmTORC1 </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kmTORC1DePhos </ci>
+              <ci> pmTORC1 </ci>
+              <ci> Everolimus </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R17_2" name="Function for R17_2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> S6K </ci>
+            </bvar>
+            <bvar>
+              <ci> kS6KPhosByErk </ci>
+            </bvar>
+            <bvar>
+              <ci> pErk </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kS6KPhosByErk </ci>
+              <ci> S6K </ci>
+              <ci> pErk </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_R15_2" name="Function for R15_2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> kmTORC1PhosByErk </ci>
+            </bvar>
+            <bvar>
+              <ci> mTORC1 </ci>
+            </bvar>
+            <bvar>
+              <ci> pErk </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> kmTORC1PhosByErk </ci>
+              <ci> mTORC1 </ci>
+              <ci> pErk </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+    </listOfFunctionDefinitions>
+    <listOfCompartments>
+      <compartment id="Cell" name="Cell" spatialDimensions="3" size="1" constant="true"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="TGFbR" name="TGFbR" compartment="Cell" initialConcentration="100" boundaryCondition="false" constant="false"/>
+      <species id="TGFbR_a" name="TGFbR_a" compartment="Cell" initialConcentration="0" boundaryCondition="false" constant="false"/>
+      <species id="Smad2" name="Smad2" compartment="Cell" initialConcentration="100" boundaryCondition="false" constant="false"/>
+      <species id="pSmad2" name="pSmad2" compartment="Cell" initialConcentration="0" boundaryCondition="false" constant="false"/>
+      <species id="Mek" name="Mek" compartment="Cell" initialConcentration="100" boundaryCondition="false" constant="false"/>
+      <species id="pMek" name="pMek" compartment="Cell" initialConcentration="0" boundaryCondition="false" constant="false"/>
+      <species id="Erk" name="Erk" compartment="Cell" initialConcentration="100" boundaryCondition="false" constant="false"/>
+      <species id="pErk" name="pErk" compartment="Cell" initialConcentration="0" boundaryCondition="false" constant="false"/>
+      <species id="IGFR" name="IGFR" compartment="Cell" initialConcentration="100" boundaryCondition="false" constant="false"/>
+      <species id="pIGFR" name="pIGFR" compartment="Cell" initialConcentration="0" boundaryCondition="false" constant="false"/>
+      <species id="PI3K" name="PI3K" compartment="Cell" initialConcentration="100" boundaryCondition="false" constant="false"/>
+      <species id="pPI3K" name="pPI3K" compartment="Cell" initialConcentration="0" boundaryCondition="false" constant="false"/>
+      <species id="Akt" name="Akt" compartment="Cell" initialConcentration="100" boundaryCondition="false" constant="false"/>
+      <species id="pAkt" name="pAkt" compartment="Cell" initialConcentration="0" boundaryCondition="false" constant="false"/>
+      <species id="mTORC1" name="mTORC1" compartment="Cell" initialConcentration="100" boundaryCondition="false" constant="false"/>
+      <species id="pmTORC1" name="pmTORC1" compartment="Cell" initialConcentration="0" boundaryCondition="false" constant="false"/>
+      <species id="S6K" name="S6K" compartment="Cell" initialConcentration="100" boundaryCondition="false" constant="false"/>
+      <species id="pS6K" name="pS6K" compartment="Cell" initialConcentration="0" boundaryCondition="false" constant="false"/>
+      <species id="TGFb_0" name="TGFb" compartment="Cell" initialConcentration="1" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter id="AZD" name="AZD" value="0" constant="true"/>
+      <parameter id="GrowthFactors" name="GrowthFactors" value="0.001" constant="true"/>
+      <parameter id="MK2206" name="MK2206" value="0" constant="true"/>
+      <parameter id="Everolimus" name="Everolimus" value="0" constant="true"/>
+      <parameter id="TGFbOn" name="TGFbOn" value="0.01" constant="true"/>
+      <parameter id="kTGFbOff" name="kTGFbOff" value="0.01" constant="true"/>
+      <parameter id="kSmad2Phos" name="kSmad2Phos" value="0.01" constant="true"/>
+      <parameter id="kSmad2Dephos" name="kSmad2Dephos" value="0.01" constant="true"/>
+      <parameter id="kMekPhosByPI3K" name="kMekPhosByPI3K" value="0.01" constant="true"/>
+      <parameter id="kMekPhosByTGFbR_a" name="kMekPhosByTGFbR_a" value="0.01" constant="true"/>
+      <parameter id="kMekPhosByIGFR" name="kMekPhosByIGFR" value="0.01" constant="true"/>
+      <parameter id="kMekDephosByAkt" name="kMekDephosByAkt" value="0.01" constant="true"/>
+      <parameter id="kMekDephosByAZD" name="kMekDephosByAZD" value="0.01" constant="true"/>
+      <parameter id="kErkPhosByMek" name="kErkPhosByMek" value="0.01" constant="true"/>
+      <parameter id="kErkDephos" name="kErkDephos" value="0.01" constant="true"/>
+      <parameter id="kIGFRPhos" name="kIGFRPhos" value="0.01" constant="true"/>
+      <parameter id="kIGFRDephos" name="kIGFRDephos" value="0.01" constant="true"/>
+      <parameter id="kPI3KPhosByIGFR" name="kPI3KPhosByIGFR" value="0.01" constant="true"/>
+      <parameter id="kPI3KPhosByMek" name="kPI3KPhosByMek" value="0.01" constant="true"/>
+      <parameter id="kPI3KDephosByS6K" name="kPI3KDephosByS6K" value="0.01" constant="true"/>
+      <parameter id="kPI3KDephosByErk" name="kPI3KDephosByErk" value="0.01" constant="true"/>
+      <parameter id="kAktPhos" name="kAktPhos" value="0.01" constant="true"/>
+      <parameter id="kAktDephos" name="kAktDephos" value="0.01" constant="true"/>
+      <parameter id="kmTORC1PhosByAkt" name="kmTORC1PhosByAkt" value="0.01" constant="true"/>
+      <parameter id="kmTORC1PhosByErk" name="kmTORC1PhosByErk" value="0.01" constant="true"/>
+      <parameter id="kmTORC1DePhos" name="kmTORC1DePhos" value="0.01" constant="true"/>
+      <parameter id="kS6KPhosBymTORC1" name="kS6KPhosBymTORC1" value="0.01" constant="true"/>
+      <parameter id="kS6KPhosByErk" name="kS6KPhosByErk" value="0.01" constant="true"/>
+      <parameter id="kS6KDephos" name="kS6KDephos" value="0.01" constant="true"/>
+      <parameter id="kTGFbOn" name="kTGFbOn" value="0.01" constant="true"/>
+    </listOfParameters>
+    <listOfReactions>
+      <reaction metaid="COPASI1" id="R1" name="R1" reversible="false">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI1">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2018-11-26T11:59:24Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="TGFbR" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="TGFbR_a" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="TGFb_0"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> K_M_S </ci>
+                <ci> TGFbOn </ci>
+                <ci> TGFb_0 </ci>
+                <ci> TGFbR </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R2" name="R2" reversible="false">
+        <listOfReactants>
+          <speciesReference species="TGFbR_a" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="TGFbR" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kTGFbOff </ci>
+              <ci> TGFbR_a </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R3" name="R3" reversible="false">
+        <listOfReactants>
+          <speciesReference species="Smad2" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pSmad2" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="TGFbR_a"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R3 </ci>
+                <ci> Smad2 </ci>
+                <ci> TGFbR_a </ci>
+                <ci> kSmad2Phos </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R4" name="R4" reversible="false">
+        <listOfReactants>
+          <speciesReference species="pSmad2" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Smad2" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kSmad2Dephos </ci>
+              <ci> pSmad2 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI2" id="R5_1" name="R5_1" reversible="false">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI2">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2018-11-26T11:51:37Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="Mek" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pMek" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pPI3K"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R5_1 </ci>
+                <ci> Mek </ci>
+                <ci> kMekPhosByPI3K </ci>
+                <ci> pPI3K </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI3" id="R5_2" name="R5_2" reversible="false">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI3">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2018-11-26T11:51:47Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="Mek" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pMek" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="TGFbR_a"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R5_2 </ci>
+                <ci> Mek </ci>
+                <ci> TGFbR_a </ci>
+                <ci> kMekPhosByTGFbR_a </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R5_3" name="R5_3" reversible="false">
+        <listOfReactants>
+          <speciesReference species="Mek" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pMek" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pIGFR"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R5_3 </ci>
+                <ci> Mek </ci>
+                <ci> kMekPhosByIGFR </ci>
+                <ci> pIGFR </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R6_1" name="R6_1" reversible="false">
+        <listOfReactants>
+          <speciesReference species="pMek" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Mek" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pAkt"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R6_1 </ci>
+                <ci> kMekDephosByAkt </ci>
+                <ci> pAkt </ci>
+                <ci> pMek </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R6_2" name="R6_2" reversible="false">
+        <listOfReactants>
+          <speciesReference species="pMek" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Mek" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R6_2 </ci>
+                <ci> AZD </ci>
+                <ci> kMekDephosByAZD </ci>
+                <ci> pMek </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R7" name="R7" reversible="false">
+        <listOfReactants>
+          <speciesReference species="Erk" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pErk" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pMek"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R7 </ci>
+                <ci> Erk </ci>
+                <ci> kErkPhosByMek </ci>
+                <ci> pMek </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R8" name="R8" reversible="false">
+        <listOfReactants>
+          <speciesReference species="pErk" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Erk" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kErkDephos </ci>
+              <ci> pErk </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R9" name="R9" reversible="false">
+        <listOfReactants>
+          <speciesReference species="IGFR" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pIGFR" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R9 </ci>
+                <ci> GrowthFactors </ci>
+                <ci> IGFR </ci>
+                <ci> kIGFRPhos </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R10" name="R10" reversible="false">
+        <listOfReactants>
+          <speciesReference species="pIGFR" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="IGFR" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kIGFRDephos </ci>
+              <ci> pIGFR </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R11_1" name="R11_1" reversible="false">
+        <listOfReactants>
+          <speciesReference species="PI3K" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pPI3K" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pIGFR"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R11_1 </ci>
+                <ci> PI3K </ci>
+                <ci> kPI3KPhosByIGFR </ci>
+                <ci> pIGFR </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R11_2" name="R11_2" reversible="false">
+        <listOfReactants>
+          <speciesReference species="PI3K" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pPI3K" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pMek"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R11_2 </ci>
+                <ci> PI3K </ci>
+                <ci> kPI3KPhosByMek </ci>
+                <ci> pMek </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI4" id="R12_1" name="R12_1" reversible="false">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI4">
+                <dcterms:created>
+                  <rdf:Description>
+                    <dcterms:W3CDTF>2018-11-26T12:03:50Z</dcterms:W3CDTF>
+                  </rdf:Description>
+                </dcterms:created>
+              </rdf:Description>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="pPI3K" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PI3K" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pS6K"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R12_1 </ci>
+                <ci> kPI3KDephosByS6K </ci>
+                <ci> pPI3K </ci>
+                <ci> pS6K </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R12_2" name="R12_2" reversible="false">
+        <listOfReactants>
+          <speciesReference species="pPI3K" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PI3K" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pErk"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R12_2 </ci>
+                <ci> PI3K </ci>
+                <ci> kPI3KDephosByErk </ci>
+                <ci> pErk </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R13" name="R13" reversible="false">
+        <listOfReactants>
+          <speciesReference species="Akt" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pAkt" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pPI3K"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R13 </ci>
+                <ci> Akt </ci>
+                <ci> kAktPhos </ci>
+                <ci> pPI3K </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R14" name="R14" reversible="false">
+        <listOfReactants>
+          <speciesReference species="pAkt" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Akt" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R14 </ci>
+                <ci> Akt </ci>
+                <ci> MK2206 </ci>
+                <ci> kAktDephos </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R15_1" name="R15_1" reversible="false">
+        <listOfReactants>
+          <speciesReference species="mTORC1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pmTORC1" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pAkt"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R15_1 </ci>
+                <ci> kmTORC1PhosByAkt </ci>
+                <ci> mTORC1 </ci>
+                <ci> pAkt </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R15_2" name="R15_2" reversible="false">
+        <listOfReactants>
+          <speciesReference species="mTORC1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pmTORC1" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pErk"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R15_2 </ci>
+                <ci> kmTORC1PhosByErk </ci>
+                <ci> mTORC1 </ci>
+                <ci> pErk </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R16" name="R16" reversible="false">
+        <listOfReactants>
+          <speciesReference species="pmTORC1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="mTORC1" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R16 </ci>
+                <ci> Everolimus </ci>
+                <ci> kmTORC1DePhos </ci>
+                <ci> pmTORC1 </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R17_1" name="R17_1" reversible="false">
+        <listOfReactants>
+          <speciesReference species="S6K" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pS6K" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pmTORC1"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R17_1 </ci>
+                <ci> S6K </ci>
+                <ci> kS6KPhosBymTORC1 </ci>
+                <ci> pmTORC1 </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R17_2" name="R17_2" reversible="false">
+        <listOfReactants>
+          <speciesReference species="S6K" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pS6K" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pErk"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> Function_for_R17_2 </ci>
+                <ci> S6K </ci>
+                <ci> kS6KPhosByErk </ci>
+                <ci> pErk </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R18" name="R18" reversible="false">
+        <listOfReactants>
+          <speciesReference species="pS6K" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="S6K" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kS6KDephos </ci>
+              <ci> pS6K </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>
