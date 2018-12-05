@@ -17,9 +17,10 @@ These are arguments for the conditions simulation functions.
     :param GF: starting amount of GrowthFactors
     :param pretreatment: either 'AZD', or 'MK2206'. This is added as an event at the time specified by pretreatment time
     :param pretreatment_time: The time at which the variable specified by 'pretreatment' is added
-    :param EV: Starting amount of EVerolimus
+    :param EV: Starting amount of Everolimus
     :param serum_starve_event: Boolean, whether to remove serum, aka GrowthFactors by event
     :param TGFb_event: Boolean. Whether to add 1 unit TGF at t=-45min (71.75h)
+    
 """
 
 AZD_CONDITIONS = OrderedDict()
@@ -36,17 +37,17 @@ AZD_CONDITIONS['T_A_48']        =   [1,  "AZD",    48.0,       0,  True,   True]
 AZD_CONDITIONS['T_A_70.75']     =   [1,  "AZD",    70.75,      0,  True,   True]
 
 MK_CONDITIONS = OrderedDict()
-MK_CONDITIONS['D']            =     [1, 0, None,      None,   0, True, False]
-MK_CONDITIONS['T']            =     [1, 0, None,      None,   0, True, True]
-MK_CONDITIONS['T_E']          =     [1, 0, None,      None,   1, True, True]
-MK_CONDITIONS['T_M_E_0']      =     [1, 0, "MK2206",  0.0,    1, True, True]
-MK_CONDITIONS['T_M_E_24']     =     [1, 0, "MK2206",  24.0,   1, True, True]
-MK_CONDITIONS['T_M_E_48']     =     [1, 0, "MK2206",  48.0,   1, True, True]
-MK_CONDITIONS['T_M_E_70.75']  =     [1, 0, "MK2206",  70.75,  1, True, True]
-MK_CONDITIONS['T_M_0']        =     [1, 0, "MK2206",  0.0,    0, True, True]
-MK_CONDITIONS['T_M_24']       =     [1, 0, "MK2206",  24.0,   0, True, True]
-MK_CONDITIONS['T_M_48']       =     [1, 0, "MK2206",  48.0,   0, True, True]
-MK_CONDITIONS['T_M_70.75']    =     [1, 0, "MK2206",  70.75,  0, True, True]
+MK_CONDITIONS['D']            =     [1, None,      None,   0, True, False]
+MK_CONDITIONS['T']            =     [1, None,      None,   0, True, True]
+MK_CONDITIONS['T_E']          =     [1, None,      None,   1, True, True]
+MK_CONDITIONS['T_M_E_0']      =     [1, "MK2206",  0.0,    1, True, True]
+MK_CONDITIONS['T_M_E_24']     =     [1, "MK2206",  24.0,   1, True, True]
+MK_CONDITIONS['T_M_E_48']     =     [1, "MK2206",  48.0,   1, True, True]
+MK_CONDITIONS['T_M_E_70.75']  =     [1, "MK2206",  70.75,  1, True, True]
+MK_CONDITIONS['T_M_0']        =     [1, "MK2206",  0.0,    0, True, True]
+MK_CONDITIONS['T_M_24']       =     [1, "MK2206",  24.0,   0, True, True]
+MK_CONDITIONS['T_M_48']       =     [1, "MK2206",  48.0,   0, True, True]
+MK_CONDITIONS['T_M_70.75']    =     [1, "MK2206",  70.75,  0, True, True]
 
 
 MODEL_SPECIES = ['TGFb', 'TGFbR', 'TGFbR_a', 'Smad2',
@@ -95,17 +96,17 @@ def cross_talk_model_antstr():
         var pS6K        in Cell  
         
         
-        var TGFb             in Cell
-        var AZD              in Cell
-        var GrowthFactors    in Cell
-        var MK2206           in Cell
-        var Everolimus       in Cell
+        const TGFb             in Cell
+        const AZD              in Cell
+        const GrowthFactors    in Cell
+        const MK2206           in Cell
+        const Everolimus       in Cell
     
         
         //TGFb module
-        R1_1: TGFbR + TGFb    => TGFbR_a          ; Cell * kTGFbOn         *TGFb                ;
+        R1_1: TGFbR           => TGFbR_a          ; Cell * kTGFbOn         *TGFb                ;
         R1_2: TGFbR           => TGFbR_a          ; Cell * kTGFbOnBasal    *TGFb                     ;
-        R2:   TGFbR_a         => TGFbR + TGFb     ; Cell * kTGFbOff        *TGFbR_a             ;
+        R2:   TGFbR_a         => TGFbR            ; Cell * kTGFbOff        *TGFbR_a             ;
         R3:   TGFb            =>                  ; Cell * kTGFRemoval     *TGFb                ;
         R4:   Smad2           => pSmad2           ; Cell * kSmad2Phos      *Smad2   *TGFbR_a    ;
         R5:   pSmad2          => Smad2            ; Cell * kSmad2Dephos    *pSmad2              ;
@@ -358,17 +359,15 @@ def add_AZD_event(model_string, time):
 
 def simulate_condition(model_string, GF=0, pretreatment=None,
                        pretreatment_time=None, EV=0,
-                       serum_starve_event=False, TGFb_event=False, open_with_copasi=False):
+                       serum_starve_event=False, TGFb_event=False):
     """
     :param model_string: antimony model string
     :param GF: starting amount of GrowthFactors
-    :param TGF: starting amount of tgf
     :param pretreatment: either 'AZD', or 'MK2206'. This is added as an event at the time specified by pretreatment time
     :param pretreatment_time: The time at which the variable specified by 'pretreatment' is added
     :param EV: Starting amount of Everolimus
     :param serum_starve_event: Boolean, whether to remove serum, aka GrowthFactors by event
     :param TGFb_event: Boolean. Whether to add 1 unit TGF at t=-45min (71.75h)
-    :param open_with_copasi: open the model with copasi
     :return:
     """
     if serum_starve_event:
@@ -376,6 +375,7 @@ def simulate_condition(model_string, GF=0, pretreatment=None,
 
     if TGFb_event:
         model_string = add_TGFb_event(model_string)
+
     if pretreatment is not None:
         if pretreatment_time != 0:
             if pretreatment == 'AZD':
@@ -395,13 +395,6 @@ def simulate_condition(model_string, GF=0, pretreatment=None,
             mod.AZD = 1
         elif pretreatment == 'MK2206':
             mod.MK2206 = 1
-
-    if open_with_copasi:
-        ## has to be the modified model NOT model string
-        copasi_mod = load_model_with_pyco(mod.getCurrentAntimony(), copasi_filename)
-        tasks.TimeCourse(copasi_mod, start=0, end=72, step_size=1, intervals=73, run=False)
-
-        copasi_mod.open()
 
     ## Add 1 to intervals for 0 indexed python
     start = 0
@@ -673,9 +666,9 @@ def make_condition(condition):
         model_string = cross_talk_model_antstr()
 
         try:
-            GF, TGF, pretreatment, pretreatment_time, EV, serum_starve_event, TGFb_event = AZD_CONDITIONS[condition]
+            GF, pretreatment, pretreatment_time, EV, serum_starve_event, TGFb_event = AZD_CONDITIONS[condition]
         except KeyError:
-            GF, TGF, pretreatment, pretreatment_time, EV, serum_starve_event, TGFb_event = MK_CONDITIONS[condition]
+            GF, pretreatment, pretreatment_time, EV, serum_starve_event, TGFb_event = MK_CONDITIONS[condition]
 
         if serum_starve_event:
             model_string = add_serum_starve_event(model_string)
@@ -692,7 +685,7 @@ def make_condition(condition):
                     raise ValueError
 
         mod = te.loada(model_string)
-        mod.model['init([TGFb])'] = TGF
+        # mod.model['init([TGFb])'] = TGF
         mod.Everolimus = EV
         mod.GrowthFactors = GF
 
@@ -809,9 +802,9 @@ if __name__ == '__main__':
     SIMULATE_TIME_SERIES            = False
     SIMULATE_BAR_GRAPHS             = False
 
-    OPEN_CONDITION_WITH_COPASI      = True
+    OPEN_CONDITION_WITH_COPASI      = False
 
-    SIMULATE_INPUTS                 = False
+    SIMULATE_INPUTS                 = True
 
 
 
