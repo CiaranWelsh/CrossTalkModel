@@ -15,7 +15,7 @@ seaborn.set_context('talk', font_scale=1)
 """
 These are arguments for the conditions simulation functions. 
     :param GF: starting amount of GrowthFactors
-    :param TGF: starting amount of tgf
+    :param TGF: starting amount of tgf. This was a mistake. Just set all to 0. 
     :param pretreatment: either 'AZD', or 'MK2206'. This is added as an event at the time specified by pretreatment time
     :param pretreatment_time: The time at which the variable specified by 'pretreatment' is added
     :param EV: Starting amount of EVerolimus
@@ -26,7 +26,7 @@ These are arguments for the conditions simulation functions.
 
 AZD_CONDITIONS = OrderedDict()
 AZD_CONDITIONS['D']             =   [1,   0,  None,           None,       0,  True,   False]
-AZD_CONDITIONS['T']             =   [1,   0,  None,           None,       1,  True,   True]
+AZD_CONDITIONS['T']             =   [1,   0,  None,           None,       0,  True,   True]
 AZD_CONDITIONS['T_E']           =   [1,   0,  None,           None,       1,  True,   True]
 AZD_CONDITIONS['T_A_E_0']       =   [1,   0,  "AZD",           0.0,       1,  True,   True]
 AZD_CONDITIONS['T_A_E_24']      =   [1,   0,  "AZD",           24,        1,  True,   True]
@@ -39,7 +39,7 @@ AZD_CONDITIONS['T_A_70.75']     =   [1,   0,  "AZD",           70.75,     0,  Tr
 
 MK_CONDITIONS = OrderedDict()
 MK_CONDITIONS['D']            =     [1, 0, None,      None,   0, True, False]
-MK_CONDITIONS['T']            =     [1, 0, None,      None,   1, True, True]
+MK_CONDITIONS['T']            =     [1, 0, None,      None,   0, True, True]
 MK_CONDITIONS['T_E']          =     [1, 0, None,      None,   1, True, True]
 MK_CONDITIONS['T_M_E_0']      =     [1, 0, "MK2206",  0.0,    1, True, True]
 MK_CONDITIONS['T_M_E_24']     =     [1, 0, "MK2206",  24.0,   1, True, True]
@@ -81,7 +81,6 @@ def cross_talk_model_antstr():
         var TGFbR_a     in Cell  
         var Smad2       in Cell  
         var pSmad2      in Cell  
-        var Smad7       in Cell
         var Mek         in Cell
         var pMek        in Cell  
         var Erk         in Cell
@@ -169,12 +168,13 @@ def cross_talk_model_antstr():
         kAktPhos            = 0.1
         kAktDephos          = 0.01
         kAktDephosByMK      = 0.5
-        kmTORC1PhosByAkt    = 0.001         
-        kmTORC1PhosByErk    = 0.001        
+        kmTORC1PhosByAkt    = 0.001
+                 
+        kmTORC1PhosByErk    = 0.00        // set to 0 on 05-12-2018 at 12:20
         kmTORC1Dephos       = 0.001   
         kmTORC1DephosByEv   = 1 
         kS6KPhosBymTORC1    = 0.1        
-        kS6KPhosByErk       = 0.001    
+        kS6KPhosByErk       = 0.00        // set to 0 on 05-12-2018 at 12:20
         kS6KDephos          = 0.01
         
         //collect the feedback parameters into one list. Turn them off to see what they do
@@ -189,7 +189,6 @@ def cross_talk_model_antstr():
         TGFbR_a                 = 0
         Smad2                   = 100
         pSmad2                  = 0
-        Smad7                   = 0
         Mek                     = 100
         pMek                    = 0
         Erk                     = 100
@@ -492,14 +491,7 @@ def simulate_all_conditions_and_plot_as_bargraphs():
     Plot all bar graphs from simulations
     :return:
     """
-    # model_species = ['TGFb', 'TGFbR', 'TGFbR_a', 'Smad2',
-    #                  'pSmad2', 'Mek', 'pMek',
-    #                  'Erk', 'pErk', 'GFR', 'pGFR', 'PI3K',
-    #                  'pPI3K', 'Akt', 'pAkt', 'mTORC1',
-    #                  'pmTORC1', 'S6K', 'pS6K']
     model_species = MODEL_SPECIES
-    exclude_list = ['AZD', 'GrowthFactors', 'MK2206']
-    model_species = [i for i in model_species if i not in exclude_list]
     for i in model_species:
         simulate_conditions_and_plot_as_bargraph(i, 'AZD')
         simulate_conditions_and_plot_as_bargraph(i, 'MK2206')
@@ -816,8 +808,8 @@ if __name__ == '__main__':
     GET_ODES_WITH_ANTIMONY          = False
     GET_MODEL_AS_SBML               = False
 
-    SIMULATE_TIME_SERIES            = True
-    SIMULATE_BAR_GRAPHS             = False
+    SIMULATE_TIME_SERIES            = False
+    SIMULATE_BAR_GRAPHS             = True
 
     OPEN_CONDITION_WITH_COPASI      = False
 
@@ -857,7 +849,7 @@ if __name__ == '__main__':
         simulate_all_conditions_and_plot_as_bargraphs()
 
     if OPEN_CONDITION_WITH_COPASI:
-        open_condition_with_copasi('D')
+        open_condition_with_copasi('T_E')
 
     ## use model checking to evaluate the truth of a condition for each parameter value
 
@@ -866,14 +858,11 @@ if __name__ == '__main__':
         simulate_model_component_timecourse(['pAkt'], MK_CONDITIONS.keys(), filename='MK_pAkt')
 
     if SIMULATE_BAR_GRAPHS:
-        simulate_conditions_and_plot_as_bargraph('pAkt', 'AZD')
-        simulate_conditions_and_plot_as_bargraph('pAkt', 'MK2206')
-        # plot_simulation_bar_graphs()
+        # simulate_conditions_and_plot_as_bargraph('pAkt', 'AZD')
+        # simulate_conditions_and_plot_as_bargraph('pAkt', 'MK2206')
+        simulate_all_conditions_and_plot_as_bargraphs()
 
 
-
-    # print(simulate_condition(cross_talk_model_antstr(), *AZD_CONDITIONS['T'] ))
-    # print(simulate_conditions('pAkt', 'MK2206'))
 
 
 
