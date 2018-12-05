@@ -171,7 +171,7 @@ def cross_talk_model_antstr():
                  
         kmTORC1PhosByErk    = 0.00        // set to 0 on 05-12-2018 at 12:20
         kmTORC1Dephos       = 0.001   
-        kmTORC1DephosByEv   = 1 
+        kmTORC1DephosByEv   = 50 
         kS6KPhosBymTORC1    = 0.1        
         kS6KPhosByErk       = 0.00        // set to 0 on 05-12-2018 at 12:20
         kS6KDephos          = 0.01
@@ -802,9 +802,9 @@ if __name__ == '__main__':
     SIMULATE_TIME_SERIES            = False
     SIMULATE_BAR_GRAPHS             = False
 
-    OPEN_CONDITION_WITH_COPASI      = False
+    OPEN_CONDITION_WITH_COPASI      = True
 
-    SIMULATE_INPUTS                 = True
+    SIMULATE_INPUTS                 = False
 
 
 
