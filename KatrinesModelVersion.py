@@ -59,6 +59,13 @@ MODEL_SPECIES = ['TGFb', 'TGFbR', 'TGFbR_a', 'Smad2',
 
 MODEL_SPECIES += ['Everolimus', 'MK2206', 'AZD', 'GrowthFactors']
 
+ALL_CONDITIONS = ['D', 'T', 'T_E',
+                  'T_M_E_0', 'T_M_E_24',
+                  'T_M_E_48', 'T_M_E_70.75',
+                  'T_M_0', 'T_M_24', 'T_M_48',
+                  'T_M_70.75', 'T_A_E_0', 'T_A_E_24',
+                  'T_A_E_48', 'T_A_E_70.75', 'T_A_0',
+                  'T_A_24', 'T_A_48', 'T_A_70.75']
 
 def cross_talk_model_antstr():
     """
@@ -99,13 +106,13 @@ def cross_talk_model_antstr():
     
         
         //TGFb module
-        R1_1: TGFbR + TGFb    => TGFbR_a          ; Cell * kTGFbOn        *TGFb                   ;
-        R1_2: TGFbR           => TGFbR_a          ; Cell * kTGFbOnBasal   *TGFb                   ;
-        R2: TGFbR_a         => TGFbR + TGFb     ; Cell * kTGFbOff       *TGFbR_a                ;
-        R3: TGFb            =>                  ; Cell * kTGFRemoval    *TGFb                   ;
-        R4: Smad2           => pSmad2           ; Cell * kSmad2Phos     *Smad2      *TGFbR_a    ;
-        R5: pSmad2          => Smad2            ; Cell * kSmad2Dephos   *pSmad2                 ;
-        //Rx1: Smad2          => pSmad2           ; Cell * kSmad2PhosByAkt * Smad2 * pAkt
+        R1_1: TGFbR + TGFb    => TGFbR_a          ; Cell * kTGFbOn         *TGFb                ;
+        R1_2: TGFbR           => TGFbR_a          ; Cell * kTGFbOnBasal                         ;
+        R2:   TGFbR_a         => TGFbR + TGFb     ; Cell * kTGFbOff        *TGFbR_a             ;
+        R3:   TGFb            =>                  ; Cell * kTGFRemoval     *TGFb                ;
+        R4:   Smad2           => pSmad2           ; Cell * kSmad2Phos      *Smad2   *TGFbR_a    ;
+        R5:   pSmad2          => Smad2            ; Cell * kSmad2Dephos    *pSmad2              ;
+        //Rx1: Smad2          => pSmad2           ; Cell * kSmad2PhosByAkt * Smad2  *pAkt
         //kSmad2PhosByAkt = 10
         
         //MEK module                   //
@@ -169,6 +176,8 @@ def cross_talk_model_antstr():
         kS6KPhosBymTORC1    = 0.1        
         kS6KPhosByErk       = 0.001    
         kS6KDephos          = 0.01
+        
+        //collect the feedback parameters into one list. Turn them off to see what they do
     
         TGFb                    = 0
         AZD                     = 0
@@ -398,14 +407,28 @@ def simulate_condition(model_string, GF=0, TGF=0, pretreatment=None,
         copasi_mod.open()
 
     ## Add 1 to intervals for 0 indexed python
-    res = mod.simulate(0, 72, 730, ['time'] + MODEL_SPECIES)
+    start = 0
+    end = 75
+    num = 751
+    time = numpy.linspace(start, end, num)
+
+    if 72.0 not in time:
+        raise ValueError("Simulating conditions requires an output at exactly "
+                         "72h after the first inhibitor. The current time steps "
+                         "do not 'land' on 72.0 exactly - so pick different "
+                         "simulation parameters. Also, remember that Python is "
+                         "0 indexed, so try adding 1 to the number of "
+                         " data points collected. To help, here is the current"
+                         " time vector \n\n{}".format(time))
+
+    res = mod.simulate(start, end, num, ['time'] + MODEL_SPECIES)
 
     df = pandas.DataFrame(res, columns=['time'] + MODEL_SPECIES)
     return df
 
 
 
-def simulate_conditions(y, type='AZD', open_with_copasi=False):
+def simulate_conditions_and_plot_as_bargraph(y, type='AZD'):
     """
     Takes output from simulation and plot
     :param df:
@@ -424,10 +447,16 @@ def simulate_conditions(y, type='AZD', open_with_copasi=False):
 
     dct = OrderedDict()
     for k, v in conditions.items():
-        df = simulate_condition(cross_talk_model_antstr(), *conditions[k] + [open_with_copasi])
-        dct[k] = df[df['time'] == 72.0]
+        df = simulate_condition(cross_talk_model_antstr(), *conditions[k])
+        df = df[df['time'] == 72.0]
+        if df.empty:
+            raise ValueError("Condition '{}' with values '{}' produces an "
+                             "empty data frame".format(k, v))
+
+        dct[k] = df
 
     df = pandas.concat(dct)
+
     df.index = df.index.droplevel(1)
     df = df.drop('time', axis=1)
     df = df.reset_index()
@@ -458,20 +487,22 @@ def simulate_conditions(y, type='AZD', open_with_copasi=False):
 
 
 
-def plot_simulation_bar_graphs():
+def simulate_all_conditions_and_plot_as_bargraphs():
     """
     Plot all bar graphs from simulations
     :return:
     """
-    model_species = ['TGFb', 'TGFbR', 'TGFbR_a', 'Smad2',
-                     'pSmad2', 'Mek', 'pMek',
-                     'Erk', 'pErk', 'GFR', 'pGFR', 'PI3K',
-                     'pPI3K', 'Akt', 'pAkt', 'mTORC1',
-                     'pmTORC1', 'S6K', 'pS6K']
-
+    # model_species = ['TGFb', 'TGFbR', 'TGFbR_a', 'Smad2',
+    #                  'pSmad2', 'Mek', 'pMek',
+    #                  'Erk', 'pErk', 'GFR', 'pGFR', 'PI3K',
+    #                  'pPI3K', 'Akt', 'pAkt', 'mTORC1',
+    #                  'pmTORC1', 'S6K', 'pS6K']
+    model_species = MODEL_SPECIES
+    exclude_list = ['AZD', 'GrowthFactors', 'MK2206']
+    model_species = [i for i in model_species if i not in exclude_list]
     for i in model_species:
-        simulate_conditions(i, 'AZD')
-        simulate_conditions(i, 'MK2206')
+        simulate_conditions_and_plot_as_bargraph(i, 'AZD')
+        simulate_conditions_and_plot_as_bargraph(i, 'MK2206')
 
 def simulate_timecourse(type='MK2206'):
     """
@@ -727,25 +758,26 @@ def simulate_model_component_timecourse(vars, cond, filename=None, **kwargs):
     cols = seaborn.color_palette("hls", len(vars))*len(cond)
     cols = iter(cols)
 
+    fig = plt.figure(figsize=figsize)
     for i, c in enumerate(cond):
         if c not in MK_CONDITIONS.keys() + AZD_CONDITIONS.keys():
             raise ValueError('condition "{}" not in "{}"'.format(c, MK_CONDITIONS.keys() + AZD_CONDITIONS.keys()))
 
         model_str = make_condition(c)
         mod = te.loada(model_str)
-        res = mod.simulate(0, 72, 730, ['time'] + vars)
+        res = mod.simulate(0, 75, 750, ['time'] + vars)
         gs = GridSpec(len(cond), 1, wspace=0.3)
-        fig = plt.figure(num=1, figsize=figsize)
         ax = []
         for j, v in enumerate(vars):
             ax.append(fig.add_subplot(gs[i, 0]))
             ax[-1].plot(res['time'], res[v], label=v, color=next(cols), linewidth=6, **kwargs)
 
-        plt.axvline(24.0 ,   linestyle='--', linewidth=2, color='red', alpha=0.4)
-        plt.axvline(48.0 ,   linestyle='--', linewidth=2, color='red', alpha=0.4)
-        plt.axvline(70.25,   linestyle='--', linewidth=2, color='red', alpha=0.4)
-        plt.axvline(71.25,   linestyle='--', linewidth=2, color='red', alpha=0.4)
-        plt.axvline(72.0 ,   linestyle='--', linewidth=2, color='red', alpha=0.4)
+        plt.axvline(0.0  ,   linestyle='--', linewidth=2, color='black',  alpha=0.4)
+        plt.axvline(24.0 ,   linestyle='--', linewidth=2, color='black',  alpha=0.4)
+        plt.axvline(48.0 ,   linestyle='--', linewidth=2, color='black',  alpha=0.4)
+        plt.axvline(70.25,   linestyle='--', linewidth=2, color='green',  alpha=0.4)
+        plt.axvline(71.25,   linestyle='--', linewidth=2, color='purple', alpha=0.4)
+        plt.axvline(72.0 ,   linestyle='--', linewidth=2, color='black',  alpha=0.4)
 
         plt.setp(ax[-1].get_xticklabels(), visible=False)
         seaborn.despine(ax=ax[-1], top=True, right=True)
@@ -767,91 +799,81 @@ def simulate_model_component_timecourse(vars, cond, filename=None, **kwargs):
     plt.savefig(fname, dpi=250, bbox_inches='tight')
 
 
+
+
 if __name__ == '__main__':
 
     working_directory = r'D:\MesiSTRAT\CrossTalkModel'
     copasi_filename = os.path.join(working_directory, 'KatrinesTopology.cps')
     graphs_directory = os.path.join(working_directory, 'SimulationGraphs')
 
+    """
+    Set flags to determine which part of the script will run
+    """
+
+    DOSE_RESPONSE_GROWTH_FACTOR     = False
+    DOSE_RESPONSE_TGFB              = False
+    GET_ODES_WITH_ANTIMONY          = False
+    GET_MODEL_AS_SBML               = False
+
+    SIMULATE_TIME_SERIES            = True
+    SIMULATE_BAR_GRAPHS             = False
+
+    OPEN_CONDITION_WITH_COPASI      = False
+
+
+
     if not os.path.isdir(graphs_directory):
         os.makedirs(graphs_directory)
 
-    # dose_response_for_growth_factors()
-    # mod = load_model_with_pyco(cross_talk_model_antstr(), copasi_filename)
-    # mod.open()
-
-    # mod = te.loada(functions_antstr() + cross_talk_model_antstr())
-    # odes = te.utils.misc.getODEsFromModel(mod)
-    # print(odes)
-
-    # sbml = te.antimonyToSBML(functions_antstr() + cross_talk_model_antstr())
-    # print(sbml)
-    # i = 'GFR'
-    # j = 'pGFR'
-    # pmid_for_IGF_data = 'PMID: 26217307'
-    # fig = dose_response(cross_talk_model_antstr(), 'GrowthFactors', 0.1, 1000, 50, [i, j])
-    # plt.title('Dose Response of {} and \n{} to GrowthFactors'.format(i, j))
-    # fname = os.path.join(graphs_directory, 'GrowthFactorsDoseResponse{}.png'.format(i))
-    # fig.savefig(fname, dpi=150, bbox_inches='tight')
-    # plt.show()
-
-    # fig = dose_response(cross_talk_model_antstr(), 'TGFb', 0.01, 1000, 100, ['TGFbR'])
-    # plt.show()
-
-    # string = add_serum_starve_event(cross_talk_model_antstr())
-    # mod = te.loada(string)
-    # mod.simulate(0, 5000, 5000, ['time', 'GrowthFactors'])
-    # mod.plot()
-
-    ## GF=0, TGF=0, AZD=0, MK=0, EV=0, serum_starve_event=False, TGFb_event=False):
-    # df = simulate_condition(cross_talk_model_antstr(), *azd_conditions['D'])
-    # plot_condition(df)
-    # plot_azd()
-
-
-    print(MK_CONDITIONS.keys())
-    #['D', 'T_M_E_48', 'T', 'T_M_E_0', 'T_M_70.75', 'T_M_E_24',
-    # 'T_M_E_70.75', 'T_M_0', 'T_E', 'T_M_24', 'T_M_48']
-
-
-    # simulate_condition(cross_talk_model_antstr(), *MK_CONDITIONS['T_E'],
-    #                    open_with_copasi=True)
-
-    # plot_simulation_bar_graphs()
-
-    # open_condition_with_copasi('D')
-
-    # simulate_conditions('pSmad2', 'MK2206')
-    # plt.show()
-
-    # plot_timecourse_single(['pErk'], 'T')
-
-    # plt.show()
-
-
-
+    if DOSE_RESPONSE_GROWTH_FACTOR:
+        # i = 'GFR'
+        # j = 'pGFR'
+        # pmid_for_IGF_data = 'PMID: 26217307'
+        # fig = dose_response(cross_talk_model_antstr(), 'GrowthFactors', 0.1, 1000, 50, [i, j])
+        # plt.title('Dose Response of {} and \n{} to GrowthFactors'.format(i, j))
+        # fname = os.path.join(graphs_directory, 'GrowthFactorsDoseResponse{}.png'.format(i))
+        # fig.savefig(fname, dpi=150, bbox_inches='tight')
         # plt.show()
+        dose_response_for_growth_factors()
+        mod = load_model_with_pyco(cross_talk_model_antstr(), copasi_filename)
+        mod.open()
 
-    # simulate_inputs_only('AZD')
+    if GET_ODES_WITH_ANTIMONY:
+        mod = te.loada(cross_talk_model_antstr())
+        odes = te.utils.misc.getODEsFromModel(mod)
+        print(odes)
 
+    if GET_MODEL_AS_SBML:
+        sbml = te.antimonyToSBML(cross_talk_model_antstr())
+        print(sbml)
+
+    if DOSE_RESPONSE_TGFB:
+        fig = dose_response(cross_talk_model_antstr(), 'TGFb', 0.01, 1000, 100, ['TGFbR'])
+        plt.show()
+
+
+    if SIMULATE_BAR_GRAPHS:
+        simulate_all_conditions_and_plot_as_bargraphs()
+
+    if OPEN_CONDITION_WITH_COPASI:
+        open_condition_with_copasi('D')
 
     ## use model checking to evaluate the truth of a condition for each parameter value
-    all_conds = ['D', 'T', 'T_E',
-                 'T_M_E_0', 'T_M_E_24',
-                 'T_M_E_48', 'T_M_E_70.75',
-                 'T_M_0', 'T_M_24', 'T_M_48',
-                 'T_M_70.75', 'T_A_E_0', 'T_A_E_24',
-                 'T_A_E_48', 'T_A_E_70.75', 'T_A_0',
-                 'T_A_24', 'T_A_48', 'T_A_70.75']
 
-    simulate_model_component_timecourse(['pAkt'], AZD_CONDITIONS.keys(), filename='AZD_pAkt')
-    simulate_model_component_timecourse(['pAkt'], MK_CONDITIONS.keys(), filename='MK_pAkt')
+    if SIMULATE_TIME_SERIES:
+        simulate_model_component_timecourse(['pAkt'], AZD_CONDITIONS.keys(), filename='AZD_pAkt')
+        simulate_model_component_timecourse(['pAkt'], MK_CONDITIONS.keys(), filename='MK_pAkt')
 
-
-    simulate_conditions('pAkt', 'AZD')
-    simulate_conditions('pAkt', 'MK2206')
+    if SIMULATE_BAR_GRAPHS:
+        simulate_conditions_and_plot_as_bargraph('pAkt', 'AZD')
+        simulate_conditions_and_plot_as_bargraph('pAkt', 'MK2206')
+        # plot_simulation_bar_graphs()
 
 
+
+    # print(simulate_condition(cross_talk_model_antstr(), *AZD_CONDITIONS['T'] ))
+    # print(simulate_conditions('pAkt', 'MK2206'))
 
 
 
