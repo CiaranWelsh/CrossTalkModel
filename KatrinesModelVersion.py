@@ -24,47 +24,58 @@ These are arguments for the conditions simulation functions.
 """
 
 AZD_CONDITIONS = OrderedDict()
-AZD_CONDITIONS['D']             =   [1,  None,     None,       0,  True,   False]
-AZD_CONDITIONS['T']             =   [1,  None,     None,       0,  True,   True]
-AZD_CONDITIONS['T_E']           =   [1,  None,     None,       1,  True,   True]
-AZD_CONDITIONS['T_A_E_0']       =   [1,  "AZD",    0.0,        1,  True,   True]
-AZD_CONDITIONS['T_A_E_24']      =   [1,  "AZD",    24,         1,  True,   True]
-AZD_CONDITIONS['T_A_E_48']      =   [1,  "AZD",    48.0,       1,  True,   True]
-AZD_CONDITIONS['T_A_E_70.75']   =   [1,  "AZD",    70.75,      1,  True,   True]
-AZD_CONDITIONS['T_A_0']         =   [1,  "AZD",    0.0,        0,  True,   True]
-AZD_CONDITIONS['T_A_24']        =   [1,  "AZD",    24,         0,  True,   True]
-AZD_CONDITIONS['T_A_48']        =   [1,  "AZD",    48.0,       0,  True,   True]
-AZD_CONDITIONS['T_A_70.75']     =   [1,  "AZD",    70.75,      0,  True,   True]
+AZD_CONDITIONS['D']         =   [1,  None,     None,       0,  True,   False]
+AZD_CONDITIONS['T']         =   [1,  None,     None,       0,  True,   True]
+AZD_CONDITIONS['E']         =   [1,  None,     None,       1,  True,   True]
+AZD_CONDITIONS['E_A_72']    =   [1,  "AZD",    0.0,        1,  True,   True]
+AZD_CONDITIONS['E_A_48']    =   [1,  "AZD",    24,         1,  True,   True]
+AZD_CONDITIONS['E_A_24']    =   [1,  "AZD",    48.0,       1,  True,   True]
+AZD_CONDITIONS['E_A_1.25']  =   [1,  "AZD",    70.75,      1,  True,   True]
+AZD_CONDITIONS['A_72']      =   [1,  "AZD",    0.0,        0,  True,   True]
+AZD_CONDITIONS['A_48']      =   [1,  "AZD",    24,         0,  True,   True]
+AZD_CONDITIONS['A_24']      =   [1,  "AZD",    48.0,       0,  True,   True]
+AZD_CONDITIONS['A_1.25']    =   [1,  "AZD",    70.75,      0,  True,   True]
 
 MK_CONDITIONS = OrderedDict()
-MK_CONDITIONS['D']            =     [1, None,      None,   0, True, False]
-MK_CONDITIONS['T']            =     [1, None,      None,   0, True, True]
-MK_CONDITIONS['T_E']          =     [1, None,      None,   1, True, True]
-MK_CONDITIONS['T_M_E_0']      =     [1, "MK2206",  0.0,    1, True, True]
-MK_CONDITIONS['T_M_E_24']     =     [1, "MK2206",  24.0,   1, True, True]
-MK_CONDITIONS['T_M_E_48']     =     [1, "MK2206",  48.0,   1, True, True]
-MK_CONDITIONS['T_M_E_70.75']  =     [1, "MK2206",  70.75,  1, True, True]
-MK_CONDITIONS['T_M_0']        =     [1, "MK2206",  0.0,    0, True, True]
-MK_CONDITIONS['T_M_24']       =     [1, "MK2206",  24.0,   0, True, True]
-MK_CONDITIONS['T_M_48']       =     [1, "MK2206",  48.0,   0, True, True]
-MK_CONDITIONS['T_M_70.75']    =     [1, "MK2206",  70.75,  0, True, True]
+MK_CONDITIONS['D']          =     [1, None,      None,   0, True, False]
+MK_CONDITIONS['T']          =     [1, None,      None,   0, True, True]
+MK_CONDITIONS['E']          =     [1, None,      None,   1, True, True]
+MK_CONDITIONS['E_M_72']     =     [1, "MK2206",  0.0,    1, True, True]
+MK_CONDITIONS['E_M_48']     =     [1, "MK2206",  24.0,   1, True, True]
+MK_CONDITIONS['E_M_24']     =     [1, "MK2206",  48.0,   1, True, True]
+MK_CONDITIONS['E_M_1.25']   =     [1, "MK2206",  70.75,  1, True, True]
+MK_CONDITIONS['M_72']       =     [1, "MK2206",  0.0,    0, True, True]
+MK_CONDITIONS['M_48']       =     [1, "MK2206",  24.0,   0, True, True]
+MK_CONDITIONS['M_24']       =     [1, "MK2206",  48.0,   0, True, True]
+MK_CONDITIONS['M_1.25']     =     [1, "MK2206",  70.75,  0, True, True]
 
 
-MODEL_SPECIES = ['TGFb', 'TGFbR', 'TGFbR_a', 'Smad2',
+MODEL_SPECIES = ['TGFbR', 'TGFbR_a', 'Smad2',
                  'pSmad2', 'Mek', 'pMek',
                  'Erk', 'pErk', 'GFR', 'pGFR', 'PI3K',
                  'pPI3K', 'Akt', 'pAkt', 'mTORC1',
                  'pmTORC1', 'S6K', 'pS6K']
 
-MODEL_SPECIES += ['Everolimus', 'MK2206', 'AZD', 'GrowthFactors']
+MODEL_INPUTS = ['TGFb', 'Everolimus', 'MK2206', 'AZD', 'GrowthFactors']
 
-ALL_CONDITIONS = ['D', 'T', 'T_E',
-                  'T_M_E_0', 'T_M_E_24',
-                  'T_M_E_48', 'T_M_E_70.75',
-                  'T_M_0', 'T_M_24', 'T_M_48',
-                  'T_M_70.75', 'T_A_E_0', 'T_A_E_24',
-                  'T_A_E_48', 'T_A_E_70.75', 'T_A_0',
-                  'T_A_24', 'T_A_48', 'T_A_70.75']
+MODEL_SPECIES += MODEL_INPUTS
+
+print(AZD_CONDITIONS.keys() + MK_CONDITIONS.keys())
+
+
+ALL_CONDITIONS = ['D', 'T', 'E', 'E_A_72', 'E_A_48',
+                  'E_A_24', 'E_A_1.25', 'A_72', 'A_48',
+                  'A_24', 'A_1.25', 'E_M_72',
+                  'E_M_48', 'E_M_24', 'E_M_1.25', 'M_72',
+                  'M_48', 'M_24', 'M_1.25']
+#
+# ALL_CONDITIONS = ['D', 'T', 'T_E',
+#                   'T_M_E_0', 'T_M_E_24',
+#                   'T_M_E_48', 'T_M_E_70.75',
+#                   'T_M_0', 'T_M_24', 'T_M_48',
+#                   'T_M_70.75', 'T_A_E_0', 'T_A_E_24',
+#                   'T_A_E_48', 'T_A_E_70.75', 'T_A_0',
+#                   'T_A_24', 'T_A_48', 'T_A_70.75']
 
 def cross_talk_model_antstr():
     """
@@ -436,8 +447,13 @@ def simulate_conditions_and_plot_as_bargraph(y, type='AZD'):
     else:
         raise ValueError
 
+    # from multiprocessing import Process
+
     dct = OrderedDict()
     for k, v in conditions.items():
+        # p = Process(target=simulate_condition, args=(tuple([cross_talk_model_antstr()] + conditions[k])))
+        # p.start()
+        # p.join()
         df = simulate_condition(cross_talk_model_antstr(), *conditions[k])
         df = df[df['time'] == 72.0]
         if df.empty:
@@ -801,7 +817,7 @@ if __name__ == '__main__':
     GET_MODEL_AS_SBML               = False
 
     SIMULATE_TIME_SERIES            = True
-    SIMULATE_BAR_GRAPHS             = False
+    SIMULATE_BAR_GRAPHS             = True
 
     OPEN_CONDITION_WITH_COPASI      = False
 
@@ -850,6 +866,8 @@ if __name__ == '__main__':
     if SIMULATE_TIME_SERIES:
         simulate_model_component_timecourse(['pErk'], AZD_CONDITIONS.keys(), filename='AZD_pErk')
         simulate_model_component_timecourse(['pErk'], MK_CONDITIONS.keys(), filename='MK_pErk')
+        simulate_model_component_timecourse(['pAkt'], AZD_CONDITIONS.keys(), filename='AZD_pAkt')
+        simulate_model_component_timecourse(['pAkt'], MK_CONDITIONS.keys(), filename='MK_pAkt')
 
     if SIMULATE_BAR_GRAPHS:
         # simulate_conditions_and_plot_as_bargraph('pAkt', 'AZD')
