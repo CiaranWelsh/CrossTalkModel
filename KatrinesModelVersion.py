@@ -15,27 +15,25 @@ seaborn.set_context('talk', font_scale=1)
 """
 These are arguments for the conditions simulation functions. 
     :param GF: starting amount of GrowthFactors
-    :param TGF: starting amount of tgf. This was a mistake. Just set all to 0. 
     :param pretreatment: either 'AZD', or 'MK2206'. This is added as an event at the time specified by pretreatment time
     :param pretreatment_time: The time at which the variable specified by 'pretreatment' is added
     :param EV: Starting amount of EVerolimus
     :param serum_starve_event: Boolean, whether to remove serum, aka GrowthFactors by event
     :param TGFb_event: Boolean. Whether to add 1 unit TGF at t=-45min (71.75h)
-    :param open_with_copasi: open the model with copasi
 """
 
 AZD_CONDITIONS = OrderedDict()
-AZD_CONDITIONS['D']             =   [1,   0,  None,           None,       0,  True,   False]
-AZD_CONDITIONS['T']             =   [1,   0,  None,           None,       0,  True,   True]
-AZD_CONDITIONS['T_E']           =   [1,   0,  None,           None,       1,  True,   True]
-AZD_CONDITIONS['T_A_E_0']       =   [1,   0,  "AZD",           0.0,       1,  True,   True]
-AZD_CONDITIONS['T_A_E_24']      =   [1,   0,  "AZD",           24,        1,  True,   True]
-AZD_CONDITIONS['T_A_E_48']      =   [1,   0,  "AZD",           48.0,      1,  True,   True]
-AZD_CONDITIONS['T_A_E_70.75']   =   [1,   0,  "AZD",           70.75,     1,  True,   True]
-AZD_CONDITIONS['T_A_0']         =   [1,   0,  "AZD",           0.0,       0,  True,   True]
-AZD_CONDITIONS['T_A_24']        =   [1,   0,  "AZD",           24,        0,  True,   True]
-AZD_CONDITIONS['T_A_48']        =   [1,   0,  "AZD",           48.0,      0,  True,   True]
-AZD_CONDITIONS['T_A_70.75']     =   [1,   0,  "AZD",           70.75,     0,  True,   True]
+AZD_CONDITIONS['D']             =   [1,  None,     None,       0,  True,   False]
+AZD_CONDITIONS['T']             =   [1,  None,     None,       0,  True,   True]
+AZD_CONDITIONS['T_E']           =   [1,  None,     None,       1,  True,   True]
+AZD_CONDITIONS['T_A_E_0']       =   [1,  "AZD",    0.0,        1,  True,   True]
+AZD_CONDITIONS['T_A_E_24']      =   [1,  "AZD",    24,         1,  True,   True]
+AZD_CONDITIONS['T_A_E_48']      =   [1,  "AZD",    48.0,       1,  True,   True]
+AZD_CONDITIONS['T_A_E_70.75']   =   [1,  "AZD",    70.75,      1,  True,   True]
+AZD_CONDITIONS['T_A_0']         =   [1,  "AZD",    0.0,        0,  True,   True]
+AZD_CONDITIONS['T_A_24']        =   [1,  "AZD",    24,         0,  True,   True]
+AZD_CONDITIONS['T_A_48']        =   [1,  "AZD",    48.0,       0,  True,   True]
+AZD_CONDITIONS['T_A_70.75']     =   [1,  "AZD",    70.75,      0,  True,   True]
 
 MK_CONDITIONS = OrderedDict()
 MK_CONDITIONS['D']            =     [1, 0, None,      None,   0, True, False]
@@ -106,7 +104,7 @@ def cross_talk_model_antstr():
         
         //TGFb module
         R1_1: TGFbR + TGFb    => TGFbR_a          ; Cell * kTGFbOn         *TGFb                ;
-        R1_2: TGFbR           => TGFbR_a          ; Cell * kTGFbOnBasal                         ;
+        R1_2: TGFbR           => TGFbR_a          ; Cell * kTGFbOnBasal    *TGFb                     ;
         R2:   TGFbR_a         => TGFbR + TGFb     ; Cell * kTGFbOff        *TGFbR_a             ;
         R3:   TGFb            =>                  ; Cell * kTGFRemoval     *TGFb                ;
         R4:   Smad2           => pSmad2           ; Cell * kSmad2Phos      *Smad2   *TGFbR_a    ;
@@ -179,7 +177,7 @@ def cross_talk_model_antstr():
         
         //collect the feedback parameters into one list. Turn them off to see what they do
     
-        TGFb                    = 0
+        TGFb                    = 0.0004  // set to 4e-4 on 05-12-2018 at 12:36 to include basal flux through TGF module
         AZD                     = 0
         GrowthFactors           = 1
         MK2206                  = 0
@@ -358,7 +356,7 @@ def add_AZD_event(model_string, time):
     return model_string
 
 
-def simulate_condition(model_string, GF=0, TGF=0, pretreatment=None,
+def simulate_condition(model_string, GF=0, pretreatment=None,
                        pretreatment_time=None, EV=0,
                        serum_starve_event=False, TGFb_event=False, open_with_copasi=False):
     """
@@ -388,7 +386,7 @@ def simulate_condition(model_string, GF=0, TGF=0, pretreatment=None,
                 raise ValueError
 
     mod = te.loada(model_string)
-    mod.model['init([TGFb])'] = TGF
+    # mod.model['init([TGFb])'] = TGF
     mod.Everolimus = EV
     mod.GrowthFactors = GF
 
@@ -809,9 +807,11 @@ if __name__ == '__main__':
     GET_MODEL_AS_SBML               = False
 
     SIMULATE_TIME_SERIES            = False
-    SIMULATE_BAR_GRAPHS             = True
+    SIMULATE_BAR_GRAPHS             = False
 
-    OPEN_CONDITION_WITH_COPASI      = False
+    OPEN_CONDITION_WITH_COPASI      = True
+
+    SIMULATE_INPUTS                 = False
 
 
 
@@ -862,6 +862,10 @@ if __name__ == '__main__':
         # simulate_conditions_and_plot_as_bargraph('pAkt', 'MK2206')
         simulate_all_conditions_and_plot_as_bargraphs()
 
+
+    if SIMULATE_INPUTS:
+        simulate_inputs_only('AZD')
+        simulate_inputs_only('MK2206')
 
 
 
