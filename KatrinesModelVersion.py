@@ -124,9 +124,10 @@ def cross_talk_model_antstr():
         
         
         //PI3K Module
-        R13:        GFR     => pGFR     ;   Cell *(kGFRPhos_kcat       * GrowthFactors * GFR /(kGFRPhos_km^kGFRPhos_h + GFR^kGFRPhos_h))
-        R14:        pGFR    => GFR      ;   Cell *  kGFRDephos          *pGFR                    ;
-        R15_1:      PI3K    => pPI3K    ;   Cell *  kPI3KPhosByGFR      *PI3K       *pGFR        ;
+        //R13:        GFR     => pGFR     ;   Cell *(kGFRPhos_kcat       * GrowthFactors * GFR /(kGFRPhos_km^kGFRPhos_h + GFR^kGFRPhos_h))
+        //R14:        pGFR    => GFR      ;   Cell *  kGFRDephos          *pGFR                    ;
+        
+        R15_1:      PI3K    => pPI3K    ;   Cell *  kPI3KPhosByGFR      *PI3K       *GrowthFactors ;
         R15_2:      PI3K    => pPI3K    ;   Cell *  kPI3KPhosByMek      *PI3K       *pMek        ;
         R15_1:      pPI3K   => PI3K     ;   Cell *  kPI3KDephosByS6K    *pPI3K      *pS6K        ;
         R16_2:      pPI3K   => PI3K     ;   Cell *  kPI3KDephosByErk    *pPI3K      *pErk        ;
@@ -148,9 +149,9 @@ def cross_talk_model_antstr():
         kSmad2Phos          = 0.1
         kSmad2Dephos        = 0.01
           
-        kMekPhosByPI3K      = 0.01    
+        kMekPhosByPI3K      = 0.0001    
         kMekPhosByTGFbR_a   = 0.01        
-        kMekPhosByGFR       = 0.01    
+        kMekPhosByGFR       = 0.005    
         kMekDephosByAkt     = 0.01    
         kMekDephosByAZD     = 20  
         kErkPhosByMek       = 0.1
@@ -172,9 +173,9 @@ def cross_talk_model_antstr():
         kmTORC1PhosByErk    = 0.00        // set to 0 on 05-12-2018 at 12:20
         kmTORC1Dephos       = 0.001   
         kmTORC1DephosByEv   = 50 
-        kS6KPhosBymTORC1    = 0.1        
+        kS6KPhosBymTORC1    = 0.01        
         kS6KPhosByErk       = 0.00        // set to 0 on 05-12-2018 at 12:20
-        kS6KDephos          = 0.01
+        kS6KDephos          = 0.001
         
         //collect the feedback parameters into one list. Turn them off to see what they do
     
@@ -799,10 +800,10 @@ if __name__ == '__main__':
     GET_ODES_WITH_ANTIMONY          = False
     GET_MODEL_AS_SBML               = False
 
-    SIMULATE_TIME_SERIES            = False
+    SIMULATE_TIME_SERIES            = True
     SIMULATE_BAR_GRAPHS             = False
 
-    OPEN_CONDITION_WITH_COPASI      = True
+    OPEN_CONDITION_WITH_COPASI      = False
 
     SIMULATE_INPUTS                 = False
 
@@ -847,8 +848,8 @@ if __name__ == '__main__':
     ## use model checking to evaluate the truth of a condition for each parameter value
 
     if SIMULATE_TIME_SERIES:
-        simulate_model_component_timecourse(['pAkt'], AZD_CONDITIONS.keys(), filename='AZD_pAkt')
-        simulate_model_component_timecourse(['pAkt'], MK_CONDITIONS.keys(), filename='MK_pAkt')
+        simulate_model_component_timecourse(['pErk'], AZD_CONDITIONS.keys(), filename='AZD_pErk')
+        simulate_model_component_timecourse(['pErk'], MK_CONDITIONS.keys(), filename='MK_pErk')
 
     if SIMULATE_BAR_GRAPHS:
         # simulate_conditions_and_plot_as_bargraph('pAkt', 'AZD')
