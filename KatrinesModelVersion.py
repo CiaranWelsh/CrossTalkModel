@@ -299,18 +299,18 @@ def cross_talk_model_antstr():
         TGF_R8: pSmad2      => Smad2      ; Cell * kSmad2Dephos  *pSmad2                ;
         
         //MAPK module
-        //MAPK_R0_1  : Raf     => pRaf      ; Cell*GrowthFactors*Raf;
-        //MAPK_R0_2  : Raf     => pRaf      ; Cell*NonCompetitiveInhibition(kKholo_km, kKholo_Ki, kKholo_Vmax1, kKholo_n, ppErk, Raf);
-        ////MAPK_R0  : Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kKholo_km, kKholo_Ki, kKholo_Vmax1, kKholo_n, ppErk, Raf);
-        //MAPK_R1  : pRaf    => Raf       ; Cell*MM(            kKholo_Km2 , kKholo_Vmax2, pRaf            );
-        //MAPK_R2  : Mek     => pMek      ; Cell*CompetitiveInhibition(    kMekPhos_km , kMekPhos_ki, kMekPhos_kcat, Mek, AZD, pRaf       );
-        //MAPK_R3  : pMek    => ppMek     ; Cell*CompetitiveInhibition(    kMekPhos_km , kMekPhos_ki, kMekPhos_kcat, pRaf, AZD, pMek     );
-        //MAPK_R4  : ppMek   => pMek      ; Cell*MM(            kKholo_Km5 , kKholo_Vmax5, ppMek           );
-        //MAPK_R5  : pMek    => Mek       ; Cell*MM(            kKholo_Km6 , kKholo_Vmax6, pMek            );
-        //MAPK_R6  : Erk     => pErk      ; Cell*MMWithKcat(    kKholo_Km7 , kKholo_kcat7, Erk, ppMek     );
-        //MAPK_R7  : pErk    => ppErk     ; Cell*MMWithKcat(    kKholo_Km8 , kKholo_kcat8, pErk, ppMek   );
-        //MAPK_R8  : ppErk   => pErk      ; Cell*MM(            kKholo_Km9 , kKholo_Vmax9, ppErk          );
-        //MAPK_R9  : pErk    => Erk       ; Cell*MM(            kKholo_Km10, kKholo_Vmax10, pErk          );
+        MAPK_R0_1  : Raf     => pRaf      ; Cell*kRafPhos*GrowthFactors*Raf;
+        MAPK_R0_2  : Raf     => pRaf      ; Cell*NonCompetitiveInhibition(kKholo_km, kKholo_Ki, kKholo_Vmax1, kKholo_n, ppErk, Raf);
+        //MAPK_R0  : Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kKholo_km, kKholo_Ki, kKholo_Vmax1, kKholo_n, ppErk, Raf);
+        MAPK_R1  : pRaf    => Raf       ; Cell*MM(            kKholo_Km2 , kKholo_Vmax2, pRaf            );
+        MAPK_R2  : Mek     => pMek      ; Cell*CompetitiveInhibition(    kMekPhos_km , kMekPhos_ki, kMekPhos_kcat, Mek, AZD, pRaf       );
+        MAPK_R3  : pMek    => ppMek     ; Cell*CompetitiveInhibition(    kMekPhos_km , kMekPhos_ki, kMekPhos_kcat, pRaf, AZD, pMek     );
+        MAPK_R4  : ppMek   => pMek      ; Cell*MM(            kKholo_Km5 , kKholo_Vmax5, ppMek           );
+        MAPK_R5  : pMek    => Mek       ; Cell*MM(            kKholo_Km6 , kKholo_Vmax6, pMek            );
+        MAPK_R6  : Erk     => pErk      ; Cell*MMWithKcat(    kKholo_Km7 , kKholo_kcat7, Erk, ppMek     );
+        MAPK_R7  : pErk    => ppErk     ; Cell*MMWithKcat(    kKholo_Km8 , kKholo_kcat8, pErk, ppMek   );
+        MAPK_R8  : ppErk   => pErk      ; Cell*MM(            kKholo_Km9 , kKholo_Vmax9, ppErk          );
+        MAPK_R9  : pErk    => Erk       ; Cell*MM(            kKholo_Km10, kKholo_Vmax10, pErk          );
 
         
         //PI3K Module
@@ -353,7 +353,8 @@ def cross_talk_model_antstr():
         kMekDephosByAkt     = 0.01   
         kPI3KPhosByMek      = 0.1 
 
-        kKholo_n        = 1      ;///60  ;
+        // kholodenko parameters, scaled from seconds to hour
+        kKholo_n        = 1      ;
         kKholo_Ki       = 9        ;
         kMekPhos_kcat    = 0.025  *3600  ;    
         kKholo_kcat4    = 0.025  *3600  ;    
@@ -384,6 +385,7 @@ def cross_talk_model_antstr():
         kMekPhos_ki              = 0.1
         kRafPhosByTGFbR_kcat     = 0.1
         kRafPhosByTGFbR_km       = 0.1
+        kRafPhos                 = 0.1
        
         // PI3K parameters
         kPI3KPhosByGF       = 0.1    
@@ -1045,16 +1047,14 @@ if __name__ == '__main__':
         :return:
         """
 
+    SIMULATE_TIME_SERIES            = True
+    SIMULATE_BAR_GRAPHS             = False
+    OPEN_CONDITION_WITH_COPASI      = False
+
     DOSE_RESPONSE_GROWTH_FACTOR     = False
     DOSE_RESPONSE_TGFB              = False
     GET_ODES_WITH_ANTIMONY          = False
     GET_MODEL_AS_SBML               = False
-
-    SIMULATE_TIME_SERIES            = False
-    SIMULATE_BAR_GRAPHS             = False
-
-    OPEN_CONDITION_WITH_COPASI      = True
-
     SIMULATE_INPUTS                 = False
 
 
@@ -1084,8 +1084,9 @@ if __name__ == '__main__':
         to_plot = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
                    'pPI3K', 'pPI3K', 'pmTORC1', 'pS6K']
         for i in to_plot:
-            simulate_model_component_timecourse([i], AZD_CONDITIONS.keys(), filename=i)
-            simulate_model_component_timecourse([i], MK_CONDITIONS.keys(), filename=i)
+            simulate_model_component_timecourse([i], AZD_CONDITIONS.keys(), filename='AZD_'+i)
+            simulate_model_component_timecourse([i], MK_CONDITIONS.keys(), filename='MK_'+i)
+        # simulate_model_component_timecourse(['pSmad2'], MK_CONDITIONS.keys(), filename=['pSmad2'])
 
     if SIMULATE_BAR_GRAPHS:
         to_plot = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
