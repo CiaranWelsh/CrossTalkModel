@@ -69,7 +69,7 @@ ALL_CONDITIONS = ['D', 'T', 'E', 'E_A_72', 'E_A_48',
 
 
 
-def cross_talk_model_antstr():
+def cross_talk_model_antstr_old():
     """
     Antimony string model containing the most currect version of
     the CrossTalk model from Katrine and Patricia's project.
@@ -106,7 +106,7 @@ def cross_talk_model_antstr():
         
         //TGFb module
         R1_1: TGFbR           => TGFbR_a          ; Cell * kTGFbOn         *TGFb                ;
-        R1_2: TGFbR           => TGFbR_a          ; Cell * kTGFbOnBasal    *TGFb                     ;
+        //R1_2: TGFbR           => TGFbR_a          ; Cell * kTGFbOnBasal    *TGFb                     ;
         R2:   TGFbR_a         => TGFbR            ; Cell * kTGFbOff        *TGFbR_a             ;
         R3:   TGFb            =>                  ; Cell * kTGFbRemoval     *TGFb                ;
         R4:   Smad2           => pSmad2           ; Cell * kSmad2Phos      *Smad2   *TGFbR_a    ;
@@ -205,6 +205,229 @@ def cross_talk_model_antstr():
       unit substance = 1e-9 mole;
         
     end;
+"""
+
+def cross_talk_model_antstr():
+    """
+    Antimony string model containing the most currect version of
+    the CrossTalk model from Katrine and Patricia's project.
+    :return:
+    """
+    return """
+    function MM(km, Vmax, S)
+        Vmax * S / (km + S)
+    end
+
+    function MMWithKcat(km, kcat, S, E)
+        kcat * E * S / (km + S)
+    end
+    
+
+    function NonCompetitiveInhibition(km, ki, Vmax, n, I, S)
+        Vmax * S / ( (km + S) * (1 + (I / ki)^n ) )
+    end
+    
+    function MA1(k, S)
+        k * S
+    end
+    
+    function MA2(k, S1, S2)
+        k * S1 * S2
+    end
+    
+    function MA1Mod(k, S, M)
+        k * S * M
+    end
+    
+    function MA2Mod(k, S1, S2, M)
+        k * S1 * S2 * M
+    end
+    
+    model TGFbModule()
+        compartment Cell = 1.0
+        
+        var TGFbR           in Cell  
+        var TGFbR_a         in Cell  
+        var TGFbR_EE      in Cell
+        var TGFbR_Cav     in Cell
+        var Smad2           in Cell  
+        var pSmad2          in Cell  
+        var Mek             in Cell
+        var pMek            in Cell  
+        var Erk             in Cell
+        var pErk            in Cell  
+        var PI3K            in Cell  
+        var pPI3K           in Cell  
+        var Akt             in Cell
+        var pAkt            in Cell  
+        var mTORC1          in Cell  
+        var pmTORC1         in Cell  
+        var S6K             in Cell
+        var pS6K            in Cell  
+        var Raf             in Cell
+        var pRaf            in Cell
+        var pMek            in Cell
+        var ppMek           in Cell
+        var pMek            in Cell
+        var pErk            in Cell
+        var ppErk           in Cell
+        
+        
+        const TGFb             in Cell
+        const AZD              in Cell
+        const GrowthFactors    in Cell
+        const MK2206           in Cell
+        const Everolimus       in Cell
+    
+        
+        //TGFb module
+        TGF_R1: TGFbR       => TGFbR_a    ; Cell * kTGFbOn       *TGFbR_a    *TGFb      ;
+        TGF_R2: TGFbR_a     => TGFbR      ; Cell * kTGFbOff      *TGFbR_a               ;
+        TGF_R3: TGFbR_a     => TGFbR_EE   ; Cell * kTGFbRIntern  *TGFbR_a               ; 
+        TGF_R4: TGFbR_EE    => TGFbR_a    ; Cell * kTGFbRRecyc   *TGFbR_EE              ;
+        TGF_R5: TGFbR_a     => TGFbR_Cav  ; Cell * kTGFbRIntern  *TGFbR_a               ;
+        TGF_R6: TGFbR_Cav   => TGFbR_a    ; Cell * kTGFbRRecyc   *TGFbR_Cav             ;
+        TGF_R7: Smad2       => pSmad2     ; Cell * kSmad2Phos    *Smad2      *TGFbR_EE  ;
+        TGF_R8: pSmad2      => Smad2      ; Cell * kSmad2Dephos  *pSmad2                ;
+        
+        // Reactions:
+        MAPK_R0_1: Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kKholo_km, kKholo_Ki, kKholo_Vmax1, kKholo_n, ppErk, Raf);
+        MAPK_R0_2: Raf     => pRaf      ; Cell*MMWithKcat(kRafPhosByTGFbR_km, kRafPhosByTGFbR_kcat, Raf, TGFbR_Cav);
+        
+        MAPK_R1  : pRaf    => Raf       ; Cell*MM(            kKholo_Km2 , kKholo_Vmax2, pRaf            );
+        MAPK_R2  : Mek     => pMek      ; Cell*MMWithKcat(    kKholo_Km3 , kKholo_kcat3, Mek, pRaf       );
+        MAPK_R3  : pMek    => ppMek     ; Cell*MMWithKcat(    kKholo_Km4 , kKholo_kcat4, pRaf, pMek     );
+        MAPK_R4  : ppMek   => pMek      ; Cell*MM(            kKholo_Km5 , kKholo_Vmax5, ppMek           );
+        MAPK_R5  : pMek    => Mek       ; Cell*MM(            kKholo_Km6 , kKholo_Vmax6, pMek            );
+        MAPK_R6  : Erk     => pErk      ; Cell*MMWithKcat(    kKholo_Km7 , kKholo_kcat7, Erk, ppMek     );
+        MAPK_R7  : pErk    => ppErk     ; Cell*MMWithKcat(    kKholo_Km8 , kKholo_kcat8, pErk, ppMek   );
+        MAPK_R8  : ppErk   => pErk      ; Cell*MM(            kKholo_Km9 , kKholo_Vmax9, ppErk          );
+        MAPK_R9  : pErk    => Erk       ; Cell*MM(            kKholo_Km10, kKholo_Vmax10, pErk          );
+
+        
+        //PI3K Module
+        PI3K_R1 :   PI3K    => pPI3K    ;   Cell *  kPI3KPhosByGF       *PI3K       *GrowthFactors ;
+        PI3K_R2 :   pPI3K   => PI3K     ;   Cell *  kPI3KDephosByS6K    *pPI3K      *pS6K        ;
+        PI3K_R3 :   Akt     => pAkt     ;   Cell *  kAktPhos            *Akt        *pPI3K       ;
+        PI3K_R4 :   pAkt    => Akt      ;   Cell *  kAktDephos          *pAkt                    ;
+        PI3K_R5 :   pAkt    => Akt      ;   Cell *  kAktDephosByMK      *pAkt       *MK2206      ;
+        PI3K_R6 :   mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByAkt    *mTORC1     *pAkt        ;
+        PI3K_R7 :   pmTORC1 => mTORC1   ;   Cell *  kmTORC1DephosByEv   *pmTORC1    *Everolimus  ;
+        PI3K_R8 :   pmTORC1 => mTORC1   ;   Cell *  kmTORC1Dephos       *pmTORC1                 ;
+        PI3K_R9 :   S6K     => pS6K     ;   Cell *  kS6KPhosBymTORC1    *S6K        *pmTORC1     ;
+        PI3K_R10:   pS6K    => S6K      ;   Cell *  kS6KDephos          *pS6K                    ;
+        //R15_2:      PI3K    => pPI3K    ;   Cell *  kPI3KPhosByMek      *PI3K       *pMek        ;
+        //R16_2:      pPI3K   => PI3K     ;   Cell *  kPI3KDephosByErk    *pPI3K      *pErk        ;
+        //R19_2:      mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByErk    *mTORC1     *pErk        ;
+        //R21_2:      S6K     => pS6K     ;   Cell *  kS6KPhosByErk       *S6K        *pErk        ;
+        
+        kTGFbOn             = 0.4555567
+        kTGFbOnBasal        = 0.1
+        kTGFbOff            = 0.02
+        kTGFbRemoval        = 0.1
+        kSmad2Phos          = 0.1
+        kSmad2Dephos        = 0.01
+        kTGFbRIntern        = 0.3333333333    
+        kTGFbRRecyc         = 0.03333333333
+          
+        kMekPhosByPI3K      = 0.0001    
+        kMekPhosByTGFbR_a   = 0.01        
+        kMekPhosByGFR       = 0.005    
+        kMekDephosByAkt     = 0.01    
+        kMekDephosByAZD     = 10  
+        kErkPhosByMek       = 1
+        kErkDephos          = 0.01
+        
+        // Assign the kholodenko parameters 
+        // The original kholodenko model is in seconds while I will be simulating in hours. 
+        // To convert between the two forms of the model, I have multiplied the rate constants
+        // that depend on time by a conversion factor of 3600. Note, that you cannot and must not
+        // multiple the other rate constants by the time conversion factor if they are not
+        // in units depending on time. Here, kcat and Vmax parameters are in units nmol / (L*S) 
+        // while the other parameters are in until of nmol/L
+        kKholo_n        = 1      ;///60  ;
+        kKholo_Ki       = 9        ;
+        kKholo_kcat3    = 0.025  *3600  ;    
+        kKholo_kcat4    = 0.025  *3600  ;    
+        kKholo_kcat7    = 0.025  *3600  ;    
+        kKholo_kcat8    = 0.025  *3600  ;    
+
+        kKholo_km       = 10       ;    
+        kKholo_Km2      = 8        ;
+        kKholo_Km3      = 15       ;    
+        kKholo_Km4      = 15       ;    
+        kKholo_Km5      = 15       ;    
+        kKholo_Km6      = 15       ;    
+        kKholo_Km7      = 15       ;    
+        kKholo_Km8      = 15       ;    
+        kKholo_Km9      = 15       ;    
+        kKholo_Km10     = 15       ;    
+        
+        kKholo_Vmax1    = 2.5   *3600   ;    
+        kKholo_Vmax2    = 0.25  *3600   ;    
+        kKholo_Vmax5    = 0.75  *3600   ;    
+        kKholo_Vmax6    = 0.75  *3600   ;    
+        kKholo_Vmax9    = 0.5   *3600   ;    
+        kKholo_Vmax10   = 0.5   *3600   ;    
+       
+        kRafPhosByTGFbR_km       = 0.1
+        kRafPhosByTGFbR_Vmax     = 0.1
+       
+        // PI3K parameters
+        kPI3KPhosByGF       = 0.01    
+        kPI3KDephosByS6K    = 0.1        
+        kAktPhos            = 0.1
+        kAktDephos          = 0.01
+        kAktDephosByMK      = 0.5
+        kmTORC1PhosByAkt    = 0.001
+                 
+        kmTORC1Dephos       = 0.001   
+        kmTORC1DephosByEv   = 50 
+        kS6KPhosBymTORC1    = 0.01        
+        kS6KDephos          = 0.001
+        //kmTORC1PhosByErk    = 0.00        // set to 0 on 05-12-2018 at 12:20
+        //kS6KPhosByErk       = 0.00        // set to 0 on 05-12-2018 at 12:20
+        //kPI3KPhosByMek      = 0.01    
+        //kPI3KDephosByErk    = 0.001      
+        
+        //collect the feedback parameters into one list. Turn them off to see what they do
+    
+        TGFb                    = 0.0004  // set to 4e-4 on 05-12-2018 at 12:36 to include basal flux through TGF module
+        AZD                     = 0
+        GrowthFactors           = 1
+        MK2206                  = 0
+        Everolimus              = 0
+        
+        TGFbR                   = 100
+        TGFbR_a                 = 0
+        TGFbR_EE                = 0
+        TGFbR_Cav               = 0
+        Smad2                   = 100
+        pSmad2                  = 0
+        
+        Raf   = 90;
+        pRaf = 10;
+        Mek   = 280;
+        pMek  = 10;
+        ppMek = 10;
+        Erk   = 280;
+        pErk  = 10;
+        ppErk = 10;
+  
+        PI3K                    = 100
+        pPI3K                   = 0
+        Akt                     = 100
+        pAkt                    = 0
+        mTORC1                  = 100
+        pmTORC1                 = 0
+        S6K                     = 100
+        pS6K                    = 0
+    
+      unit volume = 1 litre;
+      unit time_unit = 3600 second;
+      unit substance = 1e-9 mole;
+        
+end
 """
 
 
@@ -812,7 +1035,7 @@ if __name__ == '__main__':
     SIMULATE_TIME_SERIES            = False
     SIMULATE_BAR_GRAPHS             = False
 
-    OPEN_CONDITION_WITH_COPASI      = True
+    OPEN_CONDITION_WITH_COPASI      = False
 
     SIMULATE_INPUTS                 = False
 
@@ -865,14 +1088,23 @@ if __name__ == '__main__':
 
 
 
-
-
-
+    # f = os.path.join(working_directory, 'KholoPlusVilar.cps')
+    # f2 = os.path.join(working_directory, 'KholoPlusVilar.sbml')
+    #
+    # m = model.Model(f)
+    # m.open()
+    # m.to_sbml(f2)
+    # for i in sorted(dir(te)):
+    #     print(i)
+    # st = te.sbmlToAntimony(f2)
+    # print(st)
     # m = te.loada(cross_talk_model_antstr())
     # pts, lbls, biData = te.analysis.bifurcation.bifurcation(m, 'kPI3KDephosByS6K', 0.001, 100)
     # print(pts, lbls, biData)
 
     # print(biData.plotBifurcation)
+
+    open_condition_with_copasi('D')
 
 
 
