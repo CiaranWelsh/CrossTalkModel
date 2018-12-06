@@ -52,7 +52,7 @@ MK_CONDITIONS['M_1.25']     =     [1, "MK2206",  70.75,  0, True, True]
 
 MODEL_SPECIES = ['TGFbR', 'TGFbR_a', 'Smad2',
                  'pSmad2', 'Mek', 'pMek',
-                 'Erk', 'pErk', 'GFR', 'pGFR', 'PI3K',
+                 'Erk', 'pErk', 'PI3K',
                  'pPI3K', 'Akt', 'pAkt', 'mTORC1',
                  'pmTORC1', 'S6K', 'pS6K']
 
@@ -60,22 +60,14 @@ MODEL_INPUTS = ['TGFb', 'Everolimus', 'MK2206', 'AZD', 'GrowthFactors']
 
 MODEL_SPECIES += MODEL_INPUTS
 
-print(AZD_CONDITIONS.keys() + MK_CONDITIONS.keys())
-
-
 ALL_CONDITIONS = ['D', 'T', 'E', 'E_A_72', 'E_A_48',
                   'E_A_24', 'E_A_1.25', 'A_72', 'A_48',
                   'A_24', 'A_1.25', 'E_M_72',
                   'E_M_48', 'E_M_24', 'E_M_1.25', 'M_72',
                   'M_48', 'M_24', 'M_1.25']
-#
-# ALL_CONDITIONS = ['D', 'T', 'T_E',
-#                   'T_M_E_0', 'T_M_E_24',
-#                   'T_M_E_48', 'T_M_E_70.75',
-#                   'T_M_0', 'T_M_24', 'T_M_48',
-#                   'T_M_70.75', 'T_A_E_0', 'T_A_E_24',
-#                   'T_A_E_48', 'T_A_E_70.75', 'T_A_0',
-#                   'T_A_24', 'T_A_48', 'T_A_70.75']
+
+
+
 
 def cross_talk_model_antstr():
     """
@@ -95,8 +87,6 @@ def cross_talk_model_antstr():
         var pMek        in Cell  
         var Erk         in Cell
         var pErk        in Cell  
-        var GFR         in Cell  
-        var pGFR        in Cell  
         var PI3K        in Cell  
         var pPI3K       in Cell  
         var Akt         in Cell
@@ -118,7 +108,7 @@ def cross_talk_model_antstr():
         R1_1: TGFbR           => TGFbR_a          ; Cell * kTGFbOn         *TGFb                ;
         R1_2: TGFbR           => TGFbR_a          ; Cell * kTGFbOnBasal    *TGFb                     ;
         R2:   TGFbR_a         => TGFbR            ; Cell * kTGFbOff        *TGFbR_a             ;
-        R3:   TGFb            =>                  ; Cell * kTGFRemoval     *TGFb                ;
+        R3:   TGFb            =>                  ; Cell * kTGFbRemoval     *TGFb                ;
         R4:   Smad2           => pSmad2           ; Cell * kSmad2Phos      *Smad2   *TGFbR_a    ;
         R5:   pSmad2          => Smad2            ; Cell * kSmad2Dephos    *pSmad2              ;
         //Rx1: Smad2          => pSmad2           ; Cell * kSmad2PhosByAkt * Smad2  *pAkt
@@ -135,10 +125,7 @@ def cross_talk_model_antstr():
         
         
         //PI3K Module
-        //R13:        GFR     => pGFR     ;   Cell *(kGFRPhos_kcat       * GrowthFactors * GFR /(kGFRPhos_km^kGFRPhos_h + GFR^kGFRPhos_h))
-        //R14:        pGFR    => GFR      ;   Cell *  kGFRDephos          *pGFR                    ;
-        
-        R15_1:      PI3K    => pPI3K    ;   Cell *  kPI3KPhosByGFR      *PI3K       *GrowthFactors ;
+        R15_1:      PI3K    => pPI3K    ;   Cell *  kPI3KPhosByGF      *PI3K       *GrowthFactors ;
         R15_2:      PI3K    => pPI3K    ;   Cell *  kPI3KPhosByMek      *PI3K       *pMek        ;
         R15_1:      pPI3K   => PI3K     ;   Cell *  kPI3KDephosByS6K    *pPI3K      *pS6K        ;
         R16_2:      pPI3K   => PI3K     ;   Cell *  kPI3KDephosByErk    *pPI3K      *pErk        ;
@@ -153,10 +140,10 @@ def cross_talk_model_antstr():
         R21_2:      S6K     => pS6K     ;   Cell *  kS6KPhosByErk       *S6K        *pErk        ;
         R22:        pS6K    => S6K      ;   Cell *  kS6KDephos          *pS6K                    ;
         
-        kTGFbOn             = 0.04
-        kTGFbOnBasal        = 0.00004
+        kTGFbOn             = 0.4555567
+        kTGFbOnBasal        = 0.1
         kTGFbOff            = 0.02
-        kTGFRemoval         = 0.1
+        kTGFbRemoval         = 0.1
         kSmad2Phos          = 0.1
         kSmad2Dephos        = 0.01
           
@@ -164,15 +151,15 @@ def cross_talk_model_antstr():
         kMekPhosByTGFbR_a   = 0.01        
         kMekPhosByGFR       = 0.005    
         kMekDephosByAkt     = 0.01    
-        kMekDephosByAZD     = 20  
-        kErkPhosByMek       = 0.1
+        kMekDephosByAZD     = 10  
+        kErkPhosByMek       = 1
         kErkDephos          = 0.01
         
-        kGFRPhos_kcat      = 10
-        kGFRPhos_km        = 25
-        kGFRPhos_h         = 2
-        kGFRDephos         = 1
-        kPI3KPhosByGFR     = 0.01    
+        kGFRPhos_kcat       = 10
+        kGFRPhos_km         = 25
+        kGFRPhos_h          = 2
+        kGFRDephos          = 1
+        kPI3KPhosByGF       = 0.01    
         kPI3KPhosByMek      = 0.01    
         kPI3KDephosByS6K    = 0.1        
         kPI3KDephosByErk    = 0.001      
@@ -204,8 +191,6 @@ def cross_talk_model_antstr():
         pMek                    = 0
         Erk                     = 100
         pErk                    = 0
-        GFR                     = 100
-        pGFR                    = 0
         PI3K                    = 100
         pPI3K                   = 0
         Akt                     = 100
@@ -293,7 +278,7 @@ def dose_response_for_growth_factors():
     model_species = ['TGFbR', 'TGFbR_a',
                      'Smad2', 'pSmad2',
                      'Mek', 'pMek', 'Erk',
-                     'pErk', 'GFR', 'pGFR',
+                     'pErk'
                      'PI3K', 'pPI3K', 'Akt',
                      'pAkt', 'mTORC1', 'pmTORC1',
                      'S6K', 'pS6K', 'TGFb']
@@ -305,7 +290,6 @@ def dose_response_for_growth_factors():
         ['Erk', 'pErk'],
         ['Akt', 'pAkt'],
         ['S6K', 'pS6K'],
-        ['GFR', 'pGFR']
     ]
 
     for i, j in l:
@@ -436,6 +420,7 @@ def simulate_conditions_and_plot_as_bargraph(y, type='AZD'):
     :param df:
     :return:
     """
+    print('line 431: the value of y is "{}"'.format(y))
     seaborn.set_context('talk', font_scale=2)
     if type not in ['AZD', 'MK2206']:
         raise ValueError
@@ -490,7 +475,7 @@ def simulate_conditions_and_plot_as_bargraph(y, type='AZD'):
     os.makedirs(dire) if not os.path.isdir(dire) else None
     fname = os.path.join(dire, "{}.png".format(y))
     fig.savefig(fname, dpi=300, bbox_inches='tight')
-    print('Figure saved to "{}"'.format(fname))
+    print('line 485: Figure saved to "{}"'.format(fname))
 
 
 
@@ -811,15 +796,23 @@ if __name__ == '__main__':
     Set flags to determine which part of the script will run
     """
 
+    def set_flags():
+        """
+        Dummy function to get clickable button on
+        PyCharm structure tab to take me directly to
+        the flags
+        :return:
+        """
+
     DOSE_RESPONSE_GROWTH_FACTOR     = False
     DOSE_RESPONSE_TGFB              = False
     GET_ODES_WITH_ANTIMONY          = False
     GET_MODEL_AS_SBML               = False
 
-    SIMULATE_TIME_SERIES            = True
-    SIMULATE_BAR_GRAPHS             = True
+    SIMULATE_TIME_SERIES            = False
+    SIMULATE_BAR_GRAPHS             = False
 
-    OPEN_CONDITION_WITH_COPASI      = False
+    OPEN_CONDITION_WITH_COPASI      = True
 
     SIMULATE_INPUTS                 = False
 
@@ -827,19 +820,6 @@ if __name__ == '__main__':
 
     if not os.path.isdir(graphs_directory):
         os.makedirs(graphs_directory)
-
-    if DOSE_RESPONSE_GROWTH_FACTOR:
-        # i = 'GFR'
-        # j = 'pGFR'
-        # pmid_for_IGF_data = 'PMID: 26217307'
-        # fig = dose_response(cross_talk_model_antstr(), 'GrowthFactors', 0.1, 1000, 50, [i, j])
-        # plt.title('Dose Response of {} and \n{} to GrowthFactors'.format(i, j))
-        # fname = os.path.join(graphs_directory, 'GrowthFactorsDoseResponse{}.png'.format(i))
-        # fig.savefig(fname, dpi=150, bbox_inches='tight')
-        # plt.show()
-        dose_response_for_growth_factors()
-        mod = load_model_with_pyco(cross_talk_model_antstr(), copasi_filename)
-        mod.open()
 
     if GET_ODES_WITH_ANTIMONY:
         mod = te.loada(cross_talk_model_antstr())
@@ -855,11 +835,8 @@ if __name__ == '__main__':
         plt.show()
 
 
-    if SIMULATE_BAR_GRAPHS:
-        simulate_all_conditions_and_plot_as_bargraphs()
-
     if OPEN_CONDITION_WITH_COPASI:
-        open_condition_with_copasi('T_E')
+        open_condition_with_copasi('D')
 
     ## use model checking to evaluate the truth of a condition for each parameter value
 
@@ -870,9 +847,16 @@ if __name__ == '__main__':
         simulate_model_component_timecourse(['pAkt'], MK_CONDITIONS.keys(), filename='MK_pAkt')
 
     if SIMULATE_BAR_GRAPHS:
-        # simulate_conditions_and_plot_as_bargraph('pAkt', 'AZD')
-        # simulate_conditions_and_plot_as_bargraph('pAkt', 'MK2206')
-        simulate_all_conditions_and_plot_as_bargraphs()
+        active_species = [
+            'pErk', 'pAkt','pSmad2',
+        ]
+        simulate_conditions_and_plot_as_bargraph('pErk', 'AZD')
+        simulate_conditions_and_plot_as_bargraph('pAkt', 'AZD')
+        simulate_conditions_and_plot_as_bargraph('pSmad2', 'AZD')
+        simulate_conditions_and_plot_as_bargraph('pErk', 'MK2206')
+        simulate_conditions_and_plot_as_bargraph('pAkt', 'MK2206')
+        simulate_conditions_and_plot_as_bargraph('pSmad2', 'MK2206')
+        # simulate_all_conditions_and_plot_as_bargraphs()
 
 
     if SIMULATE_INPUTS:
@@ -884,11 +868,11 @@ if __name__ == '__main__':
 
 
 
+    # m = te.loada(cross_talk_model_antstr())
+    # pts, lbls, biData = te.analysis.bifurcation.bifurcation(m, 'kPI3KDephosByS6K', 0.001, 100)
+    # print(pts, lbls, biData)
 
-
-
-
-
+    # print(biData.plotBifurcation)
 
 
 
