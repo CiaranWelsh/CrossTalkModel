@@ -72,145 +72,6 @@ ALL_CONDITIONS = ['D', 'T', 'E', 'E_A_72', 'E_A_48',
 
 
 
-
-def cross_talk_model_antstr_old():
-    """
-    Antimony string model containing the most currect version of
-    the CrossTalk model from Katrine and Patricia's project.
-    :return:
-    """
-    return """
-    model TGFbModule()
-        compartment Cell = 1.0
-        
-        var TGFbR       in Cell  
-        var TGFbR_a     in Cell  
-        var Smad2       in Cell  
-        var pSmad2      in Cell  
-        var Mek         in Cell
-        var pMek        in Cell  
-        var Erk         in Cell
-        var pErk        in Cell  
-        var PI3K        in Cell  
-        var pPI3K       in Cell  
-        var Akt         in Cell
-        var pAkt        in Cell  
-        var mTORC1      in Cell  
-        var pmTORC1     in Cell  
-        var S6K         in Cell
-        var pS6K        in Cell  
-        
-        
-        const TGFb             in Cell
-        const AZD              in Cell
-        const GrowthFactors    in Cell
-        const MK2206           in Cell
-        const Everolimus       in Cell
-    
-        
-        //TGFb module
-        R1_1: TGFbR           => TGFbR_a          ; Cell * kTGFbOn         *TGFb                ;
-        //R1_2: TGFbR           => TGFbR_a          ; Cell * kTGFbOnBasal    *TGFb                     ;
-        R2:   TGFbR_a         => TGFbR            ; Cell * kTGFbOff        *TGFbR_a             ;
-        R3:   TGFb            =>                  ; Cell * kTGFbRemoval     *TGFb                ;
-        R4:   Smad2           => pSmad2           ; Cell * kSmad2Phos      *Smad2   *TGFbR_a    ;
-        R5:   pSmad2          => Smad2            ; Cell * kSmad2Dephos    *pSmad2              ;
-        //Rx1: Smad2          => pSmad2           ; Cell * kSmad2PhosByAkt * Smad2  *pAkt
-        //kSmad2PhosByAkt = 10
-        
-        //MEK module                   //
-        R9_1:    Mek      => pMek     ;   Cell * kMekPhosByPI3K      *Mek    *pPI3K   ;
-        R9_2:    Mek      => pMek     ;   Cell * kMekPhosByTGFbR_a   *Mek    *TGFbR_a ;
-        R9_3:    Mek      => pMek     ;   Cell * kMekPhosByGFR       *Mek    *pGFR    ;
-        R10_1:   pMek     => Mek      ;   Cell * kMekDephosByAkt     *pMek   *pAkt    ;
-        R10_2:   pMek     => Mek      ;   Cell * kMekDephosByAZD     *pMek   *AZD     ; 
-        R11 :    Erk      => pErk     ;   Cell * kErkPhosByMek       *Erk    *pMek    ;
-        R12:     pErk     => Erk      ;   Cell * kErkDephos          *pErk
-        
-        
-        //PI3K Module
-        R15_1:      PI3K    => pPI3K    ;   Cell *  kPI3KPhosByGF      *PI3K       *GrowthFactors ;
-        R15_2:      PI3K    => pPI3K    ;   Cell *  kPI3KPhosByMek      *PI3K       *pMek        ;
-        R15_1:      pPI3K   => PI3K     ;   Cell *  kPI3KDephosByS6K    *pPI3K      *pS6K        ;
-        R16_2:      pPI3K   => PI3K     ;   Cell *  kPI3KDephosByErk    *pPI3K      *pErk        ;
-        R17:        Akt     => pAkt     ;   Cell *  kAktPhos            *Akt        *pPI3K       ;
-        R18_1:      pAkt    => Akt      ;   Cell *  kAktDephos          *pAkt                    ;
-        R18_2:      pAkt    => Akt      ;   Cell *  kAktDephosByMK      *pAkt       *MK2206      ;
-        R19_1:      mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByAkt    *mTORC1     *pAkt        ;
-        R19_2:      mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByErk    *mTORC1     *pErk        ;
-        R20_1:      pmTORC1 => mTORC1   ;   Cell *  kmTORC1DephosByEv   *pmTORC1    *Everolimus  ;
-        R20_2:      pmTORC1 => mTORC1   ;   Cell *  kmTORC1Dephos       *pmTORC1                 ;
-        R21_1:      S6K     => pS6K     ;   Cell *  kS6KPhosBymTORC1    *S6K        *pmTORC1     ;
-        R21_2:      S6K     => pS6K     ;   Cell *  kS6KPhosByErk       *S6K        *pErk        ;
-        R22:        pS6K    => S6K      ;   Cell *  kS6KDephos          *pS6K                    ;
-        
-        kTGFbOn             = 0.4555567
-        kTGFbOnBasal        = 0.1
-        kTGFbOff            = 0.02
-        kTGFbRemoval         = 0.1
-        kSmad2Phos          = 0.1
-        kSmad2Dephos        = 0.01
-          
-        kMekPhosByPI3K      = 0.0001    
-        kMekPhosByTGFbR_a   = 0.01        
-        kMekPhosByGFR       = 0.005    
-        kMekDephosByAkt     = 0.01    
-        kMekDephosByAZD     = 10  
-        kErkPhosByMek       = 1
-        kErkDephos          = 0.01
-        
-        kGFRPhos_kcat       = 10
-        kGFRPhos_km         = 25
-        kGFRPhos_h          = 2
-        kGFRDephos          = 1
-        kPI3KPhosByGF       = 0.01    
-        kPI3KPhosByMek      = 0.01    
-        kPI3KDephosByS6K    = 0.1        
-        kPI3KDephosByErk    = 0.001      
-        kAktPhos            = 0.1
-        kAktDephos          = 0.01
-        kAktDephosByMK      = 0.5
-        kmTORC1PhosByAkt    = 0.001
-                 
-        kmTORC1PhosByErk    = 0.00        // set to 0 on 05-12-2018 at 12:20
-        kmTORC1Dephos       = 0.001   
-        kmTORC1DephosByEv   = 50 
-        kS6KPhosBymTORC1    = 0.01        
-        kS6KPhosByErk       = 0.00        // set to 0 on 05-12-2018 at 12:20
-        kS6KDephos          = 0.001
-        
-        //collect the feedback parameters into one list. Turn them off to see what they do
-    
-        TGFb                    = 0.0004  // set to 4e-4 on 05-12-2018 at 12:36 to include basal flux through TGF module
-        AZD                     = 0
-        GrowthFactors           = 1
-        MK2206                  = 0
-        Everolimus              = 0
-        
-        TGFbR                   = 45.55162345
-        TGFbR_a                 = 2.593918407
-        Smad2                   = 100
-        pSmad2                  = 0
-        Mek                     = 100
-        pMek                    = 0
-        Erk                     = 100
-        pErk                    = 0
-        PI3K                    = 100
-        pPI3K                   = 0
-        Akt                     = 100
-        pAkt                    = 0
-        mTORC1                  = 100
-        pmTORC1                 = 0
-        S6K                     = 100
-        pS6K                    = 0
-    
-      unit volume = 1 litre;
-      unit time_unit = 3600 second;
-      unit substance = 1e-9 mole;
-        
-    end;
-"""
-
 def cross_talk_model_antstr():
     """
     Antimony string model containing the most currect version of
@@ -299,9 +160,7 @@ def cross_talk_model_antstr():
         TGF_R8: pSmad2      => Smad2      ; Cell * kSmad2Dephos  *pSmad2                ;
         
         //MAPK module
-        MAPK_R0_1  : Raf     => pRaf      ; Cell*kRafPhos*GrowthFactors*Raf;
-        MAPK_R0_2  : Raf     => pRaf      ; Cell*NonCompetitiveInhibition(kKholo_km, kKholo_Ki, kKholo_Vmax1, kKholo_n, ppErk, Raf);
-        //MAPK_R0  : Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kKholo_km, kKholo_Ki, kKholo_Vmax1, kKholo_n, ppErk, Raf);
+        MAPK_R0  : Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kKholo_km, kKholo_Ki, kKholo_Vmax1, kKholo_n, ppErk, Raf);
         MAPK_R1  : pRaf    => Raf       ; Cell*MM(            kKholo_Km2 , kKholo_Vmax2, pRaf            );
         MAPK_R2  : Mek     => pMek      ; Cell*CompetitiveInhibition(    kMekPhos_km , kMekPhos_ki, kMekPhos_kcat, Mek, AZD, pRaf       );
         MAPK_R3  : pMek    => ppMek     ; Cell*CompetitiveInhibition(    kMekPhos_km , kMekPhos_ki, kMekPhos_kcat, pRaf, AZD, pMek     );
@@ -317,16 +176,18 @@ def cross_talk_model_antstr():
         PI3K_R1 :   PI3K    => pPI3K    ;   Cell *  kPI3KPhosByGF       *PI3K       *GrowthFactors ;
         PI3K_R2 :   pPI3K   => PI3K     ;   Cell *  kPI3KDephosByS6K    *pPI3K      *pS6K        ;
         PI3K_R3 :   Akt     => pAkt     ;   Cell *  kAktPhos            *Akt        *pPI3K       ;
+        //// Should I change Akt to michaelis menten and competitive inhibition? 
         PI3K_R4 :   pAkt    => Akt      ;   Cell *  kAktDephos          *pAkt                    ;
         PI3K_R5 :   pAkt    => Akt      ;   Cell *  kAktDephosByMK      *pAkt       *MK2206      ;
         PI3K_R6 :   mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByAkt    *mTORC1     *pAkt        ;
+        //// Same questions with Everolimus
         PI3K_R7 :   pmTORC1 => mTORC1   ;   Cell *  kmTORC1DephosByEv   *pmTORC1    *Everolimus  ;
         PI3K_R8 :   pmTORC1 => mTORC1   ;   Cell *  kmTORC1Dephos       *pmTORC1                 ;
         PI3K_R9 :   S6K     => pS6K     ;   Cell *  kS6KPhosBymTORC1    *S6K        *pmTORC1     ;
         PI3K_R10:   pS6K    => S6K      ;   Cell *  kS6KDephos          *pS6K                    ;
         
         // Cross talk reactions
-        //CroosTalkR1  :    Raf     => pRaf     ;   Cell *  MMWithKcat(kRafPhosByTGFbR_km, kRafPhosByTGFbR_kcat, Raf, TGFbR_Cav);
+        CroosTalkR1  :    Raf     => pRaf     ;   Cell *  MMWithKcat(kRafPhosByTGFbR_km, kRafPhosByTGFbR_kcat, Raf, TGFbR_Cav);
         //CroosTalkR2  :    PI3K    => pPI3K    ;   Cell *  kPI3KPhosByMek      *PI3K       *ppMek        ;
         //CroosTalkR3  :    pPI3K   => PI3K     ;   Cell *  kPI3KDephosByErk    *pPI3K      *ppErk        ;
         //CrossTalkR4  :    TGFbR_a => TGFbR_EE ;   Cell *  kTGFbRInternByAkt   *TGFbR_a    *pAkt         ;
@@ -380,12 +241,9 @@ def cross_talk_model_antstr():
         kKholo_Vmax10   = 0.5   *3600   ;    
        
        // MAPK parameters that were not in original model
-        kRafPhosByTGFbR_km       = 0.1
-        kRafPhosByTGFbR_Vmax     = 0.1
+        kRafPhosByTGFbR_kcat     = 38.4
+        kRafPhosByTGFbR_km       = 25
         kMekPhos_ki              = 0.1
-        kRafPhosByTGFbR_kcat     = 0.1
-        kRafPhosByTGFbR_km       = 0.1
-        kRafPhos                 = 0.1
        
         // PI3K parameters
         kPI3KPhosByGF       = 0.1    
@@ -1047,9 +905,9 @@ if __name__ == '__main__':
         :return:
         """
 
-    SIMULATE_TIME_SERIES            = True
+    SIMULATE_TIME_SERIES            = False
     SIMULATE_BAR_GRAPHS             = False
-    OPEN_CONDITION_WITH_COPASI      = False
+    OPEN_CONDITION_WITH_COPASI      = True
 
     DOSE_RESPONSE_GROWTH_FACTOR     = False
     DOSE_RESPONSE_TGFB              = False
@@ -1077,20 +935,18 @@ if __name__ == '__main__':
 
 
     if OPEN_CONDITION_WITH_COPASI:
-        open_condition_with_copasi('D')
+        open_condition_with_copasi('T')
 
+    to_plot = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
+               'pPI3K', 'pPI3K', 'pmTORC1', 'pS6K']
 
     if SIMULATE_TIME_SERIES:
-        to_plot = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
-                   'pPI3K', 'pPI3K', 'pmTORC1', 'pS6K']
         for i in to_plot:
             simulate_model_component_timecourse([i], AZD_CONDITIONS.keys(), filename='AZD_'+i)
             simulate_model_component_timecourse([i], MK_CONDITIONS.keys(), filename='MK_'+i)
         # simulate_model_component_timecourse(['pSmad2'], MK_CONDITIONS.keys(), filename=['pSmad2'])
 
     if SIMULATE_BAR_GRAPHS:
-        to_plot = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
-                   'pPI3K', 'pPI3K', 'pmTORC1', 'pS6K']
         for i in ['AZD', 'MK2206']:
             for j in to_plot:
                 simulate_conditions_and_plot_as_bargraph(j, i)
