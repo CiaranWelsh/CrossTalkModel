@@ -902,7 +902,7 @@ if __name__ == '__main__':
 
 
     if OPEN_CONDITION_WITH_COPASI:
-        open_condition_with_copasi(cross_talk_model_antstr(), 'D')
+        open_condition_with_copasi(cross_talk_model_antstr(), 'T')
 
 
     phos = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
