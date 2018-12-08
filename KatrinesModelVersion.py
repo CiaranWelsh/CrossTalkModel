@@ -257,7 +257,7 @@ def cross_talk_model_antstr():
         kPI3KPhosByGF = 0.339180527465076;
         kPI3KDephosByS6K = 0.780713549796025;
         kAktPhos_km = 15;
-        kAktPhos_ki = 1;
+        kAktPhos_ki = 0.1;
         kAktPhos_kcat = 1.16666629516116;
         kAktDephos_km = 15;
         kAktDephos_Vmax = 25;
@@ -878,8 +878,8 @@ if __name__ == '__main__':
         :return:
         """
 
-    SIMULATE_TIME_SERIES            = False
-    SIMULATE_BAR_GRAPHS             = True
+    SIMULATE_TIME_SERIES            = True
+    SIMULATE_BAR_GRAPHS             = False
     OPEN_CONDITION_WITH_COPASI      = False
 
     DOSE_RESPONSE_GROWTH_FACTOR     = False
@@ -890,7 +890,7 @@ if __name__ == '__main__':
 
 
     if OPEN_CONDITION_WITH_COPASI:
-        open_condition_with_copasi(cross_talk_model_antstr(), 'E')
+        open_condition_with_copasi(cross_talk_model_antstr(), 'E_M_72')
 
 
     phos = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
