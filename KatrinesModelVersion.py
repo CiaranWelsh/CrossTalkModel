@@ -109,7 +109,7 @@ def cross_talk_model_antstr():
     end
     
     function CompetitiveInhibition(km, ki, kcat, E, I, S)
-        kcat * E * S / (km + S + (km * I / ki))
+        kcat * E * S / (km + S + ((km * I )/ ki)  )
     end
     
     model TGFbModule()
@@ -187,29 +187,17 @@ def cross_talk_model_antstr():
         CrossTalkR1  :    Raf   => pRaf         ;   Cell *  MMWithKcat(kRafPhosByTGFbR_km, kRafPhosByTGFbR_kcat, Raf, TGFbR_Cav)    ;
         CrossTalkR2  :    Raf   => pRaf         ;   Cell *  MMWithKcat(kRafPhosByPI3K_km,kRafPhosByPI3K_kcat, Raf, pPI3K)           ;
         CrossTalkR3  :    PI3K  => pPI3K        ;   Cell *  MMWithKcat(kPI3KPhosByTGFbR_km, kPI3KPhosByTGFbR_kcat, PI3K, TGFbR_Cav) ;
+        CrossTalkR4  :    pPI3K   => PI3K       ;   Cell *  kPI3KDephosByErk    *pPI3K      *ppErk        ;
         
-        //CroosTalkR2  :    PI3K    => pPI3K    ;   Cell *  kPI3KPhosByMek      *PI3K       *ppMek        ;
-        //CroosTalkR3  :    pPI3K   => PI3K     ;   Cell *  kPI3KDephosByErk    *pPI3K      *ppErk        ;
+        //CrossTalkR2  :    PI3K    => pPI3K    ;   Cell *  kPI3KPhosByMek      *PI3K       *ppMek        ;
         //CrossTalkR4  :    TGFbR_a => TGFbR_EE ;   Cell *  kTGFbRInternByAkt   *TGFbR_a    *pAkt         ;
         
         // These two reactions counteract Everolimus
         // CroosTalkR4:    mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByErk    *mTORC1     *ppErk        ;
         // CroosTalkR5:    S6K     => pS6K     ;   Cell *  kS6KPhosByErk       *S6K        *ppErk        ;
-        
-        // Cross talk parameters
-        //kPI3KPhosByMek        = 0.01    
-        //kmTORC1PhosByErk      = 0.00        // set to 0 on 05-12-2018 at 12:20
-        //kS6KPhosByErk         = 0.00        // set to 0 on 05-12-2018 at 12:20
-        //kPI3KDephosByErk        = 0.0014855     
-        //kTGFbRInternByAkt       = 0.1
-        //kRafPhosByPI3K_km       = 50
-        //kRafPhosByPI3K_kcat     = 131.5375775
-        //kRafPhosByTGFbR_kcat    = 169.6665506
-        //kRafPhosByTGFbR_km      = 25
-        //kMekPhos_ki1            = 0.45
-        //kPI3KPhosByTGFbR_km     = 10
-        //kPI3KPhosByTGFbR_kcat   = 6.601683459
-        //
+
+
+
         // Model inputs
         TGFb = 0.005;
         AZD = 0;
@@ -274,9 +262,9 @@ def cross_talk_model_antstr():
         kAktDephos_km = 15;
         kAktDephos_Vmax = 25;
         kmTORC1Phos_km = 1;
-        kmTORC1Phos_ki = 5;
+        kmTORC1Phos_ki = 0.001;
         kmTORC1Phos_kcat = 0.50555566762314;
-        kmTORC1Dephos_km = 10;
+        kmTORC1Dephos_km = 100;
         kmTORC1Dephos_Vmax = 10;
         kS6KPhosBymTORC1_km = 10;
         kS6KPhosBymTORC1_kcat = 2.77777725364169;
@@ -891,8 +879,8 @@ if __name__ == '__main__':
         """
 
     SIMULATE_TIME_SERIES            = False
-    SIMULATE_BAR_GRAPHS             = False
-    OPEN_CONDITION_WITH_COPASI      = True
+    SIMULATE_BAR_GRAPHS             = True
+    OPEN_CONDITION_WITH_COPASI      = False
 
     DOSE_RESPONSE_GROWTH_FACTOR     = False
     DOSE_RESPONSE_TGFB              = False
@@ -902,7 +890,7 @@ if __name__ == '__main__':
 
 
     if OPEN_CONDITION_WITH_COPASI:
-        open_condition_with_copasi(cross_talk_model_antstr(), 'T')
+        open_condition_with_copasi(cross_talk_model_antstr(), 'E')
 
 
     phos = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
