@@ -160,25 +160,24 @@ def cross_talk_model_antstr():
         TGF_R8: pSmad2      => Smad2      ; Cell * kSmad2Dephos  *pSmad2                ;
         
         //MAPK module
-        MAPK_R0  : Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kKholo_km, kKholo_Ki, kKholo_Vmax1, kKholo_n, ppErk, Raf);
-        MAPK_R1  : pRaf    => Raf       ; Cell*MM(            kKholo_Km2 , kKholo_Vmax2, pRaf            );
-        MAPK_R2  : Mek     => pMek      ; Cell*CompetitiveInhibition(    kMekPhos_km , kMekPhos_ki, kMekPhos_kcat, Mek, AZD, pRaf       );
-        MAPK_R3  : pMek    => ppMek     ; Cell*CompetitiveInhibition(    kMekPhos_km , kMekPhos_ki, kMekPhos_kcat, pRaf, AZD, pMek     );
-        MAPK_R4  : ppMek   => pMek      ; Cell*MM(            kKholo_Km5 , kKholo_Vmax5, ppMek           );
-        MAPK_R5  : pMek    => Mek       ; Cell*MM(            kKholo_Km6 , kKholo_Vmax6, pMek            );
-        MAPK_R6  : Erk     => pErk      ; Cell*MMWithKcat(    kKholo_Km7 , kKholo_kcat7, Erk, ppMek     );
-        MAPK_R7  : pErk    => ppErk     ; Cell*MMWithKcat(    kKholo_Km8 , kKholo_kcat8, pErk, ppMek   );
-        MAPK_R8  : ppErk   => pErk      ; Cell*MM(            kKholo_Km9 , kKholo_Vmax9, ppErk          );
-        MAPK_R9  : pErk    => Erk       ; Cell*MM(            kKholo_Km10, kKholo_Vmax10, pErk          );
+        //(km, ki, kcat, E, I, S)
+        MAPK_R0  : Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kRafPhos_km,  kRafPhos_ki, kRafPhos_Vmax, kRafPhos_n, ppErk, Raf);
+        MAPK_R1  : pRaf    => Raf       ; Cell*MM(            kRafDephos_km ,   kRafDephosVmax,      pRaf           );
+        MAPK_R2  : Mek     => pMek      ; Cell*CompetitiveInhibition(    kMekPhos_km1 , kMekPhos_ki1, kMekPhos_kcat1, pRaf, AZD, Mek       );
+        MAPK_R3  : pMek    => ppMek     ; Cell*CompetitiveInhibition(    kMekPhos_km1 , kMekPhos_ki1, kMekPhos_kcat1, pRaf, AZD, pMek     );
+        MAPK_R4  : ppMek   => pMek      ; Cell*MM(            kMekDephos_km1,   kMekDephos_Vmax1,     ppMek         );
+        MAPK_R5  : pMek    => Mek       ; Cell*MM(            kMekDephos_km1,   kMekDephos_Vmax1,     pMek          );
+        MAPK_R6  : Erk     => pErk      ; Cell*MMWithKcat(    kErkPhos_km1,     kErkPhos_kcat1, Erk,  ppMek         );
+        MAPK_R7  : pErk    => ppErk     ; Cell*MMWithKcat(    kErkPhos_km1,     kErkPhos_kcat1, pErk, ppMek         );
+        MAPK_R8  : ppErk   => pErk      ; Cell*MM(            kErkDephos_km1,   kErkDephos_Vmax1,     ppErk         );
+        MAPK_R9  : pErk    => Erk       ; Cell*MM(            kErkDephos_km1,   kErkDephos_Vmax1,     pErk          );
 
         
         //PI3K Module
-        PI3K_R1 :   PI3K    => pPI3K    ;   Cell *  kPI3KPhosByGF       *PI3K       *GrowthFactors ;
+        PI3K_R1_1:   PI3K    => pPI3K    ;   Cell *  kPI3KPhosByGF       *PI3K       *GrowthFactors ;
         PI3K_R2 :   pPI3K   => PI3K     ;   Cell *  kPI3KDephosByS6K    *pPI3K      *pS6K        ;
-        PI3K_R3 :   Akt     => pAkt     ;   Cell *  kAktPhos            *Akt        *pPI3K       ;
-        //// Should I change Akt to michaelis menten and competitive inhibition? 
-        PI3K_R4 :   pAkt    => Akt      ;   Cell *  kAktDephos          *pAkt                    ;
-        PI3K_R5 :   pAkt    => Akt      ;   Cell *  kAktDephosByMK      *pAkt       *MK2206      ;
+        PI3K_R4 :   Akt    => pAkt      ;   Cell *  CompetitiveInhibition(kAktPhos_km, kAktDephos_ki, kAktDephos_kcat, pPI3K, MK2206, Akt)              ;
+        PI3K_R4 :   pAkt    => Akt      ;   Cell *  MM(kAktDephos_km, kAktDephos_Vmax,pAkt)         ;
         PI3K_R6 :   mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByAkt    *mTORC1     *pAkt        ;
         //// Same questions with Everolimus
         PI3K_R7 :   pmTORC1 => mTORC1   ;   Cell *  kmTORC1DephosByEv   *pmTORC1    *Everolimus  ;
@@ -187,14 +186,12 @@ def cross_talk_model_antstr():
         PI3K_R10:   pS6K    => S6K      ;   Cell *  kS6KDephos          *pS6K                    ;
         
         // Cross talk reactions
-        CroosTalkR1  :    Raf     => pRaf     ;   Cell *  MMWithKcat(kRafPhosByTGFbR_km, kRafPhosByTGFbR_kcat, Raf, TGFbR_Cav);
+        CrossTalkR1  :    Raf   => pRaf         ;   Cell *  MMWithKcat(kRafPhosByTGFbR_km, kRafPhosByTGFbR_kcat, Raf, TGFbR_Cav)    ;
+        CrossTalkR2  :    Raf   => pRaf         ;   Cell *  MMWithKcat(kRafPhosByPI3K_km,kRafPhosByPI3K_kcat, Raf, pPI3K)           ;
+        CrossTalkR3  :    PI3K  => pPI3K        ;   Cell *  MMWithKcat(kPI3KPhosByTGFbR_km, kPI3KPhosByTGFbR_kcat, PI3K, TGFbR_Cav) ;
         //CroosTalkR2  :    PI3K    => pPI3K    ;   Cell *  kPI3KPhosByMek      *PI3K       *ppMek        ;
         //CroosTalkR3  :    pPI3K   => PI3K     ;   Cell *  kPI3KDephosByErk    *pPI3K      *ppErk        ;
         //CrossTalkR4  :    TGFbR_a => TGFbR_EE ;   Cell *  kTGFbRInternByAkt   *TGFbR_a    *pAkt         ;
-        
-        // This dephosphorylation reactions interfere with mapk module. Can i integrate them?
-        //CrossTalkR4_1:    Mek     => pMek     ;   Cell *  kMekPhosByPI3K      *Mek        *pPI3K      ;
-        //CrossTalkR4_2:    Mek     => ppMek    ;   Cell *  kMekPhosByPI3K      *pMek        *pPI3K      ;
         
         // These two reactions counteract Everolimus
         // CroosTalkR4:    mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByErk    *mTORC1     *ppErk        ;
@@ -209,41 +206,29 @@ def cross_talk_model_antstr():
         kTGFbRRecyc         = 0.03333333333
           
         // MAPK parameters
-        kMekPhosByPI3K      = 0.0001
-        kMekDephosByAZD     = 10  
         kMekDephosByAkt     = 0.01   
         kPI3KPhosByMek      = 0.1 
 
         // kholodenko parameters, scaled from seconds to hour
-        kKholo_n        = 1      ;
-        kKholo_Ki       = 9        ;
-        kMekPhos_kcat    = 0.025  *3600  ;    
-        kKholo_kcat4    = 0.025  *3600  ;    
-        kKholo_kcat7    = 0.025  *3600  ;    
-        kKholo_kcat8    = 0.025  *3600  ;    
+        kRafPhos_n        = 1       ;
+        kRafPhos_ki       = 0.5     ;
+        kMekPhos_kcat1    = 195.287 ;//0.025  *3600  ;    
+        kErkPhos_kcat1    = 85.068  ;//0.025  *3600  ;    
 
-        kKholo_km       = 10       ;    
-        kKholo_Km2      = 8        ;
-        kMekPhos_km     = 15       ;    
-        kKholo_Km4      = 15       ;    
-        kKholo_Km5      = 15       ;    
-        kKholo_Km6      = 15       ;    
-        kKholo_Km7      = 15       ;    
-        kKholo_Km8      = 15       ;    
-        kKholo_Km9      = 15       ;    
-        kKholo_Km10     = 15       ;    
+        kRafPhos_km         = 10    ;    
+        kRafDephos_km       = 8     ;
+        kMekPhos_km1        = 15    ;    
+        kKholo_Km4          = 15    ;    
+        kMekDephos_km1      = 15    ;    
+        kErkPhos_km1        = 100    ;    
+        kErkDephos_km1      = 15    ;    
         
-        kKholo_Vmax1    = 2.5   *3600   ;    
-        kKholo_Vmax2    = 0.25  *3600   ;    
-        kKholo_Vmax5    = 0.75  *3600   ;    
-        kKholo_Vmax6    = 0.75  *3600   ;    
-        kKholo_Vmax9    = 0.5   *3600   ;    
-        kKholo_Vmax10   = 0.5   *3600   ;    
+        kRafPhos_Vmax       = 9000      ;      //2.5   *3600   ;    
+        kRafDephosVmax      = 3602.5    ;      //0.25  *3600   ;    
+        kMekDephos_Vmax1    = 2700      ;      //0.75  *3600   ;    
+        kErkDephos_Vmax1    = 1800      ;      //0.5   *3600   ;    
        
-       // MAPK parameters that were not in original model
-        kRafPhosByTGFbR_kcat     = 38.4
-        kRafPhosByTGFbR_km       = 25
-        kMekPhos_ki              = 0.1
+
        
         // PI3K parameters
         kPI3KPhosByGF       = 0.1    
@@ -258,11 +243,18 @@ def cross_talk_model_antstr():
         kS6KDephos          = 1
         
         // Cross talk parameters
-        //kPI3KPhosByMek      = 0.01    
-        //kmTORC1PhosByErk    = 0.00        // set to 0 on 05-12-2018 at 12:20
-        //kS6KPhosByErk       = 0.00        // set to 0 on 05-12-2018 at 12:20
-        kPI3KDephosByErk    = 0.0014855     
+        //kPI3KPhosByMek        = 0.01    
+        //kmTORC1PhosByErk      = 0.00        // set to 0 on 05-12-2018 at 12:20
+        //kS6KPhosByErk         = 0.00        // set to 0 on 05-12-2018 at 12:20
+        kPI3KDephosByErk        = 0.0014855     
         kTGFbRInternByAkt       = 0.1
+        kRafPhosByPI3K_km       = 50
+        kRafPhosByPI3K_kcat     = 2.5
+        kRafPhosByTGFbR_kcat    = 100
+        kRafPhosByTGFbR_km      = 25
+        kMekPhos_ki1            = 0.45
+        kPI3KPhosByTGFbR_km     = 0.1
+        kPI3KPhosByTGFbR_kcat   = 0.1
         
         // Model inputs
         TGFb                    = 0.005  // set to 4e-4 on 05-12-2018 at 12:36 to include basal flux through TGF module
@@ -280,24 +272,24 @@ def cross_talk_model_antstr():
         pSmad2                  = 10.00010242
         
         // MAPK compopnents
-        Raf                     = 90;
-        pRaf                    = 10;
-        Mek                     = 280;
-        pMek                    = 10;
-        ppMek                   = 10;
-        Erk                     = 280;
-        pErk                    = 10;
-        ppErk                   = 10;
+        Raf                     = 88.10297228;
+        pRaf                    = 11.89702772;
+        Mek                     = 243.7859268;
+        pMek                    = 60.77330273;
+        ppMek                   = 33.41081226;
+        Erk                     = 125.10215;
+        pErk                    = 107.4868744;
+        ppErk                   = 67.41097565;
   
         // PI3K components
-        PI3K                    = 80.08458578
-        pPI3K                   = 19.91541422
-        Akt                     = 83.39211489
-        pAkt                    = 16.60788511
-        mTORC1                  = 83.22790592
-        pmTORC1                 = 16.77209408
-        S6K                     = 94.04702256
-        pS6K                    = 5.952977438
+        PI3K                    = 76.81059428
+        pPI3K                   = 23.18940572
+        Akt                     = 81.17581168
+        pAkt                    = 18.82418832
+        mTORC1                  = 81.40586622
+        pmTORC1                 = 18.59413378
+        S6K                     = 93.44272578
+        pS6K                    = 6.557274218
         
         //extra globals
         TGFbRTotal := TGFbR + TGFbR_a + TGFbR_EE + TGFbR_Cav
@@ -371,21 +363,13 @@ def dose_response(model_string,
     return fig
 
 
-def dose_response_for_growth_factors():
+def __dep__dose_response_for_growth_factors():
     """
+    Now deprecated since GrowthFactors is now boolean
     Use the dose repsonse function to see the effect of changing the
     initial concentration of GrowthFactors. Plot some output
     :return:
     """
-    model_species = ['TGFbR', 'TGFbR_a',
-                     'Smad2', 'pSmad2',
-                     'Mek', 'pMek', 'Erk',
-                     'pErk'
-                     'PI3K', 'pPI3K', 'Akt',
-                     'pAkt', 'mTORC1', 'pmTORC1',
-                     'S6K', 'pS6K', 'TGFb']
-    mod = te.loada(cross_talk_model_antstr())
-
     l = [
         ['PI3K', 'pPI3K'],
         ['Mek', 'pMek'],
@@ -411,13 +395,23 @@ def add_event(model_string, event_str):
     return model_string
 
 
-def add_serum_starve_event(model_string):
+def add_serum_starve_event_remove_growth_factors(model_string):
     """
     Set growth factors to 0 at t=70.25 minutes
     :param model_string:
     :return:
     """
-    event_str = "RemoveGrowthFactors: at (time>70.25): GrowthFactors=0;\n"
+    event_str = "SerumStarveRemoveGrowthFactors: at (time>70.25): GrowthFactors=0;\n"
+    model_string = add_event(model_string, event_str)
+    return model_string
+
+def add_serum_starve_event_remove_basal_TGFb(model_string):
+    """
+    Set growth factors to 0 at t=70.25 minutes
+    :param model_string:
+    :return:
+    """
+    event_str = "SerumStarveRemoveTGFb: at (time>70.25): TGFb=0;\n"
     model_string = add_event(model_string, event_str)
     return model_string
 
@@ -455,25 +449,34 @@ def add_AZD_event(model_string, time):
     return model_string
 
 
-def simulate_condition(model_string, GF=0, pretreatment=None,
-                       pretreatment_time=None, EV=0,
-                       serum_starve_event=False, TGFb_event=False):
+def make_condition(model_string, condition):
     """
+    Take the model string and create condition
+
     :param model_string: antimony model string
     :param GF: starting amount of GrowthFactors
+    :param TGF: starting amount of tgf
     :param pretreatment: either 'AZD', or 'MK2206'. This is added as an event at the time specified by pretreatment time
     :param pretreatment_time: The time at which the variable specified by 'pretreatment' is added
     :param EV: Starting amount of Everolimus
     :param serum_starve_event: Boolean, whether to remove serum, aka GrowthFactors by event
     :param TGFb_event: Boolean. Whether to add 1 unit TGF at t=-45min (71.75h)
+    :param open_with_copasi: open the model with copasi
     :return:
     """
+    if condition not in AZD_CONDITIONS.keys() + MK_CONDITIONS.keys():
+        raise ValueError('No key. These keys "{}"'.format(AZD_CONDITIONS.keys()+MK_CONDITIONS.keys()))
+    try:
+        GF, pretreatment, pretreatment_time, EV, serum_starve_event, TGFb_event = AZD_CONDITIONS[condition]
+    except KeyError:
+        GF, pretreatment, pretreatment_time, EV, serum_starve_event, TGFb_event = MK_CONDITIONS[condition]
+
     if serum_starve_event:
-        model_string = add_serum_starve_event(model_string)
+        model_string = add_serum_starve_event_remove_basal_TGFb(model_string)
+        model_string = add_serum_starve_event_remove_growth_factors(model_string)
 
     if TGFb_event:
         model_string = add_TGFb_event(model_string)
-
     if pretreatment is not None:
         if pretreatment_time != 0:
             if pretreatment == 'AZD':
@@ -494,6 +497,25 @@ def simulate_condition(model_string, GF=0, pretreatment=None,
         elif pretreatment == 'MK2206':
             mod.MK2206 = 1
 
+    return mod.getCurrentAntimony()
+
+
+def simulate_condition(model_string, condition):
+    """
+    :param model_string: antimony model string
+    :param GF: starting amount of GrowthFactors
+    :param pretreatment: either 'AZD', or 'MK2206'. This is added as an event at the time specified by pretreatment time
+    :param pretreatment_time: The time at which the variable specified by 'pretreatment' is added
+    :param EV: Starting amount of Everolimus
+    :param serum_starve_event: Boolean, whether to remove serum, aka GrowthFactors by event
+    :param TGFb_event: Boolean. Whether to add 1 unit TGF at t=-45min (71.75h)
+    :return:
+    """
+    if condition not in AZD_CONDITIONS.keys() + MK_CONDITIONS.keys():
+        raise ValueError
+
+    model_string = make_condition(model_string, condition)
+    mod = te.loada(model_string)
     ## Add 1 to intervals for 0 indexed python
     start = 0
     end = 75
@@ -540,7 +562,7 @@ def simulate_conditions_and_plot_as_bargraph(y, type='AZD'):
         # p = Process(target=simulate_condition, args=(tuple([cross_talk_model_antstr()] + conditions[k])))
         # p.start()
         # p.join()
-        df = simulate_condition(cross_talk_model_antstr(), *conditions[k])
+        df = simulate_condition(cross_talk_model_antstr(), k)
         df = df[df['time'] == 72.0]
         if df.empty:
             raise ValueError("Condition '{}' with values '{}' produces an "
@@ -590,6 +612,7 @@ def simulate_all_conditions_and_plot_as_bargraphs():
         simulate_conditions_and_plot_as_bargraph(i, 'AZD')
         simulate_conditions_and_plot_as_bargraph(i, 'MK2206')
 
+
 def simulate_timecourse(type='MK2206'):
     """
     Events are used throughout the simulations.
@@ -609,7 +632,7 @@ def simulate_timecourse(type='MK2206'):
 
     dct = OrderedDict()
     for k, v in conditions.items():
-        df = simulate_condition(cross_talk_model_antstr(), *conditions[k])
+        df = simulate_condition(cross_talk_model_antstr(), k)
         dct[k] = df
     # print(dct)
 
@@ -750,64 +773,16 @@ def simulate_inputs_only(AZD_or_MK='AZD'):
         print("Saved to '{}'".format(fname))
 
 
-def make_condition(condition):
-        """
-        Take the model string and create condition
 
-        :param model_string: antimony model string
-        :param GF: starting amount of GrowthFactors
-        :param TGF: starting amount of tgf
-        :param pretreatment: either 'AZD', or 'MK2206'. This is added as an event at the time specified by pretreatment time
-        :param pretreatment_time: The time at which the variable specified by 'pretreatment' is added
-        :param EV: Starting amount of Everolimus
-        :param serum_starve_event: Boolean, whether to remove serum, aka GrowthFactors by event
-        :param TGFb_event: Boolean. Whether to add 1 unit TGF at t=-45min (71.75h)
-        :param open_with_copasi: open the model with copasi
-        :return:
-        """
 
-        model_string = cross_talk_model_antstr()
-
-        try:
-            GF, pretreatment, pretreatment_time, EV, serum_starve_event, TGFb_event = AZD_CONDITIONS[condition]
-        except KeyError:
-            GF, pretreatment, pretreatment_time, EV, serum_starve_event, TGFb_event = MK_CONDITIONS[condition]
-
-        if serum_starve_event:
-            model_string = add_serum_starve_event(model_string)
-
-        if TGFb_event:
-            model_string = add_TGFb_event(model_string)
-        if pretreatment is not None:
-            if pretreatment_time != 0:
-                if pretreatment == 'AZD':
-                    model_string = add_AZD_event(model_string, pretreatment_time)
-                elif pretreatment == 'MK2206':
-                    model_string = add_MK_event(model_string, pretreatment_time)
-                else:
-                    raise ValueError
-
-        mod = te.loada(model_string)
-        # mod.model['init([TGFb])'] = TGF
-        mod.Everolimus = EV
-        mod.GrowthFactors = GF
-
-        if pretreatment_time == 0:
-            if pretreatment == 'AZD':
-                mod.AZD = 1
-            elif pretreatment == 'MK2206':
-                mod.MK2206 = 1
-
-        return mod.getCurrentAntimony()
-
-def open_condition_with_copasi(condition):
+def open_condition_with_copasi(model_string, condition):
     """
     Create condition with model string and open with copasi,
     saving to folder while your at it
     :param condition:
     :return:
     """
-    mod_string = make_condition(condition)
+    mod_string = make_condition(model_string, condition)
     copasi_dir = os.path.join(working_directory, 'copasi_models')
     if not os.path.isdir(copasi_dir):
         os.makedirs(copasi_dir)
@@ -815,6 +790,7 @@ def open_condition_with_copasi(condition):
     copasi_mod = load_model_with_pyco(mod_string, fname)
     tasks.TimeCourse(copasi_mod, start=0, end=72, step_size=0.1, intervals=720, run=False)
     copasi_mod.open()
+    return copasi_mod
 
 
 def simulate_model_component_timecourse(vars, cond, filename=None, **kwargs):
@@ -849,7 +825,7 @@ def simulate_model_component_timecourse(vars, cond, filename=None, **kwargs):
         if c not in list(MK_CONDITIONS.keys()) + list(AZD_CONDITIONS.keys()):
             raise ValueError('condition "{}" not in "{}"'.format(c, MK_CONDITIONS.keys() + AZD_CONDITIONS.keys()))
 
-        model_str = make_condition(c)
+        model_str = make_condition(cross_talk_model_antstr(), c)
         mod = te.loada(model_str)
         res = mod.simulate(0, 75, 750, ['time'] + vars)
         gs = GridSpec(len(cond), 1, wspace=0.3)
@@ -906,8 +882,8 @@ if __name__ == '__main__':
         """
 
     SIMULATE_TIME_SERIES            = False
-    SIMULATE_BAR_GRAPHS             = False
-    OPEN_CONDITION_WITH_COPASI      = True
+    SIMULATE_BAR_GRAPHS             = True
+    OPEN_CONDITION_WITH_COPASI      = False
 
     DOSE_RESPONSE_GROWTH_FACTOR     = False
     DOSE_RESPONSE_TGFB              = False
@@ -916,6 +892,30 @@ if __name__ == '__main__':
     SIMULATE_INPUTS                 = False
 
 
+    if OPEN_CONDITION_WITH_COPASI:
+        open_condition_with_copasi(cross_talk_model_antstr(), 'E_M_48')
+
+
+    phos = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
+               'pPI3K', 'pPI3K', 'pmTORC1', 'pS6K']
+    erk = ['Erk', 'pErk', 'ppErk']
+    if SIMULATE_TIME_SERIES:
+        for i in phos:
+            simulate_model_component_timecourse([i], AZD_CONDITIONS.keys(), filename='AZD_'+i)
+            simulate_model_component_timecourse([i], MK_CONDITIONS.keys(), filename='MK_'+i)
+        # simulate_model_component_timecourse(['pSmad2'], MK_CONDITIONS.keys(), filename=['pSmad2'])
+
+    if SIMULATE_BAR_GRAPHS:
+        for i in ['AZD', 'MK2206']:
+            for j in phos:
+                simulate_conditions_and_plot_as_bargraph(j, i)
+
+        # simulate_all_conditions_and_plot_as_bargraphs()
+
+
+    if SIMULATE_INPUTS:
+        simulate_inputs_only('AZD')
+        simulate_inputs_only('MK2206')
 
     if not os.path.isdir(graphs_directory):
         os.makedirs(graphs_directory)
@@ -934,29 +934,7 @@ if __name__ == '__main__':
         plt.show()
 
 
-    if OPEN_CONDITION_WITH_COPASI:
-        open_condition_with_copasi('T')
 
-    to_plot = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
-               'pPI3K', 'pPI3K', 'pmTORC1', 'pS6K']
-
-    if SIMULATE_TIME_SERIES:
-        for i in to_plot:
-            simulate_model_component_timecourse([i], AZD_CONDITIONS.keys(), filename='AZD_'+i)
-            simulate_model_component_timecourse([i], MK_CONDITIONS.keys(), filename='MK_'+i)
-        # simulate_model_component_timecourse(['pSmad2'], MK_CONDITIONS.keys(), filename=['pSmad2'])
-
-    if SIMULATE_BAR_GRAPHS:
-        for i in ['AZD', 'MK2206']:
-            for j in to_plot:
-                simulate_conditions_and_plot_as_bargraph(j, i)
-
-        # simulate_all_conditions_and_plot_as_bargraphs()
-
-
-    if SIMULATE_INPUTS:
-        simulate_inputs_only('AZD')
-        simulate_inputs_only('MK2206')
 
 
 
