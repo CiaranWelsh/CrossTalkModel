@@ -160,7 +160,6 @@ def cross_talk_model_antstr():
         TGF_R8: pSmad2      => Smad2      ; Cell * kSmad2Dephos  *pSmad2                ;
         
         //MAPK module
-        //(km, ki, kcat, E, I, S)
         MAPK_R0  : Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kRafPhos_km,  kRafPhos_ki, kRafPhos_Vmax, kRafPhos_n, ppErk, Raf);
         MAPK_R1  : pRaf    => Raf       ; Cell*MM(            kRafDephos_km ,   kRafDephosVmax,      pRaf           );
         MAPK_R2  : Mek     => pMek      ; Cell*CompetitiveInhibition(    kMekPhos_km1 , kMekPhos_ki1, kMekPhos_kcat1, pRaf, AZD, Mek       );
@@ -174,21 +173,21 @@ def cross_talk_model_antstr():
 
         
         //PI3K Module
-        PI3K_R1_1:   PI3K    => pPI3K    ;   Cell *  kPI3KPhosByGF       *PI3K       *GrowthFactors ;
+        //n(km, ki, kcat, E, I, S)
+        PI3K_R1 :   PI3K    => pPI3K    ;  Cell *  kPI3KPhosByGF       *PI3K       *GrowthFactors ;
         PI3K_R2 :   pPI3K   => PI3K     ;   Cell *  kPI3KDephosByS6K    *pPI3K      *pS6K        ;
-        PI3K_R4 :   Akt    => pAkt      ;   Cell *  CompetitiveInhibition(kAktPhos_km, kAktDephos_ki, kAktDephos_kcat, pPI3K, MK2206, Akt)              ;
+        PI3K_R3 :   Akt    => pAkt      ;   Cell *  CompetitiveInhibition(kAktPhos_km, kAktPhos_ki, kAktPhos_kcat, pPI3K, MK2206, Akt)              ;
         PI3K_R4 :   pAkt    => Akt      ;   Cell *  MM(kAktDephos_km, kAktDephos_Vmax,pAkt)         ;
-        PI3K_R6 :   mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByAkt    *mTORC1     *pAkt        ;
-        //// Same questions with Everolimus
-        PI3K_R7 :   pmTORC1 => mTORC1   ;   Cell *  kmTORC1DephosByEv   *pmTORC1    *Everolimus  ;
-        PI3K_R8 :   pmTORC1 => mTORC1   ;   Cell *  kmTORC1Dephos       *pmTORC1                 ;
-        PI3K_R9 :   S6K     => pS6K     ;   Cell *  kS6KPhosBymTORC1    *S6K        *pmTORC1     ;
-        PI3K_R10:   pS6K    => S6K      ;   Cell *  kS6KDephos          *pS6K                    ;
+        PI3K_R5 :   mTORC1 => pmTORC1   ;   Cell *  CompetitiveInhibition(kmTORC1Phos_km, kmTORC1Phos_ki, kmTORC1Phos_kcat, pAkt, Everolimus, mTORC1)  ;
+        PI3K_R6 :   pmTORC1 => mTORC1   ;   Cell *  MM(kmTORC1Dephos_km, kmTORC1Dephos_Vmax, pmTORC1);
+        PI3K_R7 :   S6K     => pS6K     ;   Cell *  MMWithKcat(kS6KPhosBymTORC1_km, kS6KPhosBymTORC1_kcat, S6K, pmTORC1) ;
+        PI3K_R8 :   pS6K    => S6K      ;   Cell *  MM(kS6KDephos_km,kS6KDephos_Vmax, pS6K)                    ;
         
         // Cross talk reactions
         CrossTalkR1  :    Raf   => pRaf         ;   Cell *  MMWithKcat(kRafPhosByTGFbR_km, kRafPhosByTGFbR_kcat, Raf, TGFbR_Cav)    ;
         CrossTalkR2  :    Raf   => pRaf         ;   Cell *  MMWithKcat(kRafPhosByPI3K_km,kRafPhosByPI3K_kcat, Raf, pPI3K)           ;
         CrossTalkR3  :    PI3K  => pPI3K        ;   Cell *  MMWithKcat(kPI3KPhosByTGFbR_km, kPI3KPhosByTGFbR_kcat, PI3K, TGFbR_Cav) ;
+        
         //CroosTalkR2  :    PI3K    => pPI3K    ;   Cell *  kPI3KPhosByMek      *PI3K       *ppMek        ;
         //CroosTalkR3  :    pPI3K   => PI3K     ;   Cell *  kPI3KDephosByErk    *pPI3K      *ppErk        ;
         //CrossTalkR4  :    TGFbR_a => TGFbR_EE ;   Cell *  kTGFbRInternByAkt   *TGFbR_a    *pAkt         ;
@@ -197,100 +196,103 @@ def cross_talk_model_antstr():
         // CroosTalkR4:    mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByErk    *mTORC1     *ppErk        ;
         // CroosTalkR5:    S6K     => pS6K     ;   Cell *  kS6KPhosByErk       *S6K        *ppErk        ;
         
-        // TGFb Parameters
-        kTGFbOn             = 0.4555567
-        kTGFbOff            = 0.04
-        kSmad2Phos          = 0.01
-        kSmad2Dephos        = 2.3345
-        kTGFbRIntern        = 0.3333333333    
-        kTGFbRRecyc         = 0.03333333333
-          
-        // MAPK parameters
-        kMekDephosByAkt     = 0.01   
-        kPI3KPhosByMek      = 0.1 
-
-        // kholodenko parameters, scaled from seconds to hour
-        kRafPhos_n        = 1       ;
-        kRafPhos_ki       = 0.5     ;
-        kMekPhos_kcat1    = 195.287 ;//0.025  *3600  ;    
-        kErkPhos_kcat1    = 85.068  ;//0.025  *3600  ;    
-
-        kRafPhos_km         = 10    ;    
-        kRafDephos_km       = 8     ;
-        kMekPhos_km1        = 15    ;    
-        kKholo_Km4          = 15    ;    
-        kMekDephos_km1      = 15    ;    
-        kErkPhos_km1        = 100    ;    
-        kErkDephos_km1      = 15    ;    
-        
-        kRafPhos_Vmax       = 9000      ;      //2.5   *3600   ;    
-        kRafDephosVmax      = 3602.5    ;      //0.25  *3600   ;    
-        kMekDephos_Vmax1    = 2700      ;      //0.75  *3600   ;    
-        kErkDephos_Vmax1    = 1800      ;      //0.5   *3600   ;    
-       
-
-       
-        // PI3K parameters
-        kPI3KPhosByGF       = 0.1    
-        kPI3KDephosByS6K    = 0.06755      
-        kAktPhos            = 0.001
-        kAktDephos          = 0.1
-        kAktDephosByMK      = 0.5
-        kmTORC1PhosByAkt    = 0.012134
-        kmTORC1Dephos       = 1 
-        kmTORC1DephosByEv   = 50 
-        kS6KPhosBymTORC1    = 0.003774     
-        kS6KDephos          = 1
-        
         // Cross talk parameters
         //kPI3KPhosByMek        = 0.01    
         //kmTORC1PhosByErk      = 0.00        // set to 0 on 05-12-2018 at 12:20
         //kS6KPhosByErk         = 0.00        // set to 0 on 05-12-2018 at 12:20
-        kPI3KDephosByErk        = 0.0014855     
-        kTGFbRInternByAkt       = 0.1
-        kRafPhosByPI3K_km       = 50
-        kRafPhosByPI3K_kcat     = 2.5
-        kRafPhosByTGFbR_kcat    = 100
-        kRafPhosByTGFbR_km      = 25
-        kMekPhos_ki1            = 0.45
-        kPI3KPhosByTGFbR_km     = 0.1
-        kPI3KPhosByTGFbR_kcat   = 0.1
-        
+        //kPI3KDephosByErk        = 0.0014855     
+        //kTGFbRInternByAkt       = 0.1
+        //kRafPhosByPI3K_km       = 50
+        //kRafPhosByPI3K_kcat     = 131.5375775
+        //kRafPhosByTGFbR_kcat    = 169.6665506
+        //kRafPhosByTGFbR_km      = 25
+        //kMekPhos_ki1            = 0.45
+        //kPI3KPhosByTGFbR_km     = 10
+        //kPI3KPhosByTGFbR_kcat   = 6.601683459
+        //
         // Model inputs
-        TGFb                    = 0.005  // set to 4e-4 on 05-12-2018 at 12:36 to include basal flux through TGF module
-        AZD                     = 0
-        GrowthFactors           = 1
-        MK2206                  = 0
-        Everolimus              = 0
+        TGFb = 0.005;
+        AZD = 0;
+        MK2206 = 0;
+        Everolimus = 0;
+        GrowthFactors = 1;
         
-        // TGFb components
-        TGFbR                   = 45.55162345
-        TGFbR_a                 = 2.593918407
-        TGFbR_EE                = 25.93918407
-        TGFbR_Cav               = 25.93918407
-        Smad2                   = 89.99989758
-        pSmad2                  = 10.00010242
+        TGFbR = 83.21931946809;
+        TGFbR_a = 0.800218596614763;
+        TGFbR_EE = 8.00218596614763;
+        TGFbR_Cav = 8.00218596614762;
+        Smad2 = 89.9999999940209;
+        pSmad2 = 10.0000000059791;        
+        Mek = 251.985740681864;
+        pMek = 56.5959877171344;
+        Erk = 183.571911639422;
+        pErk = 117.791917815304;
+        Raf = 90.0000020005432;
+        pRaf = 9.99999800135168;
+        ppMek = 29.3883133910016;
+        ppErk = 42.9365684990579;
+        PI3K = 89.9999979164107;
+        pPI3K = 10.0000020835893;
+        Akt = 90.0000017843682;
+        pAkt = 9.9999982126318;
+        mTORC1 = 89.9999991433861;
+        pmTORC1 = 10.0000008566139;
+        S6K = 90.0000020167358;
+        pS6K = 9.99999798426415;
         
-        // MAPK compopnents
-        Raf                     = 88.10297228;
-        pRaf                    = 11.89702772;
-        Mek                     = 243.7859268;
-        pMek                    = 60.77330273;
-        ppMek                   = 33.41081226;
-        Erk                     = 125.10215;
-        pErk                    = 107.4868744;
-        ppErk                   = 67.41097565;
-  
-        // PI3K components
-        PI3K                    = 76.81059428
-        pPI3K                   = 23.18940572
-        Akt                     = 81.17581168
-        pAkt                    = 18.82418832
-        mTORC1                  = 81.40586622
-        pmTORC1                 = 18.59413378
-        S6K                     = 93.44272578
-        pS6K                    = 6.557274218
+        // TGFb parameters       
+        kTGFbOn = 0.076926233161193;
+        kTGFbOff = 0.04;
+        kTGFbRIntern = 0.3333333333;
+        kTGFbRRecyc = 0.03333333333;
+        kSmad2Phos = 0.0324147539383026;
+        kSmad2Dephos = 2.3345;
         
+        // MAPK parameters
+        kRafPhos_km = 10;
+        kRafPhos_ki = 0.5;
+        kRafPhos_Vmax = 9000;
+        kRafPhos_n = 1;
+        kRafDephos_km = 8;
+        kRafDephosVmax = 3602.5;
+        kMekPhos_km1 = 15;
+        kMekPhos_ki1 = 0.45;
+        kMekPhos_kcat1 = 226.137668895313;
+        kMekDephos_km1 = 15;
+        kMekDephos_Vmax1 = 2700;
+        kErkPhos_km1 = 100;
+        kErkPhos_kcat1 = 83.9264150995757;
+        kErkDephos_km1 = 15;
+        kErkDephos_Vmax1 = 1800;
+        
+        // PI3K parameters
+        kPI3KPhosByGF = 0.339180527465076;
+        kPI3KDephosByS6K = 0.780713549796025;
+        kAktPhos_km = 15;
+        kAktPhos_ki = 1;
+        kAktPhos_kcat = 1.16666629516116;
+        kAktDephos_km = 15;
+        kAktDephos_Vmax = 25;
+        kmTORC1Phos_km = 1;
+        kmTORC1Phos_ki = 5;
+        kmTORC1Phos_kcat = 0.50555566762314;
+        kmTORC1Dephos_km = 10;
+        kmTORC1Dephos_Vmax = 10;
+        kS6KPhosBymTORC1_km = 10;
+        kS6KPhosBymTORC1_kcat = 2.77777725364169;
+        kS6KDephos_km = 10;
+        kS6KDephos_Vmax = 50;
+        
+        //Cross Talk parameters
+        kTGFbRInternByAkt = 0.1;
+        kPI3KDephosByErk = 0.0014855;
+        kPI3KPhosByTGFbR_km = 10;
+        kPI3KPhosByTGFbR_kcat = 6.60168345880077;
+        kRafPhosByTGFbR_km = 25;
+        kRafPhosByTGFbR_kcat = 169.666550557351;
+        kRafPhosByPI3K_km = 50;
+        kRafPhosByPI3K_kcat = 131.537577515562;
+
         //extra globals
         TGFbRTotal := TGFbR + TGFbR_a + TGFbR_EE + TGFbR_Cav
     
@@ -789,6 +791,13 @@ def open_condition_with_copasi(model_string, condition):
     fname = os.path.join(copasi_dir, "{}.cps".format(condition))
     copasi_mod = load_model_with_pyco(mod_string, fname)
     tasks.TimeCourse(copasi_mod, start=0, end=72, step_size=0.1, intervals=720, run=False)
+    f = r'D:\MesiSTRAT\CrossTalkModel\data\fakeSteadyStateData.txt'
+    assert os.path.isfile(f)
+    # PE = tasks.ParameterEstimation(copasi_mod, f, metabolites=[], run_mode=False,
+    #                                experiment_type=['steadystate'])
+    # PE.write_config_file()
+    # PE.setup()
+    # PE.model.open()
     copasi_mod.open()
     return copasi_mod
 
@@ -882,8 +891,8 @@ if __name__ == '__main__':
         """
 
     SIMULATE_TIME_SERIES            = False
-    SIMULATE_BAR_GRAPHS             = True
-    OPEN_CONDITION_WITH_COPASI      = False
+    SIMULATE_BAR_GRAPHS             = False
+    OPEN_CONDITION_WITH_COPASI      = True
 
     DOSE_RESPONSE_GROWTH_FACTOR     = False
     DOSE_RESPONSE_TGFB              = False
@@ -893,7 +902,7 @@ if __name__ == '__main__':
 
 
     if OPEN_CONDITION_WITH_COPASI:
-        open_condition_with_copasi(cross_talk_model_antstr(), 'E_M_48')
+        open_condition_with_copasi(cross_talk_model_antstr(), 'D')
 
 
     phos = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
@@ -957,8 +966,12 @@ if __name__ == '__main__':
     # open_condition_with_copasi('D')
 
 
-
-
+    # f=r'D:\MesiSTRAT\CrossTalkModel\copasi_models\D.cps'
+    # sbml=r'D:\MesiSTRAT\CrossTalkModel\copasi_models\D.sbml'
+    # # pm = model.Model(f)
+    # # pm.to_sbml(sbml)
+    # mod = te.loadSBMLModel(sbml)
+    # print(mod.getCurrentAntimony())
 
 
 
