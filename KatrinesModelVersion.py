@@ -156,8 +156,8 @@ def cross_talk_model_antstr():
         TGF_R4: TGFbR_EE    => TGFbR_a    ; Cell * kTGFbRRecyc   *TGFbR_EE              ;
         TGF_R5: TGFbR_a     => TGFbR_Cav  ; Cell * kTGFbRIntern  *TGFbR_a               ;
         TGF_R6: TGFbR_Cav   => TGFbR_a    ; Cell * kTGFbRRecyc   *TGFbR_Cav             ;
-        TGF_R7: Smad2       => pSmad2     ; Cell * kSmad2Phos    *Smad2      *TGFbR_EE  ;
-        TGF_R8: pSmad2      => Smad2      ; Cell * kSmad2Dephos  *pSmad2                ;
+        TGF_R7: Smad2       => pSmad2     ; Cell * MMWithKcat(kSmad2Phos_km, kSmad2Phos_kcat, Smad2, TGFbR_EE  );
+        TGF_R8: pSmad2      => Smad2      ; Cell * MM(kSmad2Dephos_km, kSmad2Dephos_Vmax, pSmad2               );
         
         //MAPK module
         MAPK_R0  : Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kRafPhos_km,  kRafPhos_ki, kRafPhos_Vmax, kRafPhos_n, ppErk, Raf);
@@ -188,101 +188,92 @@ def cross_talk_model_antstr():
         CrossTalkR2  :    Raf   => pRaf         ;   Cell *  MMWithKcat(kRafPhosByPI3K_km,kRafPhosByPI3K_kcat, Raf, pPI3K)           ;
         CrossTalkR3  :    PI3K  => pPI3K        ;   Cell *  MMWithKcat(kPI3KPhosByTGFbR_km, kPI3KPhosByTGFbR_kcat, PI3K, TGFbR_Cav) ;
         CrossTalkR4  :    pPI3K   => PI3K       ;   Cell *  kPI3KDephosByErk    *pPI3K      *ppErk        ;
-        
+        CrossTalkR5  :    TGFbR_a => TGFbR_EE   ;   Cell *  kTGFbRInternByAkt     *TGFbR_a    *Akt
         //CrossTalkR2  :    PI3K    => pPI3K    ;   Cell *  kPI3KPhosByMek      *PI3K       *ppMek        ;
         //CrossTalkR4  :    TGFbR_a => TGFbR_EE ;   Cell *  kTGFbRInternByAkt   *TGFbR_a    *pAkt         ;
         
         // These two reactions counteract Everolimus
         // CroosTalkR4:    mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByErk    *mTORC1     *ppErk        ;
         // CroosTalkR5:    S6K     => pS6K     ;   Cell *  kS6KPhosByErk       *S6K        *ppErk        ;
-
-
-
-        // Model inputs
+ 
+        // Species initializations:
+        TGFbR = 76.8396790634687;
+        TGFbR_a = 0.966718661034664;
+        TGFbR_EE = 12.55032566215;
+        TGFbR_Cav = 9.66718661034664;
+        Smad2 = 90.7578601099753;
+        pSmad2 = 9.24213988902463;
+        Mek = 252.876273823102;
+        pMek = 56.0642557607438;
+        Erk = 183.331905604514;
+        pErk = 117.882228538386;
+        PI3K = 99.9603027531632;
+        pPI3K = 0.039697246836694;
+        Akt = 99.413240815732;
+        pAkt = 0.586759181268058;
+        mTORC1 = 90.2724562462086;
+        pmTORC1 = 9.72754375379144;
+        S6K = 90.5069860202662;
+        pS6K = 9.49301398073377;
+        Raf = 87.932595095561;
+        pRaf = 12.0674049063339;
+        ppMek = 29.0295122061532;
+        ppErk = 43.0862638108839;
+        
+        // Variable initializations:
+        kTGFbOn = 0.100647860357268;
         TGFb = 0.005;
-        AZD = 0;
-        MK2206 = 0;
-        Everolimus = 0;
-        GrowthFactors = 1;
-        
-        TGFbR = 83.21931946809;
-        TGFbR_a = 0.800218596614763;
-        TGFbR_EE = 8.00218596614763;
-        TGFbR_Cav = 8.00218596614762;
-        Smad2 = 89.9999999940209;
-        pSmad2 = 10.0000000059791;        
-        Mek = 251.985740681864;
-        pMek = 56.5959877171344;
-        Erk = 183.571911639422;
-        pErk = 117.791917815304;
-        Raf = 90.0000020005432;
-        pRaf = 9.99999800135168;
-        ppMek = 29.3883133910016;
-        ppErk = 42.9365684990579;
-        PI3K = 89.9999979164107;
-        pPI3K = 10.0000020835893;
-        Akt = 90.0000017843682;
-        pAkt = 9.9999982126318;
-        mTORC1 = 89.9999991433861;
-        pmTORC1 = 10.0000008566139;
-        S6K = 90.0000020167358;
-        pS6K = 9.99999798426415;
-        
-        // TGFb parameters       
-        kTGFbOn = 0.076926233161193;
         kTGFbOff = 0.04;
         kTGFbRIntern = 0.3333333333;
         kTGFbRRecyc = 0.03333333333;
-        kSmad2Phos = 0.0324147539383026;
-        kSmad2Dephos = 2.3345;
-        
-        // MAPK parameters
+        kSmad2Phos_km = 97.0531;
+        kSmad2Phos_kcat = 0.821234914911266;
+        kSmad2Dephos_km = 100;
+        kSmad2Dephos_Vmax = 58.8712661228653;
+        GrowthFactors = 1;
         kRafPhos_km = 10;
-        kRafPhos_ki = 0.5;
+        kRafPhos_ki = 0.470122973857689;
         kRafPhos_Vmax = 9000;
         kRafPhos_n = 1;
         kRafDephos_km = 8;
         kRafDephosVmax = 3602.5;
         kMekPhos_km1 = 15;
-        kMekPhos_ki1 = 0.45;
-        kMekPhos_kcat1 = 226.137668895313;
+        kMekPhos_ki1 = 8.51335428744735;
+        kMekPhos_kcat1 = 186.986776157027;
+        AZD = 0;
         kMekDephos_km1 = 15;
         kMekDephos_Vmax1 = 2700;
         kErkPhos_km1 = 100;
-        kErkPhos_kcat1 = 83.9264150995757;
+        kErkPhos_kcat1 = 85.0103161451182;
         kErkDephos_km1 = 15;
         kErkDephos_Vmax1 = 1800;
-        
-        // PI3K parameters
-        kPI3KPhosByGF = 0.339180527465076;
-        kPI3KDephosByS6K = 0.780713549796025;
+        kPI3KPhosByGF = 0.239474698704283;
+        kPI3KDephosByS6K = 78.593911393544;
         kAktPhos_km = 15;
-        kAktPhos_ki = 0.1;
-        kAktPhos_kcat = 1.16666629516116;
+        kAktPhos_ki = 11.4306280538384;
+        kAktPhos_kcat = 33.9694384586186;
+        MK2206 = 0;
         kAktDephos_km = 15;
-        kAktDephos_Vmax = 25;
+        kAktDephos_Vmax = 31.1252344504785;
         kmTORC1Phos_km = 1;
-        kmTORC1Phos_ki = 0.001;
-        kmTORC1Phos_kcat = 0.50555566762314;
+        kmTORC1Phos_ki = 29.2436318008605;
+        kmTORC1Phos_kcat = 1.52760868893678;
+        Everolimus = 0;
         kmTORC1Dephos_km = 100;
         kmTORC1Dephos_Vmax = 10;
         kS6KPhosBymTORC1_km = 10;
-        kS6KPhosBymTORC1_kcat = 2.77777725364169;
+        kS6KPhosBymTORC1_kcat = 2.77975221288272;
         kS6KDephos_km = 10;
         kS6KDephos_Vmax = 50;
-        
-        //Cross Talk parameters
-        kTGFbRInternByAkt = 0.1;
-        kPI3KDephosByErk = 0.0014855;
-        kPI3KPhosByTGFbR_km = 10;
-        kPI3KPhosByTGFbR_kcat = 6.60168345880077;
         kRafPhosByTGFbR_km = 25;
-        kRafPhosByTGFbR_kcat = 169.666550557351;
+        kRafPhosByTGFbR_kcat = 274.631085458647;
         kRafPhosByPI3K_km = 50;
-        kRafPhosByPI3K_kcat = 131.537577515562;
+        kRafPhosByPI3K_kcat = 471.350849560322;
+        kPI3KPhosByTGFbR_km = 10;
+        kPI3KPhosByTGFbR_kcat = 2.11703869307362;
+        kPI3KDephosByErk = 7.55652721516263;
+        kTGFbRInternByAkt = 0.001;
 
-        //extra globals
-        TGFbRTotal := TGFbR + TGFbR_a + TGFbR_EE + TGFbR_Cav
     
       unit volume = 1 litre;
       unit time_unit = 3600 second;
@@ -779,15 +770,31 @@ def open_condition_with_copasi(model_string, condition):
     fname = os.path.join(copasi_dir, "{}.cps".format(condition))
     copasi_mod = load_model_with_pyco(mod_string, fname)
     tasks.TimeCourse(copasi_mod, start=0, end=72, step_size=0.1, intervals=720, run=False)
-    f = r'D:\MesiSTRAT\CrossTalkModel\data\fakeSteadyStateData.txt'
-    assert os.path.isfile(f)
-    # PE = tasks.ParameterEstimation(copasi_mod, f, metabolites=[], run_mode=False,
-    #                                experiment_type=['steadystate'])
-    # PE.write_config_file()
-    # PE.setup()
-    # PE.model.open()
     copasi_mod.open()
     return copasi_mod
+
+
+def configure_parameter_estimation(model_string, condition):
+    mod_string = make_condition(model_string, condition)
+    copasi_dir = os.path.join(working_directory, 'copasi_models')
+    if not os.path.isdir(copasi_dir):
+        os.makedirs(copasi_dir)
+    fname = os.path.join(copasi_dir, "{}.cps".format(condition))
+    copasi_mod = load_model_with_pyco(mod_string, fname)
+    tasks.TimeCourse(copasi_mod, start=0, end=72, step_size=0.1, intervals=720, run=False)
+    f1 = r'D:\MesiSTRAT\CrossTalkModel\copasi_models\fakeSteadyStateData.txt'
+    f2 = r'D:\MesiSTRAT\CrossTalkModel\copasi_models\Smad2.txt'
+    assert os.path.isfile(f1)
+    assert os.path.isfile(f2)
+    # copasi_mod.open()
+    PE = tasks.ParameterEstimation(copasi_mod, [f1, f2], metabolites=[], run_mode=False,
+                                   experiment_type=['steadystate', 'steadystate'],
+                                   overwrite_config_file=False)
+    PE.write_config_file()
+    PE.setup()
+    return PE.model
+
+
 
 
 def simulate_model_component_timecourse(vars, cond, filename=None, **kwargs):
@@ -858,6 +865,14 @@ def simulate_model_component_timecourse(vars, cond, filename=None, **kwargs):
     plt.savefig(fname, dpi=250, bbox_inches='tight')
 
 
+def get_parameters_from_copasi_in_antimony_format(condition):
+    copasi_dir = os.path.join(working_directory, 'copasi_models')
+    fname = os.path.join(copasi_dir, "{}.cps".format(condition))
+    sbml = os.path.join(copasi_dir, "{}.sbml".format(condition))
+    pm = model.Model(fname)
+    pm.to_sbml(sbml)
+    mod = te.loadSBMLModel(sbml)
+    print(mod.getCurrentAntimony())
 
 
 if __name__ == '__main__':
@@ -879,8 +894,12 @@ if __name__ == '__main__':
         """
 
     SIMULATE_TIME_SERIES            = True
-    SIMULATE_BAR_GRAPHS             = False
+    SIMULATE_BAR_GRAPHS             = True
     OPEN_CONDITION_WITH_COPASI      = False
+
+    GET_PARAMETERS_FROM_COPASI      = False
+
+    CONFIGURE_PARAMETER_ESTIMATION  = False
 
     DOSE_RESPONSE_GROWTH_FACTOR     = False
     DOSE_RESPONSE_TGFB              = False
@@ -888,26 +907,31 @@ if __name__ == '__main__':
     GET_MODEL_AS_SBML               = False
     SIMULATE_INPUTS                 = False
 
+    if GET_PARAMETERS_FROM_COPASI:
+        get_parameters_from_copasi_in_antimony_format('T')
 
     if OPEN_CONDITION_WITH_COPASI:
-        open_condition_with_copasi(cross_talk_model_antstr(), 'E_M_72')
+        open_condition_with_copasi(cross_talk_model_antstr(), 'D')
 
+    if CONFIGURE_PARAMETER_ESTIMATION:
+        m = configure_parameter_estimation(cross_talk_model_antstr(), 'T')
+        m.open()
 
     phos = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
-               'pPI3K', 'pPI3K', 'pmTORC1', 'pS6K']
+            'pPI3K', 'pPI3K', 'pmTORC1', 'pS6K']
     erk = ['Erk', 'pErk', 'ppErk']
+    pSmad2  =   ['pSmad2']
+
     if SIMULATE_TIME_SERIES:
         for i in phos:
             simulate_model_component_timecourse([i], AZD_CONDITIONS.keys(), filename='AZD_'+i)
             simulate_model_component_timecourse([i], MK_CONDITIONS.keys(), filename='MK_'+i)
-        # simulate_model_component_timecourse(['pSmad2'], MK_CONDITIONS.keys(), filename=['pSmad2'])
 
     if SIMULATE_BAR_GRAPHS:
         for i in ['AZD', 'MK2206']:
             for j in phos:
                 simulate_conditions_and_plot_as_bargraph(j, i)
 
-        # simulate_all_conditions_and_plot_as_bargraphs()
 
 
     if SIMULATE_INPUTS:
@@ -954,12 +978,7 @@ if __name__ == '__main__':
     # open_condition_with_copasi('D')
 
 
-    # f=r'D:\MesiSTRAT\CrossTalkModel\copasi_models\D.cps'
-    # sbml=r'D:\MesiSTRAT\CrossTalkModel\copasi_models\D.sbml'
-    # # pm = model.Model(f)
-    # # pm.to_sbml(sbml)
-    # mod = te.loadSBMLModel(sbml)
-    # print(mod.getCurrentAntimony())
+
 
 
 
