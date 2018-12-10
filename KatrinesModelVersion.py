@@ -231,14 +231,14 @@ def cross_talk_model_antstr():
         kSmad2Dephos_km = 100;
         kSmad2Dephos_Vmax = 58.8712661228653;
         kRafPhos_km = 10;
-        kRafPhos_ki = 0.1;
+        kRafPhos_ki = 3.5;
         kRafPhos_Vmax = 9000;
         kRafPhos_n = 1;
         kRafDephos_km = 8;
         kRafDephosVmax = 3602.5;
         kMekPhos_km1 = 15;
-        kMekPhos_ki1 = 8.51335428744735;
-        kMekPhos_kcat1 = 186.986776157027;
+        kMekPhos_ki1 = 0.25;
+        kMekPhos_kcat1 = 165;
         AZD = 0;
         kMekDephos_km1 = 15;
         kMekDephos_Vmax1 = 2700;
@@ -265,7 +265,7 @@ def cross_talk_model_antstr():
         kS6KDephos_km = 10;
         kS6KDephos_Vmax = 50;
         kRafPhosByTGFbR_km = 25;
-        kRafPhosByTGFbR_kcat = 50;
+        kRafPhosByTGFbR_kcat = 265;
         kRafPhosByPI3K_km = 50;
         kRafPhosByPI3K_kcat = 50;
         kPI3KPhosByTGFbR_km = 10;
@@ -903,8 +903,8 @@ if __name__ == '__main__':
         :return:
         """
 
-    SIMULATE_TIME_SERIES            = True
-    SIMULATE_BAR_GRAPHS             = False
+    SIMULATE_TIME_SERIES            = False
+    SIMULATE_BAR_GRAPHS             = True
     OPEN_CONDITION_WITH_COPASI      = False
 
     GET_PARAMETERS_FROM_COPASI      = False
