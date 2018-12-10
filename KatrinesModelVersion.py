@@ -117,8 +117,8 @@ def cross_talk_model_antstr():
         
         var TGFbR           in Cell  
         var TGFbR_a         in Cell  
-        var TGFbR_EE      in Cell
-        var TGFbR_Cav     in Cell
+        var TGFbR_EE        in Cell
+        var TGFbR_Cav       in Cell
         var Smad2           in Cell  
         var pSmad2          in Cell  
         var Mek             in Cell
@@ -219,10 +219,11 @@ def cross_talk_model_antstr():
         pRaf = 12.0674049063339;
         ppMek = 29.0295122061532;
         ppErk = 43.0862638108839;
-        
+
         // Variable initializations:
-        kTGFbOn = 0.100647860357268;
         TGFb = 0.005;
+        GrowthFactors = 1;
+        kTGFbOn = 0.100647860357268;
         kTGFbOff = 0.04;
         kTGFbRIntern = 0.3333333333;
         kTGFbRRecyc = 0.03333333333;
@@ -230,7 +231,6 @@ def cross_talk_model_antstr():
         kSmad2Phos_kcat = 0.821234914911266;
         kSmad2Dephos_km = 100;
         kSmad2Dephos_Vmax = 58.8712661228653;
-        GrowthFactors = 1;
         kRafPhos_km = 10;
         kRafPhos_ki = 0.470122973857689;
         kRafPhos_Vmax = 9000;
@@ -250,17 +250,17 @@ def cross_talk_model_antstr():
         kPI3KPhosByGF = 0.239474698704283;
         kPI3KDephosByS6K = 78.593911393544;
         kAktPhos_km = 15;
-        kAktPhos_ki = 11.4306280538384;
+        kAktPhos_ki = 11.395;
         kAktPhos_kcat = 33.9694384586186;
         MK2206 = 0;
         kAktDephos_km = 15;
         kAktDephos_Vmax = 31.1252344504785;
         kmTORC1Phos_km = 1;
-        kmTORC1Phos_ki = 29.2436318008605;
+        kmTORC1Phos_ki = 0.01;
         kmTORC1Phos_kcat = 1.52760868893678;
         Everolimus = 0;
         kmTORC1Dephos_km = 100;
-        kmTORC1Dephos_Vmax = 10;
+        kmTORC1Dephos_Vmax = 1;
         kS6KPhosBymTORC1_km = 10;
         kS6KPhosBymTORC1_kcat = 2.77975221288272;
         kS6KDephos_km = 10;
@@ -273,7 +273,6 @@ def cross_talk_model_antstr():
         kPI3KPhosByTGFbR_kcat = 2.11703869307362;
         kPI3KDephosByErk = 7.55652721516263;
         kTGFbRInternByAkt = 0.001;
-
     
       unit volume = 1 litre;
       unit time_unit = 3600 second;
@@ -893,9 +892,9 @@ if __name__ == '__main__':
         :return:
         """
 
-    SIMULATE_TIME_SERIES            = True
-    SIMULATE_BAR_GRAPHS             = True
-    OPEN_CONDITION_WITH_COPASI      = False
+    SIMULATE_TIME_SERIES            = False
+    SIMULATE_BAR_GRAPHS             = False
+    OPEN_CONDITION_WITH_COPASI      = True
 
     GET_PARAMETERS_FROM_COPASI      = False
 
@@ -908,10 +907,10 @@ if __name__ == '__main__':
     SIMULATE_INPUTS                 = False
 
     if GET_PARAMETERS_FROM_COPASI:
-        get_parameters_from_copasi_in_antimony_format('T')
+        get_parameters_from_copasi_in_antimony_format('D')
 
     if OPEN_CONDITION_WITH_COPASI:
-        open_condition_with_copasi(cross_talk_model_antstr(), 'D')
+        open_condition_with_copasi(cross_talk_model_antstr(), 'E_A_72')
 
     if CONFIGURE_PARAMETER_ESTIMATION:
         m = configure_parameter_estimation(cross_talk_model_antstr(), 'T')
@@ -920,16 +919,16 @@ if __name__ == '__main__':
     phos = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
             'pPI3K', 'pPI3K', 'pmTORC1', 'pS6K']
     erk = ['Erk', 'pErk', 'ppErk']
-    pSmad2  =   ['pSmad2']
+    pSmad2  =   ['pSmad2', 'pErk', 'ppErk', 'pAkt']
 
     if SIMULATE_TIME_SERIES:
-        for i in phos:
+        for i in pSmad2:
             simulate_model_component_timecourse([i], AZD_CONDITIONS.keys(), filename='AZD_'+i)
             simulate_model_component_timecourse([i], MK_CONDITIONS.keys(), filename='MK_'+i)
 
     if SIMULATE_BAR_GRAPHS:
         for i in ['AZD', 'MK2206']:
-            for j in phos:
+            for j in pSmad2:
                 simulate_conditions_and_plot_as_bargraph(j, i)
 
 
