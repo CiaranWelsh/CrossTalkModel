@@ -188,9 +188,8 @@ def cross_talk_model_antstr():
         CrossTalkR2  :    Raf   => pRaf         ;   Cell *  MMWithKcat(kRafPhosByPI3K_km,kRafPhosByPI3K_kcat, Raf, pPI3K)           ;
         CrossTalkR3  :    PI3K  => pPI3K        ;   Cell *  MMWithKcat(kPI3KPhosByTGFbR_km, kPI3KPhosByTGFbR_kcat, PI3K, TGFbR_Cav) ;
         CrossTalkR4  :    pPI3K   => PI3K       ;   Cell *  kPI3KDephosByErk    *pPI3K      *ppErk        ;
-        CrossTalkR5  :    TGFbR_a => TGFbR_EE   ;   Cell *  kTGFbRInternByAkt     *TGFbR_a    *Akt
-        //CrossTalkR2  :    PI3K    => pPI3K    ;   Cell *  kPI3KPhosByMek      *PI3K       *ppMek        ;
-        //CrossTalkR4  :    TGFbR_a => TGFbR_EE ;   Cell *  kTGFbRInternByAkt   *TGFbR_a    *pAkt         ;
+        //CrossTalkR5  :    TGFbR_a => TGFbR_EE ;   Cell *  kTGFbRInternByAkt     *TGFbR_a    *pAkt     ;
+        CrossTalkR5  :    Smad2 => pSmad2       ;   Cell *  MMWithKcat(kSmad2PhosByAkt_km, kSmad2PhosByAkt_kcat, Smad2, pAkt)       ;
         
         // These two reactions counteract Everolimus
         // CroosTalkR4:    mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByErk    *mTORC1     *ppErk        ;
@@ -228,7 +227,7 @@ def cross_talk_model_antstr():
         kTGFbRIntern = 0.3333333333;
         kTGFbRRecyc = 0.03333333333;
         kSmad2Phos_km = 97.0531;
-        kSmad2Phos_kcat = 0.821234914911266;
+        kSmad2Phos_kcat = 2;
         kSmad2Dephos_km = 100;
         kSmad2Dephos_Vmax = 58.8712661228653;
         kRafPhos_km = 10;
@@ -272,7 +271,10 @@ def cross_talk_model_antstr():
         kPI3KPhosByTGFbR_km = 10;
         kPI3KPhosByTGFbR_kcat = 50;
         kPI3KDephosByErk = 5.014;
-        kTGFbRInternByAkt = 0.001;
+        //kTGFbRInternByAkt = 0.01;
+        kSmad2PhosByAkt_km = 1;
+        kSmad2PhosByAkt_kcat = 1;
+        
 
       unit volume = 1 litre;
       unit time_unit = 3600 second;
