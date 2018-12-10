@@ -517,8 +517,7 @@ def simulate_condition(model_string, condition):
     return df
 
 
-
-def simulate_conditions_and_plot_as_bargraph(y, type='AZD'):
+def simulate_conditions(type='azd'):
     """
     Takes output from simulation and plot
     :param df:
@@ -551,14 +550,24 @@ def simulate_conditions_and_plot_as_bargraph(y, type='AZD'):
         dct[k] = df
 
     df = pandas.concat(dct)
-
     df.index = df.index.droplevel(1)
     df = df.drop('time', axis=1)
-    df = df.reset_index()
-    df = df.rename(columns={'index': 'Condition'})
 
+
+    return df
+
+def simulate_conditions_and_plot_as_bargraph(y, type='AZD'):
+    """
+    Takes output from simulation and plot
+    :param df:
+    :return:
+    """
+
+    df = simulate_conditions(type=type)
     if y not in df.columns:
         raise ValueError('The variable "{}" does not appear in your model'.format(y))
+    df = df.reset_index()
+    df = df.rename(columns={'index': 'Condition'})
 
     fig = plt.figure()
     seaborn.barplot(x='Condition', y=y, data=df,
@@ -892,9 +901,9 @@ if __name__ == '__main__':
         :return:
         """
 
-    SIMULATE_TIME_SERIES            = False
-    SIMULATE_BAR_GRAPHS             = False
-    OPEN_CONDITION_WITH_COPASI      = True
+    SIMULATE_TIME_SERIES            = True
+    SIMULATE_BAR_GRAPHS             = True
+    OPEN_CONDITION_WITH_COPASI      = False
 
     GET_PARAMETERS_FROM_COPASI      = False
 
@@ -922,13 +931,13 @@ if __name__ == '__main__':
     pSmad2  =   ['pSmad2', 'pErk', 'ppErk', 'pAkt']
 
     if SIMULATE_TIME_SERIES:
-        for i in pSmad2:
+        for i in phos:
             simulate_model_component_timecourse([i], AZD_CONDITIONS.keys(), filename='AZD_'+i)
             simulate_model_component_timecourse([i], MK_CONDITIONS.keys(), filename='MK_'+i)
 
     if SIMULATE_BAR_GRAPHS:
         for i in ['AZD', 'MK2206']:
-            for j in pSmad2:
+            for j in phos:
                 simulate_conditions_and_plot_as_bargraph(j, i)
 
 
