@@ -904,7 +904,7 @@ if __name__ == '__main__':
         """
 
     SIMULATE_TIME_SERIES            = True
-    SIMULATE_BAR_GRAPHS             = True
+    SIMULATE_BAR_GRAPHS             = False
     OPEN_CONDITION_WITH_COPASI      = False
 
     GET_PARAMETERS_FROM_COPASI      = False
