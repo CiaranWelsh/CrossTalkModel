@@ -219,7 +219,7 @@ def cross_talk_model_antstr():
         pRaf = 12.0674049063339;
         ppMek = 29.0295122061532;
         ppErk = 43.0862638108839;
-
+        
         // Variable initializations:
         TGFb = 0.005;
         GrowthFactors = 1;
@@ -232,7 +232,7 @@ def cross_talk_model_antstr():
         kSmad2Dephos_km = 100;
         kSmad2Dephos_Vmax = 58.8712661228653;
         kRafPhos_km = 10;
-        kRafPhos_ki = 0.470122973857689;
+        kRafPhos_ki = 0.1;
         kRafPhos_Vmax = 9000;
         kRafPhos_n = 1;
         kRafDephos_km = 8;
@@ -248,16 +248,16 @@ def cross_talk_model_antstr():
         kErkDephos_km1 = 15;
         kErkDephos_Vmax1 = 1800;
         kPI3KPhosByGF = 0.239474698704283;
-        kPI3KDephosByS6K = 78.593911393544;
+        kPI3KDephosByS6K = 25;
         kAktPhos_km = 15;
-        kAktPhos_ki = 11.395;
-        kAktPhos_kcat = 33.9694384586186;
+        kAktPhos_ki = 0.01;
+        kAktPhos_kcat = 2.9215;
         MK2206 = 0;
         kAktDephos_km = 15;
         kAktDephos_Vmax = 31.1252344504785;
         kmTORC1Phos_km = 1;
-        kmTORC1Phos_ki = 0.01;
-        kmTORC1Phos_kcat = 1.52760868893678;
+        kmTORC1Phos_ki = 0.001;
+        kmTORC1Phos_kcat = 0.1;
         Everolimus = 0;
         kmTORC1Dephos_km = 100;
         kmTORC1Dephos_Vmax = 1;
@@ -266,14 +266,14 @@ def cross_talk_model_antstr():
         kS6KDephos_km = 10;
         kS6KDephos_Vmax = 50;
         kRafPhosByTGFbR_km = 25;
-        kRafPhosByTGFbR_kcat = 274.631085458647;
+        kRafPhosByTGFbR_kcat = 50;
         kRafPhosByPI3K_km = 50;
-        kRafPhosByPI3K_kcat = 471.350849560322;
+        kRafPhosByPI3K_kcat = 50;
         kPI3KPhosByTGFbR_km = 10;
-        kPI3KPhosByTGFbR_kcat = 2.11703869307362;
-        kPI3KDephosByErk = 7.55652721516263;
+        kPI3KPhosByTGFbR_kcat = 50;
+        kPI3KDephosByErk = 5.014;
         kTGFbRInternByAkt = 0.001;
-    
+
       unit volume = 1 litre;
       unit time_unit = 3600 second;
       unit substance = 1e-9 mole;
@@ -916,7 +916,7 @@ if __name__ == '__main__':
     SIMULATE_INPUTS                 = False
 
     if GET_PARAMETERS_FROM_COPASI:
-        get_parameters_from_copasi_in_antimony_format('D')
+        get_parameters_from_copasi_in_antimony_format('E_A_72')
 
     if OPEN_CONDITION_WITH_COPASI:
         open_condition_with_copasi(cross_talk_model_antstr(), 'E_A_72')
@@ -928,16 +928,16 @@ if __name__ == '__main__':
     phos = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
             'pPI3K', 'pPI3K', 'pmTORC1', 'pS6K']
     erk = ['Erk', 'pErk', 'ppErk']
-    pSmad2  =   ['pSmad2', 'pErk', 'ppErk', 'pAkt']
+    pSmad2  =   ['pSmad2', 'pErk', 'ppErk', 'pAkt', 'pS6K']
 
     if SIMULATE_TIME_SERIES:
-        for i in phos:
+        for i in pSmad2:
             simulate_model_component_timecourse([i], AZD_CONDITIONS.keys(), filename='AZD_'+i)
             simulate_model_component_timecourse([i], MK_CONDITIONS.keys(), filename='MK_'+i)
 
     if SIMULATE_BAR_GRAPHS:
         for i in ['AZD', 'MK2206']:
-            for j in phos:
+            for j in pSmad2:
                 simulate_conditions_and_plot_as_bargraph(j, i)
 
 
