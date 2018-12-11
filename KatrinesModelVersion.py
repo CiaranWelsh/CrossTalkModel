@@ -904,7 +904,7 @@ if __name__ == '__main__':
         """
 
     SIMULATE_TIME_SERIES            = False
-    SIMULATE_BAR_GRAPHS             = True
+    SIMULATE_BAR_GRAPHS             = False
     OPEN_CONDITION_WITH_COPASI      = False
 
     GET_PARAMETERS_FROM_COPASI      = False
@@ -915,7 +915,7 @@ if __name__ == '__main__':
     DOSE_RESPONSE_TGFB              = False
     GET_ODES_WITH_ANTIMONY          = False
     GET_MODEL_AS_SBML               = False
-    SIMULATE_INPUTS                 = False
+    SIMULATE_INPUTS                 = True
 
     if GET_PARAMETERS_FROM_COPASI:
         get_parameters_from_copasi_in_antimony_format('E_A_72')
