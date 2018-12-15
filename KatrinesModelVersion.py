@@ -519,12 +519,15 @@ def simulate_condition(model_string, condition):
     return df
 
 
-def simulate_conditions(type='azd'):
+def simulate_conditions(model_str=None, type='azd'):
     """
     Takes output from simulation and plot
     :param df:
     :return:
     """
+    if model_str is None:
+        model_str = cross_talk_model_antstr()
+
     seaborn.set_context('talk', font_scale=2)
     if type not in ['AZD', 'MK2206']:
         raise ValueError
@@ -543,7 +546,7 @@ def simulate_conditions(type='azd'):
         # p = Process(target=simulate_condition, args=(tuple([cross_talk_model_antstr()] + conditions[k])))
         # p.start()
         # p.join()
-        df = simulate_condition(cross_talk_model_antstr(), k)
+        df = simulate_condition(model_str, k)
         df = df[df['time'] == 72.0]
         if df.empty:
             raise ValueError("Condition '{}' with values '{}' produces an "
@@ -556,6 +559,42 @@ def simulate_conditions(type='azd'):
     df = df.drop('time', axis=1)
 
 
+    return df
+
+def simulate_conditions2(model_str=None, conditions=None):
+    """
+    Takes output from simulation and plot
+    :param df:
+    :return:
+    """
+    if model_str is None:
+        model_str = cross_talk_model_antstr()
+
+    if conditions is None:
+        conditions = [
+            'A_1.25', 'A_24', 'E', 'D', 'M_48', 'M_72',
+            'E_M_24', 'E_A_72', 'E_A_48', 'M_1.25', 'E_A_24',
+            'M_24', 'T', 'E_M_72', 'E_M_48', 'A_48', 'E_M_1.25',
+            'E_A_1.25', 'A_72'
+        ]
+    # from multiprocessing import Process
+
+    dct = OrderedDict()
+    for k in conditions:
+        # p = Process(target=simulate_condition, args=(tuple([cross_talk_model_antstr()] + conditions[k])))
+        # p.start()
+        # p.join()
+        df = simulate_condition(model_str, k)
+        df = df[df['time'] == 72.0]
+        if df.empty:
+            raise ValueError("Condition '{}' produces an "
+                             "empty data frame".format(k))
+
+        dct[k] = df
+
+    df = pandas.concat(dct)
+    df.index = df.index.droplevel(1)
+    df = df.drop('time', axis=1)
     return df
 
 def simulate_conditions_and_plot_as_bargraph(y, type='AZD'):
@@ -841,7 +880,7 @@ def simulate_model_component_timecourse(vars, cond, filename=None, **kwargs):
 
         model_str = make_condition(cross_talk_model_antstr(), c)
         mod = te.loada(model_str)
-        res = mod.simulate(0, 75, 750, ['time'] + vars)
+        res = mod.simulate(0, 72, 73, ['time'] + vars)
         gs = GridSpec(len(cond), 1, wspace=0.3)
         ax = []
         for j, v in enumerate(vars):
@@ -884,6 +923,122 @@ def get_parameters_from_copasi_in_antimony_format(condition):
     mod = te.loadSBMLModel(sbml)
     print(mod.getCurrentAntimony())
 
+def get_model_parameters(mod):
+    return dict(zip(mod.getGlobalParameterIds(), mod.getGlobalParameterValues()))
+
+class Inequality(object):
+    def __init__(self, left, operator, right, name):
+        """
+
+        :param left: [cond, species]
+        :param operator: '>' or '<'
+        :param right: [cond, species]
+        """
+        self.left = left
+        self.operator = operator
+        self.right = right
+        self.name = name
+
+    def evaluate(self, df):
+        left = df.loc[self.left[0], self.left[1]]
+        right = df.loc[self.right[0], self.right[1]]
+        if self.operator == '>':
+            return left > right
+        elif self.operator == '<':
+            return left < right
+
+
+class InequalityGroup(object):
+    def __init__(self, inequalities):
+        self.inequalities = inequalities
+
+    def evaluate(self, df):
+        eval_dct = OrderedDict()
+        for ineq in self.inequalities:
+            if not isinstance(ineq, Inequality):
+                raise ValueError
+
+            ev = ineq.evaluate(df)
+
+
+
+def do_robustness(model_string):
+    mod = te.loada(model_string)
+    peterb_parameters = OrderedDict({
+        'kSmad2Phos_kcat': 2.0,
+        'kmTORC1Phos_ki': 0.001,
+        'kPI3KPhosByTGFbR_kcat': 50.0,
+        'kAktDephos_Vmax': 31.1252344504785,
+        'kPI3KDephosByErk': 5.014,
+        'kS6KPhosBymTORC1_kcat': 2.77975221288272,
+        'kPI3KPhosByGF': 0.239474698704283,
+        'kPI3KDephosByS6K': 25.0,
+        'kErkPhos_kcat1': 85.0103161451182,
+        'kmTORC1Dephos_Vmax': 1.0,
+        'kS6KDephos_Vmax': 50.0,
+        'kAktPhos_kcat': 2.9215,
+        'kRafPhos_ki': 3.5,
+        'kRafPhosByPI3K_kcat': 50.0,
+        'kRafPhosByTGFbR_kcat': 265.0,
+        'kMekPhos_kcat1': 165.0,
+        'kMekPhos_ki1': 0.25,
+        'kTGFbOn': 0.100647860357268,
+        'kSmad2PhosByAkt_kcat': 1.0,
+        'kSmad2Dephos_Vmax': 58.8712661228653,
+        'kAktPhos_ki': 0.01,
+        'kmTORC1Phos_kcat': 0.1,
+    })
+    # for k, v in peterb_parameters.items():
+    #     print(k, v, new, type(new))
+    #     print(setattr)
+        # new = numpy.random.normal(0, 0.1*v, 1)[0]
+        # setattr(mod, k, v+new)
+
+    delta = 0.01
+
+    df = simulate_conditions2(mod.getCurrentAntimony())
+    ineq1 = Inequality(['E', 'pAkt'], '>', ['D', 'pAkt'], 'pAkt')
+    ineq2 = Inequality(['E', 'ppErk'], '>', ['D', 'ppErk'], 'pErk')
+    e = ineq1.evaluate(df)
+    prob_vec = OrderedDict(zip(peterb_parameters.keys(),
+                               [1.0 / len(peterb_parameters)] * len(peterb_parameters)))
+    res = {}
+    for i in range(3):
+        choice = numpy.random.choice(peterb_parameters.keys(), p=prob_vec.values())
+        new = numpy.random.normal(0, 0.1 * peterb_parameters[choice], 1)[0]
+        old = peterb_parameters[choice]
+        peterb_parameters[choice] = peterb_parameters[choice] + new
+        setattr(mod,  choice, peterb_parameters[choice])
+        df = simulate_conditions2(mod.getCurrentAntimony())
+        e = ineq.evaluate(df)
+        print("Eval to '{0}'. The parameter choice is '{1}'. "
+              "The old value of '{1}' is '{2}', new value is '{3}'".format(
+            e, choice, old, peterb_parameters[choice]
+        ))
+        if e:
+            res[i] = pandas.DataFrame({
+                'prob': prob_vec,
+                'param_val': peterb_parameters
+            })
+            prob_vec[choice] = prob_vec[choice] + delta
+            for i in prob_vec.keys():
+                if i != choice:
+                    prob_vec[i] = prob_vec[i] - delta/(len(prob_vec) - 1)
+        else:
+            prob_vec[choice] = prob_vec[choice] - delta
+            for i in prob_vec.keys():
+                if i != choice:
+                    prob_vec[i] = prob_vec[i] + delta/(len(prob_vec) - 1)
+
+    df = pandas.concat(res)
+    print(df)
+    return res
+
+    # print(choice)
+
+    # simulate_conditions
+    # print(get_model_parameters(mod))
+
 
 if __name__ == '__main__':
 
@@ -907,6 +1062,8 @@ if __name__ == '__main__':
     SIMULATE_BAR_GRAPHS             = False
     OPEN_CONDITION_WITH_COPASI      = False
 
+    ROBUSTNESS                      = True
+
     GET_PARAMETERS_FROM_COPASI      = False
 
     CONFIGURE_PARAMETER_ESTIMATION  = False
@@ -915,7 +1072,7 @@ if __name__ == '__main__':
     DOSE_RESPONSE_TGFB              = False
     GET_ODES_WITH_ANTIMONY          = False
     GET_MODEL_AS_SBML               = False
-    SIMULATE_INPUTS                 = True
+    SIMULATE_INPUTS                 = False
 
     if GET_PARAMETERS_FROM_COPASI:
         get_parameters_from_copasi_in_antimony_format('E_A_72')
@@ -965,8 +1122,33 @@ if __name__ == '__main__':
         plt.show()
 
 
+    if ROBUSTNESS:
+        model_string = cross_talk_model_antstr()
 
 
+        do_robustness(model_string)
+
+
+
+"""
+Sudocode for ML algorithm for optimizing topology with qualitative information.
+
+N = number of iterations
+
+Value = Evaluate objective function for current parameter set and topology
+for i=0:N
+    x = Propose new parameter set
+    evaluate objective function for x
+    if better than value:
+        value = x
+    else
+        iterate
+end
+    
+
+
+
+"""
 
 
     # f = os.path.join(working_directory, 'KholoPlusVilar.cps')
