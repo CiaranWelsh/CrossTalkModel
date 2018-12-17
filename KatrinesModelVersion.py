@@ -11,7 +11,9 @@ except ImportError:
 import tellurium as te
 import seaborn
 from collections import OrderedDict
-
+from itertools import cycle
+from decimal import Decimal, getcontext
+from multiprocessing import Process, Pool, cpu_count
 
 seaborn.set_style('white')
 seaborn.set_context('talk', font_scale=1)
@@ -561,41 +563,6 @@ def simulate_conditions(model_str=None, type='azd'):
 
     return df
 
-def simulate_conditions2(model_str=None, conditions=None):
-    """
-    Takes output from simulation and plot
-    :param df:
-    :return:
-    """
-    if model_str is None:
-        model_str = cross_talk_model_antstr()
-
-    if conditions is None:
-        conditions = [
-            'A_1.25', 'A_24', 'E', 'D', 'M_48', 'M_72',
-            'E_M_24', 'E_A_72', 'E_A_48', 'M_1.25', 'E_A_24',
-            'M_24', 'T', 'E_M_72', 'E_M_48', 'A_48', 'E_M_1.25',
-            'E_A_1.25', 'A_72'
-        ]
-    # from multiprocessing import Process
-
-    dct = OrderedDict()
-    for k in conditions:
-        # p = Process(target=simulate_condition, args=(tuple([cross_talk_model_antstr()] + conditions[k])))
-        # p.start()
-        # p.join()
-        df = simulate_condition(model_str, k)
-        df = df[df['time'] == 72.0]
-        if df.empty:
-            raise ValueError("Condition '{}' produces an "
-                             "empty data frame".format(k))
-
-        dct[k] = df
-
-    df = pandas.concat(dct)
-    df.index = df.index.droplevel(1)
-    df = df.drop('time', axis=1)
-    return df
 
 def simulate_conditions_and_plot_as_bargraph(y, type='AZD'):
     """
@@ -952,6 +919,18 @@ class InequalityGroup(object):
     def __init__(self, inequalities):
         self.inequalities = inequalities
 
+        self.memory = {
+            'old': None,
+            'new': None
+        }
+
+    def inequality_keys(self):
+        return cycle(range(len(self)))
+
+    @property
+    def names(self):
+        return [i.name for i in self.inequalities]
+
     def evaluate(self, df):
         eval_dct = OrderedDict()
         for ineq in self.inequalities:
@@ -959,85 +938,206 @@ class InequalityGroup(object):
                 raise ValueError
 
             ev = ineq.evaluate(df)
+            eval_dct[ineq.name] = ev
+
+        ## replace old memory slot with previous iteration
+        ## and the new slot with inequalities just calculated.
+        self.memory['old'] = self.memory['new']
+        self.memory['new'] = eval_dct
+
+        # self.memory.pop(0)
+        #
+        # self.memory.append(eval_dct)
+        if len(self.memory) != 2:
+            raise ValueError('Inequality memory must be of length 2. Got "{}" instead.'.format(len(self.memory)))
+
+        return eval_dct
+
+    def __len__(self):
+        return len(self.inequalities)
 
 
 
-def do_robustness(model_string):
-    mod = te.loada(model_string)
-    peterb_parameters = OrderedDict({
-        'kSmad2Phos_kcat': 2.0,
-        'kmTORC1Phos_ki': 0.001,
-        'kPI3KPhosByTGFbR_kcat': 50.0,
-        'kAktDephos_Vmax': 31.1252344504785,
-        'kPI3KDephosByErk': 5.014,
-        'kS6KPhosBymTORC1_kcat': 2.77975221288272,
-        'kPI3KPhosByGF': 0.239474698704283,
-        'kPI3KDephosByS6K': 25.0,
-        'kErkPhos_kcat1': 85.0103161451182,
-        'kmTORC1Dephos_Vmax': 1.0,
-        'kS6KDephos_Vmax': 50.0,
-        'kAktPhos_kcat': 2.9215,
-        'kRafPhos_ki': 3.5,
-        'kRafPhosByPI3K_kcat': 50.0,
-        'kRafPhosByTGFbR_kcat': 265.0,
-        'kMekPhos_kcat1': 165.0,
-        'kMekPhos_ki1': 0.25,
-        'kTGFbOn': 0.100647860357268,
-        'kSmad2PhosByAkt_kcat': 1.0,
-        'kSmad2Dephos_Vmax': 58.8712661228653,
-        'kAktPhos_ki': 0.01,
-        'kmTORC1Phos_kcat': 0.1,
-    })
-    # for k, v in peterb_parameters.items():
-    #     print(k, v, new, type(new))
-    #     print(setattr)
-        # new = numpy.random.normal(0, 0.1*v, 1)[0]
-        # setattr(mod, k, v+new)
 
-    delta = 0.01
 
-    df = simulate_conditions2(mod.getCurrentAntimony())
-    ineq1 = Inequality(['E', 'pAkt'], '>', ['D', 'pAkt'], 'pAkt')
-    ineq2 = Inequality(['E', 'ppErk'], '>', ['D', 'ppErk'], 'pErk')
-    e = ineq1.evaluate(df)
-    prob_vec = OrderedDict(zip(peterb_parameters.keys(),
-                               [1.0 / len(peterb_parameters)] * len(peterb_parameters)))
-    res = {}
-    for i in range(3):
-        choice = numpy.random.choice(peterb_parameters.keys(), p=prob_vec.values())
-        new = numpy.random.normal(0, 0.1 * peterb_parameters[choice], 1)[0]
-        old = peterb_parameters[choice]
-        peterb_parameters[choice] = peterb_parameters[choice] + new
-        setattr(mod,  choice, peterb_parameters[choice])
-        df = simulate_conditions2(mod.getCurrentAntimony())
-        e = ineq.evaluate(df)
-        print("Eval to '{0}'. The parameter choice is '{1}'. "
-              "The old value of '{1}' is '{2}', new value is '{3}'".format(
-            e, choice, old, peterb_parameters[choice]
-        ))
-        if e:
-            res[i] = pandas.DataFrame({
-                'prob': prob_vec,
-                'param_val': peterb_parameters
-            })
-            prob_vec[choice] = prob_vec[choice] + delta
-            for i in prob_vec.keys():
-                if i != choice:
-                    prob_vec[i] = prob_vec[i] - delta/(len(prob_vec) - 1)
+class OptimizeQualitative(object):
+    pandas.set_option('precision', 24)
+    getcontext().prec = 24
+
+    @property
+    def probablity_matrix(self):
+        mat_shape = (len(self.free_parameters), len(self.inequality_group))
+        starting_prob = 1.0 / len(self.free_parameters)
+        if starting_prob < delta:
+            raise ValueError(" delta must be smaller than the starting probabilities. ")
+
+        prob_mat = pandas.DataFrame(numpy.full(mat_shape, starting_prob))
+        prob_mat.columns = self.inequality_group.names
+        prob_mat['parameter_names'] = self.free_parameters.keys()
+        prob_mat.set_index('parameter_names', inplace=True)
+        return prob_mat
+
+    @property
+    def condition_list(self):
+        return cycle(self.inequality_group.names)
+
+    def __init__(self, model_string, free_parameters,
+                 inequality_group, delta, fname=None,
+                 iterations=10
+                 ):
+        self.model_string = model_string
+        self.free_parameters = free_parameters
+        self.inequality_group = inequality_group
+        self.delta = delta
+        self.fname = fname
+        self.iterations = iterations
+
+    def _load_model(self):
+        return te.loada(model_string)
+
+    @staticmethod
+    def simulate_condition(model_string, condition):
+        if condition not in AZD_CONDITIONS.keys() + MK_CONDITIONS.keys():
+            raise ValueError
+
+        model_string = make_condition(model_string, condition)
+        mod = te.loada(model_string)
+        ## Add 1 to intervals for 0 indexed python
+        start = 0
+        end = 75
+        num = 751
+        time = numpy.linspace(start, end, num)
+
+        if 72.0 not in time:
+            raise ValueError("Simulating conditions requires an output at exactly "
+                             "72h after the first inhibitor. The current time steps "
+                             "do not 'land' on 72.0 exactly - so pick different "
+                             "simulation parameters. Also, remember that Python is "
+                             "0 indexed, so try adding 1 to the number of "
+                             " data points collected. To help, here is the current"
+                             " time vector \n\n{}".format(time))
+
+        res = mod.simulate(start, end, num, ['time'] + MODEL_SPECIES)
+
+        df = pandas.DataFrame(res, columns=['time'] + MODEL_SPECIES)
+        df = df[df['time'] == 72.0]
+        if df.empty:
+            raise ValueError("Condition '{}' produces an "
+                             "empty data frame".format(condition))
+        return df
+
+    def _simulate_conditions(self, model_str, conditions=None):
+        """
+        Takes output from simulation and plot
+        :param df:
+        :return:
+        """
+        if conditions is None:
+            conditions = list(set(AZD_CONDITIONS.keys() + MK_CONDITIONS.keys()))
+
+        dct = OrderedDict()
+        for cond in conditions:
+            df = self.simulate_condition(model_str, cond)
+            df = df[df['time'] == 72.0]
+            dct[cond] = df
+
+        df = pandas.concat(dct)
+        df.index = df.index.droplevel(1)
+        df = df.drop('time', axis=1)
+        return df
+
+    def _evaluate_inequalities(self, df):
+        self.inequality_group.evaluate(df)
+        return self.inequality_group.memory
+
+    @staticmethod
+    def _check_if_all_conditions_eval_to_true(inequality_dct):
+        if inequality_dct is None:
+            return None
+
+        if not isinstance(inequality_dct, (dict, None)):
+            raise TypeError("Argument should be a dictionary. Got a '{}' instead.".format(type(inequality_dct)))
+
+        if all(inequality_dct.values()):
+            ## return if all values are True
+            print('all conditions are met')
+            return True
         else:
-            prob_vec[choice] = prob_vec[choice] - delta
-            for i in prob_vec.keys():
-                if i != choice:
-                    prob_vec[i] = prob_vec[i] + delta/(len(prob_vec) - 1)
+            return False
 
-    df = pandas.concat(res)
-    print(df)
-    return res
+    def _peterb_parameter(self, mod, param):
+        old = self.free_parameters[param]
+        peterb_amount = numpy.random.normal(0, 0.1 * old, 1)[0]
+        assert peterb_amount < old, "peterb amount must be smaller than old value otherwise risk getting negative values"
+        new_parameter_value = old + peterb_amount
+        assert new_parameter_value > 0, "Be positive"
+        setattr(mod, param, new_parameter_value)
+        return mod, new_parameter_value
 
-    # print(choice)
+    def _update_probabilities(self, cond, param, reinforcement_direction):
+        if cond not in self.probablity_matrix.columns:
+            raise ValueError('The "{}" condition is not in your dataframe'.format(cond))
 
-    # simulate_conditions
-    # print(get_model_parameters(mod))
+        original_probabilities = self.probablity_matrix[cond]
+        if reinforcement_direction == 'positive_reinforcement':
+            original_probabilities[param] = Decimal(original_probabilities[param]) + Decimal(delta)
+            for i in original_probabilities:
+                if i != param:
+                    original_probabilities[i] = Decimal(original_probabilities[i]) - \
+                                                (  Decimal(delta) / Decimal( (len(original_probabilities) - 1) )  )
+        elif reinforcement_direction == 'negative_reinforcement':
+            original_probabilities[param] = Decimal(original_probabilities[param]) - Decimal(delta)
+            for i in original_probabilities:
+                if i != param:
+                    original_probabilities[i] = Decimal(original_probabilities[i]) + \
+                                                (  Decimal(delta) / Decimal( (len(original_probabilities) - 1) )  )
+
+        self.probablity_matrix[cond] = original_probabilities
+
+    def fit(self):
+        """
+
+        :return:
+        """
+        ## if all conditions are satisified, return
+        df = self._simulate_conditions(self.model_string)
+        ineq_memory = self._evaluate_inequalities(df)
+        if self._check_if_all_conditions_eval_to_true(ineq_memory['new']):
+            return self.free_parameters, self.probablity_matrix
+
+        mod = te.loada(self.model_string)
+        for i in range(self.iterations):
+            print('Iteration {}'.format(i))
+            current_condition = next(self.condition_list)
+            ## choose one parameter to peterb, based on probabilities
+            choice = numpy.random.choice(self.free_parameters.keys(),
+                                         p=self.probablity_matrix[current_condition].values)
+            mod, new_parameter_value = self._peterb_parameter(mod, choice)
+            df = self._simulate_conditions(mod.getCurrentAntimony())
+            ineq_memory = self._evaluate_inequalities(df)
+            if self._check_if_all_conditions_eval_to_true(ineq_memory['new']):
+                return self.free_parameters, self.probablity_matrix
+
+            for cond, boolean in ineq_memory['new'].items():
+                if ineq_memory['old'] is False and ineq_memory['new'] is True:
+                    print("Positively reinforcing '{}' parameter as changing it from '{}' to '{}' "
+                          "improved the '{}' condition".format(
+                        choice, self.free_parameters[choice], new_parameter_value, cond
+                    ))
+                    self._update_probabilities(cond, choice, 'positive_reinforcement')
+                    self.free_parameters[choice] = new_parameter_value
+
+                elif ineq_memory['old'] is True and ineq_memory['new'] is False:
+                    print("Negatively reinforcing '{}' parameter as changing it from '{}' to '{}' "
+                          "inhibited the '{}' condition".format(
+                        choice, self.free_parameters[choice], new_parameter_value, cond
+                    ))
+                    self._update_probabilities(cond, choice, 'negative_reinforcement')
+
+
+
+
+
 
 
 if __name__ == '__main__':
@@ -1125,24 +1225,51 @@ if __name__ == '__main__':
     if ROBUSTNESS:
         model_string = cross_talk_model_antstr()
 
+        free_parameters = OrderedDict({
+            'kSmad2Phos_kcat': 2.0,
+            'kmTORC1Phos_ki': 0.001,
+            'kPI3KPhosByTGFbR_kcat': 50.0,
+            'kAktDephos_Vmax': 31.1252344504785,
+            'kPI3KDephosByErk': 5.014,
+            'kS6KPhosBymTORC1_kcat': 2.77975221288272,
+            'kPI3KPhosByGF': 0.239474698704283,
+            'kPI3KDephosByS6K': 25.0,
+            'kErkPhos_kcat1': 85.0103161451182,
+            'kmTORC1Dephos_Vmax': 1.0,
+            'kS6KDephos_Vmax': 50.0,
+            'kAktPhos_kcat': 2.9215,
+            'kRafPhos_ki': 3.5,
+            'kRafPhosByPI3K_kcat': 50.0,
+            'kRafPhosByTGFbR_kcat': 265.0,
+            'kMekPhos_kcat1': 165.0,
+            'kMekPhos_ki1': 0.25,
+            'kTGFbOn': 0.100647860357268,
+            'kSmad2PhosByAkt_kcat': 1.0,
+            'kSmad2Dephos_Vmax': 58.8712661228653,
+            'kAktPhos_ki': 0.01,
+            'kmTORC1Phos_kcat': 0.1,
+        })
 
-        do_robustness(model_string)
+        delta = 0.01
+        ineq1 = Inequality(['E', 'pAkt'], '>', ['D', 'pAkt'], 'pAkt')
+        ineq2 = Inequality(['E', 'ppErk'], '>', ['D', 'ppErk'], 'pErk')
+        ineq = InequalityGroup([ineq1, ineq2])
+
+        O = OptimizeQualitative(
+            cross_talk_model_antstr(), free_parameters,
+            ineq, delta
+            )
+        print(O.fit())
+
+        # do_robustness(model_string)
 
 
 
 """
 Sudocode for ML algorithm for optimizing topology with qualitative information.
 
-N = number of iterations
 
-Value = Evaluate objective function for current parameter set and topology
-for i=0:N
-    x = Propose new parameter set
-    evaluate objective function for x
-    if better than value:
-        value = x
-    else
-        iterate
+
 end
     
 
