@@ -982,14 +982,15 @@ class OptimizeQualitative(object):
         return cycle(self.inequality_group.names)
 
     def __init__(self, model_string, free_parameters,
-                 inequality_group, delta, fname=None,
-                 iterations=10
+                 inequality_group, delta, iterations=10
                  ):
         self.model_string = model_string
         self.free_parameters = free_parameters
         self.inequality_group = inequality_group
         self.delta = delta
-        self.fname = fname
+        # if self.fname is None:
+        self.fname_param = os.path.join(working_directory, 'parameters.csv')
+        self.fname_prob = os.path.join(working_directory, 'prob.csv')
         self.iterations = iterations
 
     def _load_model(self):
@@ -1061,6 +1062,7 @@ class OptimizeQualitative(object):
         if all(inequality_dct.values()):
             ## return if all values are True
             print('all conditions are met')
+
             return True
         else:
             return False
@@ -1081,18 +1083,22 @@ class OptimizeQualitative(object):
         original_probabilities = self.probablity_matrix[cond]
         if reinforcement_direction == 'positive_reinforcement':
             original_probabilities[param] = Decimal(original_probabilities[param]) + Decimal(delta)
-            for i in original_probabilities:
+            for i in original_probabilities.index:
                 if i != param:
                     original_probabilities[i] = Decimal(original_probabilities[i]) - \
                                                 (  Decimal(delta) / Decimal( (len(original_probabilities) - 1) )  )
         elif reinforcement_direction == 'negative_reinforcement':
             original_probabilities[param] = Decimal(original_probabilities[param]) - Decimal(delta)
-            for i in original_probabilities:
+            for i in original_probabilities.index:
                 if i != param:
                     original_probabilities[i] = Decimal(original_probabilities[i]) + \
                                                 (  Decimal(delta) / Decimal( (len(original_probabilities) - 1) )  )
 
         self.probablity_matrix[cond] = original_probabilities
+
+    def save_parameters_and_prob_to_file(self):
+        self.probablity_matrix.to_csv(self.fname_prob)
+        pandas.DataFrame(self.free_parameters, index=[0]).transpose().to_csv(self.fname_param)
 
     def fit(self):
         """
@@ -1103,37 +1109,59 @@ class OptimizeQualitative(object):
         df = self._simulate_conditions(self.model_string)
         ineq_memory = self._evaluate_inequalities(df)
         if self._check_if_all_conditions_eval_to_true(ineq_memory['new']):
+            self.save_parameters_and_prob_to_file()
             return self.free_parameters, self.probablity_matrix
 
         mod = te.loada(self.model_string)
         for i in range(self.iterations):
-            print('Iteration {}'.format(i))
+            print('\nIteration {}'.format(i))
             current_condition = next(self.condition_list)
             ## choose one parameter to peterb, based on probabilities
             choice = numpy.random.choice(self.free_parameters.keys(),
                                          p=self.probablity_matrix[current_condition].values)
+            # print('Current choice is "{}"'.format(choice))
             mod, new_parameter_value = self._peterb_parameter(mod, choice)
             df = self._simulate_conditions(mod.getCurrentAntimony())
             ineq_memory = self._evaluate_inequalities(df)
             if self._check_if_all_conditions_eval_to_true(ineq_memory['new']):
+                self.save_parameters_and_prob_to_file()
                 return self.free_parameters, self.probablity_matrix
+            from collections import Counter
+
+            for k in ineq_memory['old'].keys():
+                if ineq_memory['old'][k] != ineq_memory['new'][k]:
+                    print ('ineq "{}" changed from "{}" to "{}"'.format(k, ineq_memory['old'][k], ineq_memory['new'][k]))
+
+            print('old count: {}'.format(Counter(ineq_memory['old'].values())))
+            print('new count: {}'.format(Counter(ineq_memory['new'].values())))
+
+            old_parameter_value = self.free_parameters[choice]
 
             for cond, boolean in ineq_memory['new'].items():
-                if ineq_memory['old'] is False and ineq_memory['new'] is True:
+                # print ('cond={}, cond {}, ineq_memory old "{}", ineq_memory new "{}" eq {}'.format(
+                #     cond,
+                #     boolean,
+                #     ineq_memory['old'][cond],
+                #     ineq_memory['new'][cond],
+                #     (ineq_memory['old'][cond] == False) and (ineq_memory['old'][cond] == True)
+                # ))
+                if (ineq_memory['old'][cond] == False) and (ineq_memory['new'][cond] == True):
                     print("Positively reinforcing '{}' parameter as changing it from '{}' to '{}' "
-                          "improved the '{}' condition".format(
-                        choice, self.free_parameters[choice], new_parameter_value, cond
+                          "changed the '{}' condition from False to True".format(
+                        choice, old_parameter_value, new_parameter_value, cond
                     ))
                     self._update_probabilities(cond, choice, 'positive_reinforcement')
                     self.free_parameters[choice] = new_parameter_value
 
-                elif ineq_memory['old'] is True and ineq_memory['new'] is False:
+                elif (ineq_memory['old'][cond] == True) and (ineq_memory['new'][cond] == False):
                     print("Negatively reinforcing '{}' parameter as changing it from '{}' to '{}' "
-                          "inhibited the '{}' condition".format(
-                        choice, self.free_parameters[choice], new_parameter_value, cond
+                          "changed the '{}' condition from True to False".format(
+                        choice, old_parameter_value, new_parameter_value, cond
                     ))
                     self._update_probabilities(cond, choice, 'negative_reinforcement')
 
+        self.save_parameters_and_prob_to_file()
+        return self.free_parameters, self.probablity_matrix
 
 
 
@@ -1251,15 +1279,95 @@ if __name__ == '__main__':
         })
 
         delta = 0.01
-        ineq1 = Inequality(['E', 'pAkt'], '>', ['D', 'pAkt'], 'pAkt')
-        ineq2 = Inequality(['E', 'ppErk'], '>', ['D', 'ppErk'], 'pErk')
-        ineq = InequalityGroup([ineq1, ineq2])
+        akt_ineq1  = Inequality(['E',        'pAkt'],  '>', ['D',        'pAkt'], 'pAkt_1')
+        akt_ineq2  = Inequality(['E_A_72',   'pAkt'],  '>', ['E',        'pAkt'], 'pAkt_2')
+        akt_ineq3  = Inequality(['A_72',     'pAkt'],  '<', ['E',        'pAkt'], 'pAkt_3')
+        akt_ineq4  = Inequality(['A_72',     'pAkt'],  '<', ['E_A_72',   'pAkt'], 'pAkt_4')
+        akt_ineq5  = Inequality(['E_M_72',   'pAkt'],  '<', ['D',        'pAkt'], 'pAkt_5')
+        akt_ineq6  = Inequality(['E_M_72',   'pAkt'],  '<', ['T',        'pAkt'], 'pAkt_6')
+        akt_ineq7  = Inequality(['E_M_72',   'pAkt'],  '<', ['E',        'pAkt'], 'pAkt_7')
+        akt_ineq8  = Inequality(['M_72',     'pAkt'],  '<', ['D',        'pAkt'], 'pAkt_8')
+        akt_ineq9  = Inequality(['M_72',     'pAkt'],  '<', ['T',        'pAkt'], 'pAkt_9')
+        akt_ineq10 = Inequality(['M_72',     'pAkt'],  '<', ['E',        'pAkt'], 'pAkt_10')
+
+        akt = [
+            akt_ineq1,
+            akt_ineq2,
+            akt_ineq3,
+            akt_ineq4,
+            akt_ineq5,
+            akt_ineq6,
+            akt_ineq7,
+            akt_ineq8,
+            akt_ineq9,
+            akt_ineq10,
+        ]
+
+        erk_ineq1 = Inequality(['E',        'ppErk'],  '>', ['D',        'ppErk'], 'pErk_1')
+        erk_ineq2 = Inequality(['E',        'ppErk'],  '>', ['T',        'ppErk'], 'pErk_2')
+        erk_ineq3 = Inequality(['E_A_72',   'ppErk'],  '<', ['E',        'ppErk'], 'pErk_3')
+        erk_ineq4 = Inequality(['E_A_72',   'ppErk'],  '<', ['D',        'ppErk'], 'pErk_4')
+        erk_ineq5 = Inequality(['E_A_72',   'ppErk'],  '<', ['T',        'ppErk'], 'pErk_5')
+        erk_ineq6 = Inequality(['A_72',     'ppErk'],  '<', ['E',        'ppErk'], 'pErk_6')
+        erk_ineq7 = Inequality(['A_72',     'ppErk'],  '<', ['D',        'ppErk'], 'pErk_7')
+        erk_ineq8 = Inequality(['A_72',     'ppErk'],  '<', ['T',        'ppErk'], 'pErk_8')
+        erk_ineq9 = Inequality(['E_M_72',   'ppErk'],  '>', ['E',        'ppErk'], 'pErk_9')
+        erk_ineq10 = Inequality(['M_72',     'ppErk'],  '<', ['E_M_72',   'ppErk'],'pErk_10')
+
+        erk = [
+            erk_ineq1,
+            erk_ineq2,
+            erk_ineq3,
+            erk_ineq4,
+            erk_ineq5,
+            erk_ineq6,
+            erk_ineq7,
+            erk_ineq8,
+            erk_ineq9,
+            erk_ineq10,
+        ]
+        s6k_ineq1 = Inequality(['E',        'pS6K'],  '<', ['T',        'pS6K'], 'pS6K_1')
+        s6k_ineq2 = Inequality(['E',        'pS6K'],  '<', ['D',        'pS6K'], 'pS6K_2')
+        s6k_ineq3 = Inequality(['E_A_72',   'pS6K'],  '<', ['T',        'pS6K'], 'pS6K_3')
+        s6k_ineq4 = Inequality(['E_A_72',   'pS6K'],  '<', ['D',        'pS6K'], 'pS6K_4')
+        s6k_ineq5 = Inequality(['E_A_72',   'pS6K'],  '<', ['A_72',     'pS6K'], 'pS6K_5')
+        s6k_ineq6 = Inequality(['E_M_72',   'pS6K'],  '<', ['D',        'pS6K'], 'pS6K_6')
+        s6k_ineq7 = Inequality(['E_M_72',   'pS6K'],  '<', ['T',        'pS6K'], 'pS6K_7')
+        s6k_ineq8 = Inequality(['M_72',     'pS6K'],  '>', ['E_M_72',   'pS6K'], 'pS6K_8')
+
+        s6k = [
+            s6k_ineq1,
+            s6k_ineq2,
+            s6k_ineq3,
+            s6k_ineq4,
+            s6k_ineq5,
+            s6k_ineq6,
+            s6k_ineq7,
+            s6k_ineq8,
+        ]
+        smad2_ineq1 = Inequality(['T',      'pSmad2'],  '>', ['D',           'pSmad2'], 'pSmad1_1')
+        smad2_ineq2 = Inequality(['E',      'pSmad2'],  '>', ['T',           'pSmad2'], 'pSmad1_2')
+        smad2_ineq3 = Inequality(['A_72',   'pSmad2'],  '>', ['A_1.25',      'pSmad2'], 'pSmad1_3')
+        smad2_ineq4 = Inequality(['E_M_72', 'pSmad2'],  '<', ['E',           'pSmad2'], 'pSmad1_4')
+        smad2_ineq5 = Inequality(['E_M_72', 'pSmad2'],  '<', ['E_M_1.25',    'pSmad2'], 'pSmad1_5')
+        smad2_ineq6 = Inequality(['M_72',   'pSmad2'],  '<', ['E',           'pSmad2'], 'pSmad1_6')
+
+        smad = [
+            smad2_ineq1,
+            smad2_ineq2,
+            smad2_ineq3,
+            smad2_ineq4,
+            smad2_ineq5,
+            smad2_ineq6,
+        ]
+        all_ineq = akt + erk + s6k + smad
+        ineq = InequalityGroup(all_ineq)
 
         O = OptimizeQualitative(
             cross_talk_model_antstr(), free_parameters,
-            ineq, delta
+            ineq, delta, iterations=50
             )
-        print(O.fit())
+        O.fit()
 
         # do_robustness(model_string)
 
