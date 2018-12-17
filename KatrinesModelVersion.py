@@ -240,7 +240,7 @@ def cross_talk_model_antstr():
         kRafDephosVmax = 3602.5;
         kMekPhos_km1 = 15;
         kMekPhos_ki1 = 0.25;
-        kMekPhos_kcat1 = 165;
+        kMekPhos_kcat1 = 149.520985631;
         AZD = 0;
         kMekDephos_km1 = 15;
         kMekDephos_Vmax1 = 2700;
@@ -267,7 +267,7 @@ def cross_talk_model_antstr():
         kS6KDephos_km = 10;
         kS6KDephos_Vmax = 50;
         kRafPhosByTGFbR_km = 25;
-        kRafPhosByTGFbR_kcat = 265;
+        kRafPhosByTGFbR_kcat = 267.8795303;
         kRafPhosByPI3K_km = 50;
         kRafPhosByPI3K_kcat = 50;
         kPI3KPhosByTGFbR_km = 10;
@@ -965,7 +965,30 @@ class OptimizeQualitative(object):
     getcontext().prec = 24
 
     @property
-    def probablity_matrix(self):
+    def condition_list(self):
+        return cycle(self.inequality_group.names)
+
+    def __init__(self, model_string, free_parameters,
+                 inequality_group, delta, iterations=10
+                 ):
+        self.model_string = model_string
+        self.free_parameters = free_parameters
+        self.new_free_parameters = free_parameters
+        self.inequality_group = inequality_group
+        self.delta = delta
+        # if self.fname is None:
+        self.fname_param = os.path.join(working_directory, 'parameters.csv')
+        self.fname_prob = os.path.join(working_directory, 'prob.csv')
+        self.iterations = iterations
+
+        self.probability_matrix = self.get_probablity_matrix()
+
+        self.mod = self._load_model()
+
+    def _load_model(self):
+        return te.loada(model_string)
+
+    def get_probablity_matrix(self):
         mat_shape = (len(self.free_parameters), len(self.inequality_group))
         starting_prob = 1.0 / len(self.free_parameters)
         if starting_prob < delta:
@@ -976,25 +999,6 @@ class OptimizeQualitative(object):
         prob_mat['parameter_names'] = self.free_parameters.keys()
         prob_mat.set_index('parameter_names', inplace=True)
         return prob_mat
-
-    @property
-    def condition_list(self):
-        return cycle(self.inequality_group.names)
-
-    def __init__(self, model_string, free_parameters,
-                 inequality_group, delta, iterations=10
-                 ):
-        self.model_string = model_string
-        self.free_parameters = free_parameters
-        self.inequality_group = inequality_group
-        self.delta = delta
-        # if self.fname is None:
-        self.fname_param = os.path.join(working_directory, 'parameters.csv')
-        self.fname_prob = os.path.join(working_directory, 'prob.csv')
-        self.iterations = iterations
-
-    def _load_model(self):
-        return te.loada(model_string)
 
     @staticmethod
     def simulate_condition(model_string, condition):
@@ -1051,8 +1055,7 @@ class OptimizeQualitative(object):
         self.inequality_group.evaluate(df)
         return self.inequality_group.memory
 
-    @staticmethod
-    def _check_if_all_conditions_eval_to_true(inequality_dct):
+    def _check_if_all_conditions_eval_to_true(self, inequality_dct):
         if inequality_dct is None:
             return None
 
@@ -1062,7 +1065,7 @@ class OptimizeQualitative(object):
         if all(inequality_dct.values()):
             ## return if all values are True
             print('all conditions are met')
-
+            print(self.free_parameters)
             return True
         else:
             return False
@@ -1074,31 +1077,46 @@ class OptimizeQualitative(object):
         new_parameter_value = old + peterb_amount
         assert new_parameter_value > 0, "Be positive"
         setattr(mod, param, new_parameter_value)
+        print('old parameter value is "{}". New is "{}"'.format(old, new_parameter_value))
         return mod, new_parameter_value
 
     def _update_probabilities(self, cond, param, reinforcement_direction):
-        if cond not in self.probablity_matrix.columns:
+        if cond not in self.probability_matrix.columns:
             raise ValueError('The "{}" condition is not in your dataframe'.format(cond))
+        from copy import deepcopy
 
-        original_probabilities = self.probablity_matrix[cond]
+        original_probabilities = self.probability_matrix[cond]
         if reinforcement_direction == 'positive_reinforcement':
             original_probabilities[param] = Decimal(original_probabilities[param]) + Decimal(delta)
             for i in original_probabilities.index:
+                # print(i)
                 if i != param:
                     original_probabilities[i] = Decimal(original_probabilities[i]) - \
-                                                (  Decimal(delta) / Decimal( (len(original_probabilities) - 1) )  )
+                                                (  Decimal(delta) / Decimal( (len(original_probabilities) - 1.0) )  )
+
         elif reinforcement_direction == 'negative_reinforcement':
             original_probabilities[param] = Decimal(original_probabilities[param]) - Decimal(delta)
             for i in original_probabilities.index:
                 if i != param:
                     original_probabilities[i] = Decimal(original_probabilities[i]) + \
-                                                (  Decimal(delta) / Decimal( (len(original_probabilities) - 1) )  )
+                                                (  Decimal(delta) / Decimal( (len(original_probabilities) - 1.0) )  )
+        else:
+            raise ValueError
 
-        self.probablity_matrix[cond] = original_probabilities
+        # print('original probabilities', original_probabilities)
+        self.probability_matrix[cond] = original_probabilities
+        # print('self.prob matrix', self.probability_matrix[cond])
+
 
     def save_parameters_and_prob_to_file(self):
-        self.probablity_matrix.to_csv(self.fname_prob)
+        self.probability_matrix.to_csv(self.fname_prob)
         pandas.DataFrame(self.free_parameters, index=[0]).transpose().to_csv(self.fname_param)
+
+    def _load_parameters_from_dict(self, free_params):
+        for i in free_params:
+            # print('Parameter i is {}, {}'.format(i, getattr(self.mod, i)))
+            setattr(self.mod, i, free_params[i])
+            # print('Parameter i is {}, {}'.format(i, getattr(self.mod, i)))
 
     def fit(self):
         """
@@ -1110,22 +1128,27 @@ class OptimizeQualitative(object):
         ineq_memory = self._evaluate_inequalities(df)
         if self._check_if_all_conditions_eval_to_true(ineq_memory['new']):
             self.save_parameters_and_prob_to_file()
-            return self.free_parameters, self.probablity_matrix
+            return self.free_parameters, self.probability_matrix
 
-        mod = te.loada(self.model_string)
+        # mod = te.loada(self.model_string)
         for i in range(self.iterations):
             print('\nIteration {}'.format(i))
+            ## load self.free_parameters back into the model
+            self._load_parameters_from_dict(self.free_parameters)
+            # print(zip(self.mod.getGlobalParameterIds(), self.mod.getGlobalParameterValues()))
             current_condition = next(self.condition_list)
             ## choose one parameter to peterb, based on probabilities
             choice = numpy.random.choice(self.free_parameters.keys(),
-                                         p=self.probablity_matrix[current_condition].values)
-            # print('Current choice is "{}"'.format(choice))
-            mod, new_parameter_value = self._peterb_parameter(mod, choice)
-            df = self._simulate_conditions(mod.getCurrentAntimony())
+                                         p=self.probability_matrix[current_condition].values)
+
+            # print('Current choice is "{}", value "{}"'.format(choice, getattr(self.mod, choice)))
+            self.mod, new_parameter_value = self._peterb_parameter(self.mod, choice)
+            df = self._simulate_conditions(self.mod.getCurrentAntimony())
             ineq_memory = self._evaluate_inequalities(df)
+
             if self._check_if_all_conditions_eval_to_true(ineq_memory['new']):
                 self.save_parameters_and_prob_to_file()
-                return self.free_parameters, self.probablity_matrix
+                return self.free_parameters, self.probability_matrix
             from collections import Counter
 
             for k in ineq_memory['old'].keys():
@@ -1161,7 +1184,8 @@ class OptimizeQualitative(object):
                     self._update_probabilities(cond, choice, 'negative_reinforcement')
 
         self.save_parameters_and_prob_to_file()
-        return self.free_parameters, self.probablity_matrix
+        print(self.free_parameters)
+        return self.free_parameters, self.probability_matrix
 
 
 
@@ -1190,7 +1214,7 @@ if __name__ == '__main__':
     SIMULATE_BAR_GRAPHS             = False
     OPEN_CONDITION_WITH_COPASI      = False
 
-    ROBUSTNESS                      = True
+    QUALITATIVE_FITTING             = True
 
     GET_PARAMETERS_FROM_COPASI      = False
 
@@ -1250,7 +1274,7 @@ if __name__ == '__main__':
         plt.show()
 
 
-    if ROBUSTNESS:
+    if QUALITATIVE_FITTING:
         model_string = cross_talk_model_antstr()
 
         free_parameters = OrderedDict({
@@ -1267,9 +1291,9 @@ if __name__ == '__main__':
             'kS6KDephos_Vmax': 50.0,
             'kAktPhos_kcat': 2.9215,
             'kRafPhos_ki': 3.5,
-            'kRafPhosByPI3K_kcat': 50.0,
             'kRafPhosByTGFbR_kcat': 265.0,
-            'kMekPhos_kcat1': 165.0,
+            'kRafPhosByPI3K_kcat': 50.0,
+            'kMekPhos_kcat1': 149.5209856,
             'kMekPhos_ki1': 0.25,
             'kTGFbOn': 0.100647860357268,
             'kSmad2PhosByAkt_kcat': 1.0,
@@ -1277,6 +1301,8 @@ if __name__ == '__main__':
             'kAktPhos_ki': 0.01,
             'kmTORC1Phos_kcat': 0.1,
         })
+        # for i in free_parameters:
+        #     free_parameters[i] = numpy.random.uniform(0, 100, 1)[0]
 
         delta = 0.01
         akt_ineq1  = Inequality(['E',        'pAkt'],  '>', ['D',        'pAkt'], 'pAkt_1')
@@ -1365,7 +1391,7 @@ if __name__ == '__main__':
 
         O = OptimizeQualitative(
             cross_talk_model_antstr(), free_parameters,
-            ineq, delta, iterations=50
+            ineq, delta, iterations=30
             )
         O.fit()
 
@@ -1373,17 +1399,6 @@ if __name__ == '__main__':
 
 
 
-"""
-Sudocode for ML algorithm for optimizing topology with qualitative information.
-
-
-
-end
-    
-
-
-
-"""
 
 
     # f = os.path.join(working_directory, 'KholoPlusVilar.cps')
