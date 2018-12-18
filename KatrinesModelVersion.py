@@ -225,14 +225,14 @@ def cross_talk_model_antstr():
         // Variable initializations:
         TGFb = 0.005;
         GrowthFactors = 1;
-        kTGFbOn = 0.100647860357268;
+        kTGFbOn = 0.1;
         kTGFbOff = 0.04;
         kTGFbRIntern = 0.3333333333;
         kTGFbRRecyc = 0.03333333333;
-        kSmad2Phos_km = 97.0531;
-        kSmad2Phos_kcat = 2;
-        kSmad2Dephos_km = 100;
-        kSmad2Dephos_Vmax = 58.8712661228653;
+        kSmad2Phos_km = 150;
+        kSmad2Phos_kcat = 5;
+        kSmad2Dephos_km = 35;
+        kSmad2Dephos_Vmax = 80;
         kRafPhos_km = 10;
         kRafPhos_ki = 3.5;
         kRafPhos_Vmax = 9000;
@@ -263,7 +263,7 @@ def cross_talk_model_antstr():
         Everolimus = 0;
         kmTORC1Dephos_km = 100;
         kmTORC1Dephos_Vmax = 1;
-        kS6KPhosBymTORC1_km = 10;
+        kS6KPhosBymTORC1_km = 100;
         kS6KPhosBymTORC1_kcat = 0.5;
         kS6KDephos_km = 10;
         kS6KDephos_Vmax = 50;
@@ -275,8 +275,8 @@ def cross_talk_model_antstr():
         kPI3KPhosByTGFbR_kcat = 50;
         kPI3KDephosByErk = 0.5;
         //kTGFbRInternByAkt = 0.01;
-        kSmad2PhosByAkt_km = 8;
-        kSmad2PhosByAkt_kcat = 5;
+        kSmad2PhosByAkt_km = 300;
+        kSmad2PhosByAkt_kcat = 10;
         
 
       unit volume = 1 litre;
@@ -1240,6 +1240,7 @@ if __name__ == '__main__':
             'pPI3K', 'pPI3K', 'pmTORC1', 'pS6K']
     erk = ['Erk', 'pErk', 'ppErk']
     pSmad2  =   ['pSmad2', 'pErk', 'ppErk', 'pAkt', 'pS6K']
+    # pSmad2  =   ['pSmad2']
 
     if SIMULATE_TIME_SERIES:
         for i in pSmad2:
