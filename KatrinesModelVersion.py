@@ -14,6 +14,7 @@ from collections import OrderedDict
 from itertools import cycle
 from decimal import Decimal, getcontext
 from multiprocessing import Process, Pool, cpu_count
+from collections import Counter
 
 seaborn.set_style('white')
 seaborn.set_context('talk', font_scale=1)
@@ -1149,7 +1150,6 @@ class OptimizeQualitative(object):
             if self._check_if_all_conditions_eval_to_true(ineq_memory['new']):
                 self.save_parameters_and_prob_to_file()
                 return self.free_parameters, self.probability_matrix
-            from collections import Counter
 
             for k in ineq_memory['old'].keys():
                 if ineq_memory['old'][k] != ineq_memory['new'][k]:
@@ -1211,10 +1211,10 @@ if __name__ == '__main__':
         """
 
     SIMULATE_TIME_SERIES            = False
-    SIMULATE_BAR_GRAPHS             = False
+    SIMULATE_BAR_GRAPHS             = True
     OPEN_CONDITION_WITH_COPASI      = False
 
-    QUALITATIVE_FITTING             = True
+    QUALITATIVE_FITTING             = False
 
     GET_PARAMETERS_FROM_COPASI      = False
 
