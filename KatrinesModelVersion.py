@@ -1211,8 +1211,8 @@ if __name__ == '__main__':
         """
 
     SIMULATE_TIME_SERIES            = False
-    SIMULATE_BAR_GRAPHS             = True
-    OPEN_CONDITION_WITH_COPASI      = False
+    SIMULATE_BAR_GRAPHS             = False
+    OPEN_CONDITION_WITH_COPASI      = True
 
     QUALITATIVE_FITTING             = False
 
@@ -1230,7 +1230,7 @@ if __name__ == '__main__':
         get_parameters_from_copasi_in_antimony_format('E_A_72')
 
     if OPEN_CONDITION_WITH_COPASI:
-        open_condition_with_copasi(cross_talk_model_antstr(), 'E_A_72')
+        open_condition_with_copasi(cross_talk_model_antstr(), 'E')
 
     if CONFIGURE_PARAMETER_ESTIMATION:
         m = configure_parameter_estimation(cross_talk_model_antstr(), 'T')
