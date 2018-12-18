@@ -240,8 +240,8 @@ def cross_talk_model_antstr():
         kRafDephos_km = 8;
         kRafDephosVmax = 3602.5;
         kMekPhos_km1 = 15;
-        kMekPhos_ki1 = 0.25;
-        kMekPhos_kcat1 = 149.520985631;
+        kMekPhos_ki1 = 0.3;  //original 0.25
+        kMekPhos_kcat1 = 140;
         AZD = 0;
         kMekDephos_km1 = 15;
         kMekDephos_Vmax1 = 2700;
@@ -250,33 +250,33 @@ def cross_talk_model_antstr():
         kErkDephos_km1 = 15;
         kErkDephos_Vmax1 = 1800;
         kPI3KPhosByGF = 0.239474698704283;
-        kPI3KDephosByS6K = 25;
-        kAktPhos_km = 15;
+        kPI3KDephosByS6K = 25; 
+        kAktPhos_km = 12.5;
         kAktPhos_ki = 0.01;
-        kAktPhos_kcat = 2.9215;
+        kAktPhos_kcat = 1.5; // original: 2.9215;
         MK2206 = 0;
         kAktDephos_km = 15;
-        kAktDephos_Vmax = 31.1252344504785;
-        kmTORC1Phos_km = 1;
+        kAktDephos_Vmax = 30;
+        kmTORC1Phos_km = 3;
         kmTORC1Phos_ki = 0.001;
-        kmTORC1Phos_kcat = 0.1;
+        kmTORC1Phos_kcat = 0.5;
         Everolimus = 0;
         kmTORC1Dephos_km = 100;
         kmTORC1Dephos_Vmax = 1;
         kS6KPhosBymTORC1_km = 10;
-        kS6KPhosBymTORC1_kcat = 2.77975221288272;
+        kS6KPhosBymTORC1_kcat = 0.5;
         kS6KDephos_km = 10;
         kS6KDephos_Vmax = 50;
         kRafPhosByTGFbR_km = 25;
-        kRafPhosByTGFbR_kcat = 267.8795303;
+        kRafPhosByTGFbR_kcat = 265;
         kRafPhosByPI3K_km = 50;
-        kRafPhosByPI3K_kcat = 50;
+        kRafPhosByPI3K_kcat = 5;
         kPI3KPhosByTGFbR_km = 10;
         kPI3KPhosByTGFbR_kcat = 50;
-        kPI3KDephosByErk = 5.014;
+        kPI3KDephosByErk = 0.5;
         //kTGFbRInternByAkt = 0.01;
-        kSmad2PhosByAkt_km = 1;
-        kSmad2PhosByAkt_kcat = 1;
+        kSmad2PhosByAkt_km = 8;
+        kSmad2PhosByAkt_kcat = 5;
         
 
       unit volume = 1 litre;
@@ -1211,8 +1211,8 @@ if __name__ == '__main__':
         """
 
     SIMULATE_TIME_SERIES            = False
-    SIMULATE_BAR_GRAPHS             = False
-    OPEN_CONDITION_WITH_COPASI      = True
+    SIMULATE_BAR_GRAPHS             = True
+    OPEN_CONDITION_WITH_COPASI      = False
 
     QUALITATIVE_FITTING             = False
 
@@ -1247,7 +1247,8 @@ if __name__ == '__main__':
             simulate_model_component_timecourse([i], MK_CONDITIONS.keys(), filename='MK_'+i)
 
     if SIMULATE_BAR_GRAPHS:
-        for i in ['AZD', 'MK2206']:
+        # for i in ['AZD', 'MK2206']:
+        for i in ['MK2206', 'AZD']:
             for j in pSmad2:
                 simulate_conditions_and_plot_as_bargraph(j, i)
 
