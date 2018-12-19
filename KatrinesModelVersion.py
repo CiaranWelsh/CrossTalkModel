@@ -228,7 +228,7 @@ def cross_talk_model_antstr():
         TGFbR_a = 0.966718661034664;
         TGFbR_EE = 12.55032566215;
         TGFbR_Cav = 9.66718661034664;
-        Smad2 = 10 //90.7578601099753;
+        Smad2 = 90.7578601099753;
         pSmad2 = 9.24213988902463;
         Mek = 252.876273823102;
         pMek = 56.0642557607438;
@@ -257,9 +257,9 @@ def cross_talk_model_antstr():
         kSmad2Phos_km           = 50;                  
         kSmad2Phos_kcat         = 5;                    
         kSmad2Dephos_km         = 35;                 
-        kSmad2Dephos_Vmax       = 80;    
+        kSmad2Dephos_Vmax       = 20;    
         kSmad2PhosByAkt_km      = 150;                  
-        kSmad2PhosByAkt_kcat    = 1;                   
+        kSmad2PhosByAkt_kcat    = 10;                   
         kSmad2DephosByErk_km    = 45;                   
         kSmad2DephosByErk_kcat  = 5;                   
         kRafPhos_km             = 10;                   
