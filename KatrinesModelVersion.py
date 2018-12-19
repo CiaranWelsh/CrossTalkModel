@@ -193,17 +193,42 @@ def cross_talk_model_antstr():
         CrossTalkR4  :    pPI3K   => PI3K       ;   Cell *  kPI3KDephosByErk    *pPI3K      *ppErk        ;
         //CrossTalkR5  :    TGFbR_a => TGFbR_EE ;   Cell *  kTGFbRInternByAkt     *TGFbR_a    *pAkt     ;
         CrossTalkR5  :    Smad2 => pSmad2       ;   Cell *  MMWithKcat(kSmad2PhosByAkt_km, kSmad2PhosByAkt_kcat, Smad2, pAkt)       ;
+        CrossTalkR6  :    pSmad2 => Smad2       ;   Cell *  MMWithKcat(kSmad2DephosByErk_km, kSmad2DephosByErk_kcat, pSmad2, ppErk)       ;
         
         // These two reactions counteract Everolimus
         // CroosTalkR4:    mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByErk    *mTORC1     *ppErk        ;
         // CroosTalkR5:    S6K     => pS6K     ;   Cell *  kS6KPhosByErk       *S6K        *ppErk        ;
  
         // Species initializations:
+        //TGFbR = 79.2268594035644;
+        //TGFbR_a = 0.990335742544554;
+        //TGFbR_EE = 9.90335742544554;
+        //TGFbR_Cav = 9.90335742544554;
+        //Smad2 = 99.2797087027586; //reduce the amount of pSmad2 in the system to see if you can get satruation. 
+        //pSmad2 = 0.720291296241358;
+        //Mek = 247.170754159532;
+        //pMek = 59.4531153440792;
+        //Erk = 151.699432609618;
+        //pErk = 124.207966835816;
+        //PI3K = 98.0170832641768;
+        //pPI3K = 1.98291673582305;
+        //Akt = 98.552882578315;
+        //pAkt = 1.44711741868509;
+        //mTORC1 = 6.07399999546496;
+        //pmTORC1 = 93.9260000045351;
+        //S6K = 91.8304175078014;
+        //pS6K = 8.16958249319855;
+        //Raf = 83.6651695492243;
+        //pRaf = 16.3348304526706;
+        //ppMek = 31.3461722863883;
+        //ppErk = 68.3929985083502;
+        
+        // Species initializations:
         TGFbR = 76.8396790634687;
         TGFbR_a = 0.966718661034664;
         TGFbR_EE = 12.55032566215;
         TGFbR_Cav = 9.66718661034664;
-        Smad2 = 90.7578601099753;
+        Smad2 = 10 //90.7578601099753;
         pSmad2 = 9.24213988902463;
         Mek = 252.876273823102;
         pMek = 56.0642557607438;
@@ -222,66 +247,72 @@ def cross_talk_model_antstr():
         ppMek = 29.0295122061532;
         ppErk = 43.0862638108839;
         
-        // Variable initializations:
-        TGFb = 0.005;
-        GrowthFactors = 1;
-        kTGFbOn = 0.1;
-        kTGFbOff = 0.04;
-        kTGFbRIntern = 0.3333333333;
-        kTGFbRRecyc = 0.03333333333;
-        kSmad2Phos_km = 150;
-        kSmad2Phos_kcat = 5;
-        kSmad2Dephos_km = 35;
-        kSmad2Dephos_Vmax = 80;
-        kRafPhos_km = 10;
-        kRafPhos_ki = 3.5;
-        kRafPhos_Vmax = 9000;
-        kRafPhos_n = 1;
-        kRafDephos_km = 8;
-        kRafDephosVmax = 3602.5;
-        kMekPhos_km1 = 15;
-        kMekPhos_ki1 = 0.3;  //original 0.25
-        kMekPhos_kcat1 = 140;
-        AZD = 0;
-        kMekDephos_km1 = 15;
-        kMekDephos_Vmax1 = 2700;
-        kErkPhos_km1 = 100;
-        kErkPhos_kcat1 = 85.0103161451182;
-        kErkDephos_km1 = 15;
-        kErkDephos_Vmax1 = 1800;
-        kPI3KPhosByGF = 0.239474698704283;
-        kPI3KDephosByS6K = 25; 
-        kAktPhos_km = 12.5;
-        kAktPhos_ki = 0.01;
-        kAktPhos_kcat = 1.5; // original: 2.9215;
-        MK2206 = 0;
-        kAktDephos_km = 15;
-        kAktDephos_Vmax = 30;
-        kmTORC1Phos_km = 3;
-        kmTORC1Phos_ki = 0.001;
-        kmTORC1Phos_kcat = 0.5;
-        Everolimus = 0;
-        kmTORC1Dephos_km = 100;
-        kmTORC1Dephos_Vmax = 1;
-        kS6KPhosBymTORC1_km = 100;
-        kS6KPhosBymTORC1_kcat = 0.5;
-        kS6KDephos_km = 10;
-        kS6KDephos_Vmax = 50;
-        kRafPhosByTGFbR_km = 25;
-        kRafPhosByTGFbR_kcat = 265;
-        kRafPhosByPI3K_km = 50;
-        kRafPhosByPI3K_kcat = 5;
-        kPI3KPhosByTGFbR_km = 10;
-        kPI3KPhosByTGFbR_kcat = 50;
-        kPI3KDephosByErk = 0.5;
-        //kTGFbRInternByAkt = 0.01;
-        kSmad2PhosByAkt_km = 300;
-        kSmad2PhosByAkt_kcat = 10;
+        // Variable initializations:                    
+        TGFb                    = 0.005;                    
+        GrowthFactors           = 1;                    
+        kTGFbOn                 = 0.1;                  
+        kTGFbOff                = 0.04;                 
+        kTGFbRIntern            = 0.3333333333;                 
+        kTGFbRRecyc             = 0.03333333333;                    
+        kSmad2Phos_km           = 50;                  
+        kSmad2Phos_kcat         = 5;                    
+        kSmad2Dephos_km         = 35;                 
+        kSmad2Dephos_Vmax       = 80;    
+        kSmad2PhosByAkt_km      = 150;                  
+        kSmad2PhosByAkt_kcat    = 1;                   
+        kSmad2DephosByErk_km    = 45;                   
+        kSmad2DephosByErk_kcat  = 5;                   
+        kRafPhos_km             = 10;                   
+        kRafPhos_ki             = 3.5;                  
+        kRafPhos_Vmax           = 9000;                 
+        kRafPhos_n              = 1;                    
+        kRafDephos_km           = 8;                    
+        kRafDephosVmax          = 3602.5;                   
+        kMekPhos_km1            = 15;                   
+        kMekPhos_ki1            = 0.3;  //original 0.25                 
+        kMekPhos_kcat1          = 140;                  
+        AZD                     = 0;                    
+        kMekDephos_km1          = 15;                   
+        kMekDephos_Vmax1        = 2700;                 
+        kErkPhos_km1            = 100;                  
+        kErkPhos_kcat1          = 85.0103161451182;                 
+        kErkDephos_km1          = 15;                   
+        kErkDephos_Vmax1        = 1800;                 
+        kPI3KPhosByGF           = 0.239474698704283;                    
+        kPI3KDephosByS6K        = 25;                   
+        kAktPhos_km             = 12.5;                 
+        kAktPhos_ki             = 0.01;                 
+        kAktPhos_kcat           = 1.5; // original: 2.9215;                 
+        MK2206                  = 0;                    
+        kAktDephos_km           = 15;                   
+        kAktDephos_Vmax         = 30;                   
+        kmTORC1Phos_km          = 3;                    
+        kmTORC1Phos_ki          = 0.001;                    
+        kmTORC1Phos_kcat        = 0.5;                  
+        Everolimus              = 0;                    
+        kmTORC1Dephos_km        = 100;                  
+        kmTORC1Dephos_Vmax      = 1;                    
+        kS6KPhosBymTORC1_km     = 100;                  
+        kS6KPhosBymTORC1_kcat   = 0.5;                  
+        kS6KDephos_km           = 10;                   
+        kS6KDephos_Vmax         = 50;                   
+        kRafPhosByTGFbR_km      = 25;                   
+        kRafPhosByTGFbR_kcat    = 265;                  
+        kRafPhosByPI3K_km       = 50;                   
+        kRafPhosByPI3K_kcat     = 5;                    
+        kPI3KPhosByTGFbR_km     = 10;                   
+        kPI3KPhosByTGFbR_kcat   = 50;                   
+        kPI3KDephosByErk        = 0.5;                  
+        //kTGFbRInternByAkt     = 0.01;                 
+             
         
 
       unit volume = 1 litre;
       unit time_unit = 3600 second;
       unit substance = 1e-9 mole;
+      
+      //pAktReadout = 0
+      //pAktReadoutEvent: at (time>72): pAktReadout = pAkt;
         
 end
 """
@@ -1188,7 +1219,125 @@ class OptimizeQualitative(object):
         return self.free_parameters, self.probability_matrix
 
 
+class Mapping(object):
+    def __init__(self, experimental, simulation):
+        self.experimental = experimental
+        self.simulation = simulation
 
+    def __str__(self):
+        return ("({}, {})".format(self.experimental, self.simulation))
+
+
+# class MappingGroup(object):
+#     def __init__(self, mappings):
+#         self.mappings = mappings
+#
+#     def __iter__(self):
+#         return self
+#
+#     def __nex
+
+
+class RSS(object):
+    def __init__(self, simulated_data, experimental_data, mappings):
+        self.simulated_data = simulated_data
+        self.experimental_data = experimental_data
+        self.mappings = mappings
+
+        self.residuals = self._compute()
+        self.rss = self.residuals.sum().sum()
+
+    def _compute(self):
+        dct = OrderedDict()
+        for i in self.mappings:
+            exp = i.experimental
+            sim = i.simulation
+            # print(sim, exp)
+            experimental = self.experimental_data[exp]
+            # print(experimental)
+            simulated = self.simulated_data[sim]
+            # print(simulated)
+            dct[sim] = (experimental - simulated)**2
+        return pandas.concat(dct, axis=1)
+
+
+class Optimize(object):
+    def __init__(self, model_string, exp_data, mappings, free_parameters, iterations):
+        self.model_string = model_string
+        self.exp_data = exp_data
+        self.mappings = mappings
+        self.free_parameters = free_parameters
+        self.iterations = iterations
+
+    def _simulate_condition(self, condition):
+        if condition not in AZD_CONDITIONS.keys() + MK_CONDITIONS.keys():
+            raise ValueError
+
+        model_string = make_condition(self.model_string, condition)
+        mod = te.loada(model_string)
+        ## Add 1 to intervals for 0 indexed python
+        start = 0
+        end = 72
+        num = 73
+        time = numpy.linspace(start, end, num)
+
+        if 72.0 not in time:
+            raise ValueError("Simulating conditions requires an output at exactly "
+                             "72h after the first inhibitor. The current time steps "
+                             "do not 'land' on 72.0 exactly - so pick different "
+                             "simulation parameters. Also, remember that Python is "
+                             "0 indexed, so try adding 1 to the number of "
+                             " data points collected. To help, here is the current"
+                             " time vector \n\n{}".format(time))
+
+        res = mod.simulate(start, end, num, ['time'] + MODEL_SPECIES)
+
+        df = pandas.DataFrame(res, columns=['time'] + MODEL_SPECIES)
+        df = df[df['time'] == 72.0]
+        if df.empty:
+            raise ValueError("Condition '{}' produces an "
+                             "empty data frame".format(condition))
+        return df
+
+    def _simulate_conditions(self, conditions=None):
+        """
+        Takes output from simulation and plot
+        :param df:
+        :return:
+        """
+        if conditions is None:
+            conditions = list(set(AZD_CONDITIONS.keys() + MK_CONDITIONS.keys()))
+
+        dct = OrderedDict()
+        for cond in conditions:
+            df = self._simulate_condition(cond)
+            df = df[df['time'] == 72.0]
+            dct[cond] = df
+
+        df = pandas.concat(dct)
+        df.index = df.index.droplevel(1)
+        df = df.drop('time', axis=1)
+        return df
+
+    def _compute_obj_fun(self):
+        sim_data = self._simulate_conditions()
+        sim_names = [i.simulation for i in self.mappings]
+        exp_names = [i.experimental for i in self.mappings]
+        sim_data = sim_data[sim_names]
+        # print(sim_data)
+        return RSS(sim_data, self.exp_data, mappings)
+
+    @staticmethod
+    def _load_parameters_from_dict(model, free_params):
+        if not isinstance(free_params, dict):
+            raise TypeError
+
+        for i in free_params:
+            setattr(model, i, free_params[i])
+
+
+    def fit(self):
+        pass
 
 
 
@@ -1215,6 +1364,7 @@ if __name__ == '__main__':
     OPEN_CONDITION_WITH_COPASI      = False
 
     QUALITATIVE_FITTING             = False
+    OPTIMIZE                        = False
 
     GET_PARAMETERS_FROM_COPASI      = False
 
@@ -1227,7 +1377,7 @@ if __name__ == '__main__':
     SIMULATE_INPUTS                 = False
 
     if GET_PARAMETERS_FROM_COPASI:
-        get_parameters_from_copasi_in_antimony_format('E_A_72')
+        get_parameters_from_copasi_in_antimony_format('E')
 
     if OPEN_CONDITION_WITH_COPASI:
         open_condition_with_copasi(cross_talk_model_antstr(), 'E')
@@ -1239,8 +1389,8 @@ if __name__ == '__main__':
     phos = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
             'pPI3K', 'pPI3K', 'pmTORC1', 'pS6K']
     erk = ['Erk', 'pErk', 'ppErk']
-    pSmad2  =   ['pSmad2', 'pErk', 'ppErk', 'pAkt', 'pS6K']
-    # pSmad2  =   ['pSmad2']
+    pSmad2  =   ['pSmad2', 'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1']
+    pSmad2  =   ['pSmad2']
 
     if SIMULATE_TIME_SERIES:
         for i in pSmad2:
@@ -1395,37 +1545,69 @@ if __name__ == '__main__':
             cross_talk_model_antstr(), free_parameters,
             ineq, delta, iterations=30
             )
+
+
         O.fit()
 
         # do_robustness(model_string)
 
 
+    if OPTIMIZE:
+        print(working_directory)
+        azd_data = os.path.join(working_directory, r'data\HardCopy\AZD_calculations - v3.xlsx')
+        mk_data = os.path.join(working_directory, r'data\HardCopy\MK2206_calculations - v3.xlsx')
 
+        assert os.path.isfile(azd_data)
+        assert os.path.isfile(mk_data)
 
+        azd_data = pandas.read_excel(azd_data, sheet_name='AZDAverage', index_col='Condition')
+        mk_data = pandas.read_excel(mk_data, sheet_name='MKAverage', index_col='Condition')
 
-    # f = os.path.join(working_directory, 'KholoPlusVilar.cps')
-    # f2 = os.path.join(working_directory, 'KholoPlusVilar.sbml')
-    #
-    # m = model.Model(f)
-    # m.open()
-    # m.to_sbml(f2)
-    # for i in sorted(dir(te)):
-    #     print(i)
-    # st = te.sbmlToAntimony(f2)
-    # print(st)
-    # m = te.loada(cross_talk_model_antstr())
-    # pts, lbls, biData = te.analysis.bifurcation.bifurcation(m, 'kPI3KDephosByS6K', 0.001, 100)
-    # print(pts, lbls, biData)
+        mk_data = mk_data.iloc[3:]
 
-    # print(biData.plotBifurcation)
+        exp_data = pandas.concat([azd_data, mk_data])
+        # print(exp_data)
 
-    # open_condition_with_copasi('D')
+        akt_mapping = Mapping('pAkt', 'pAkt')
+        erk_mapping = Mapping('pErk', 'pErk')
+        s6k_mapping = Mapping('pS6K', 'pS6K')
+        smad2_mapping = Mapping('pSmad2', 'pSmad2')
 
+        mappings = [akt_mapping, erk_mapping, s6k_mapping, smad2_mapping]
 
+        free_parameters = OrderedDict({
+            'kSmad2Phos_kcat': 2.0,
+            'kmTORC1Phos_ki': 0.001,
+            'kPI3KPhosByTGFbR_kcat': 50.0,
+            'kAktDephos_Vmax': 31.1252344504785,
+            'kPI3KDephosByErk': 5.014,
+            'kS6KPhosBymTORC1_kcat': 2.77975221288272,
+            'kPI3KPhosByGF': 0.239474698704283,
+            'kPI3KDephosByS6K': 25.0,
+            'kErkPhos_kcat1': 85.0103161451182,
+            'kmTORC1Dephos_Vmax': 1.0,
+            'kS6KDephos_Vmax': 50.0,
+            'kAktPhos_kcat': 2.9215,
+            'kRafPhos_ki': 3.5,
+            'kRafPhosByTGFbR_kcat': 265.0,
+            'kRafPhosByPI3K_kcat': 50.0,
+            'kMekPhos_kcat1': 149.5209856,
+            'kMekPhos_ki1': 0.25,
+            'kTGFbOn': 0.100647860357268,
+            'kSmad2PhosByAkt_kcat': 1.0,
+            'kSmad2Dephos_Vmax': 58.8712661228653,
+            'kAktPhos_ki': 0.01,
+            'kmTORC1Phos_kcat': 0.1,
+        })
+        free_parameters = free_parameters.keys()
 
+        o = Optimize(cross_talk_model_antstr(), exp_data*10, mappings, iterations=10,
+                     free_parameters=free_parameters)
+        RSS = o._compute_obj_fun()
+        print(RSS.residuals)
+        print(RSS.rss)
 
-
-
+        # print(exp_data*10)
 
 
 
