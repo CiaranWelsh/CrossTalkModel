@@ -30,6 +30,21 @@ These are arguments for the conditions simulation functions.
     
 """
 
+MODEL_CODE                      = 'E_A_48'
+CURRENT_SPECIES = [
+    'pSmad2Tot', 'pSmad2', 'pSmad2n', 'Smad2n', 'Smad2Tot',
+    'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
+]
+CURRENT_SPECIES = [
+    'pSmad2Tot', 'pMek', 'ppMek',
+    'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
+]
+CURRENT_SPECIES = ['pSmad2Tot']
+CURRENT_SPECIES = [
+    'pSmad2Tot', 'pSmad2', 'pSmad2n', 'Smad2n', 'Smad2Tot',
+
+]
+
 SIMULATE_TIME_SERIES            = False
 SIMULATE_BAR_GRAPHS             = True
 OPEN_CONDITION_WITH_COPASI      = False
@@ -79,8 +94,8 @@ MODEL_SPECIES = ['TGFbR',   'TGFbR_a',  'TGFbR_EE', 'TGFbR_Cav',
                  'Smad2',   'pSmad2',   'Raf',      'pRaf',
                  'Mek',     'pMek',     'ppMek',    'Erk',        'pErk',
                  'ppErk',   'PI3K',     'pPI3K',    'Akt',        'pAkt',
-                 'mTORC1',  'pmTORC1',  'S6K',      'pS6K', 'pSmad2Tot', 'pSmad2n',
-                 'Smad2Tot'
+                 'mTORC1',  'pmTORC1',  'S6K',      'pS6K',
+                 'pSmad2Tot', 'pSmad2n', 'Smad2Tot', 'Smad2n'
                  ]
 
 MODEL_INPUTS = ['TGFb', 'Everolimus', 'MK2206', 'AZD', 'GrowthFactors']
@@ -145,6 +160,7 @@ def cross_talk_model_antstr():
         var Smad2           in Cell  
         var pSmad2          in Cell  
         var pSmad2n         in Cell  
+        var Smad2n          in Cell  
         var Mek             in Cell
         var pMek            in Cell  
         var Erk             in Cell
@@ -180,12 +196,13 @@ def cross_talk_model_antstr():
         TGF_R4 : TGFbR_EE    => TGFbR_a    ; Cell * kTGFbRRecyc   *TGFbR_EE              ;
         TGF_R5 : TGFbR_a     => TGFbR_Cav  ; Cell * kTGFbRIntern  *TGFbR_a               ;
         TGF_R6 : TGFbR_Cav   => TGFbR_a    ; Cell * kTGFbRRecyc   *TGFbR_Cav             ;
-        TGF_R7 :             => Smad2      ; Cell * kSmad2Prod
-        TGF_R8 : Smad2       => pSmad2     ; Cell * MMWithKcat(kSmad2Phos_km, kSmad2Phos_kcat, Smad2, TGFbR_EE  );
-        TGF_R9 : pSmad2      => Smad2      ; Cell * MM(kSmad2Dephos_km, kSmad2Dephos_Vmax, pSmad2               );
-        TGF_R10: pSmad2      => pSmad2n    ; Cell * MM(kSmad2Imp_km, kSmad2Imp_Vmax, pSmad2)                ;
-        TGF_R11: pSmad2n     => pSmad2     ; Cell * MM(kSmad2Exp_km, kSmad2Exp_Vmax, pSmad2n)               ;
-        TGF_R12: pSmad2n     =>            ; Cell * kSmad2Deg     *pSmad2n               ;
+        TGF_R8 : Smad2       => pSmad2     ; Cell * MMWithKcat(kSmad2Phos_km, kSmad2Phos_kcat, Smad2, TGFbR_EE );
+        //TGF_R9 : pSmad2      => Smad2      ; Cell * MM(kpSmad2Dephos_km, kpSmad2Dephos_Vmax, pSmad2            );
+        TGF_R10: pSmad2      => pSmad2n    ; Cell * MM(kpSmad2Imp_km, kpSmad2Imp_Vmax, pSmad2                  );
+        TGF_R11: pSmad2n     => pSmad2     ; Cell * MM(kpSmad2Exp_km, kpSmad2Exp_Vmax, pSmad2n                 );
+        TGF_R12: Smad2       => Smad2n     ; Cell * MM(kSmad2Imp_km, kSmad2Imp_Vmax, Smad2                     );
+        TGF_R13: Smad2n      => Smad2      ; Cell * MM(kSmad2Exp_km, kSmad2Exp_Vmax, Smad2n                    );
+        TGF_R14: pSmad2n     => Smad2n     ; Cell * MM(kpSmad2Dephos_km, kpSmad2Dephos_Vmax, pSmad2n);
         
         //MAPK module
         MAPK_R0  : Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kRafPhos_km,  kRafPhos_ki, kRafPhos_Vmax, kRafPhos_n, ppErk, Raf);
@@ -213,40 +230,40 @@ def cross_talk_model_antstr():
         PI3K_R8 :   pS6K    => S6K      ;   Cell *  MM(kS6KDephos_km,kS6KDephos_Vmax, pS6K)                    ;
         
         // Cross talk reactions
-        CrossTalkR1  :    Raf   => pRaf         ;   Cell *  MMWithKcat(kRafPhosByTGFbR_km, kRafPhosByTGFbR_kcat, Raf, TGFbR_Cav)    ;
-        CrossTalkR2  :    Raf   => pRaf         ;   Cell *  MMWithKcat(kRafPhosByPI3K_km,kRafPhosByPI3K_kcat, Raf, pPI3K)           ;
-        CrossTalkR3  :    PI3K  => pPI3K        ;   Cell *  MMWithKcat(kPI3KPhosByTGFbR_km, kPI3KPhosByTGFbR_kcat, PI3K, TGFbR_Cav) ;
-        CrossTalkR4  :    pPI3K   => PI3K       ;   Cell *  kPI3KDephosByErk    *pPI3K      *ppErk        ;
-        //CrossTalkR5  :    TGFbR_a => TGFbR_EE ;   Cell *  kTGFbRInternByAkt     *TGFbR_a    *pAkt     ;
-        CrossTalkR5  :    Smad2 => pSmad2       ;   Cell *  MMWithKcat(kSmad2PhosByAkt_km, kSmad2PhosByAkt_kcat, Smad2, pAkt)       ;
-        CrossTalkR6  :    pSmad2n =>            ;   Cell *  MMWithKcat(kSmad2DegByErk_km, kSmad2DegByErk_kcat, pSmad2n, ppErk)       ;
+        CrossTalkR1  :    Raf       => pRaf      ;   Cell *  MMWithKcat(kRafPhosByTGFbR_km, kRafPhosByTGFbR_kcat, Raf, TGFbR_Cav)    ;
+        CrossTalkR2  :    Raf       => pRaf      ;   Cell *  MMWithKcat(kRafPhosByPI3K_km,kRafPhosByPI3K_kcat, Raf, pPI3K)           ;
+        CrossTalkR3  :    PI3K      => pPI3K     ;   Cell *  MMWithKcat(kPI3KPhosByTGFbR_km, kPI3KPhosByTGFbR_kcat, PI3K, TGFbR_Cav) ;
+        CrossTalkR4  :    pPI3K     => PI3K      ;   Cell *  kPI3KDephosByErk    *pPI3K      *ppErk        ;
+        CrossTalkR5  :    Smad2     => pSmad2    ;   Cell *  MMWithKcat(kSmad2PhosByAkt_km, kSmad2PhosByAkt_kcat, Smad2, pAkt)       ;
+        CrossTalkR6  :    pSmad2n   =>  Smad2n   ;   Cell *  MMWithKcat(kSmad2DephosByErk_km, kSmad2DephosByErk_kcat, pSmad2n, ppErk)       ;
         
         // Species initializations:
-        TGFbR = 76.8396790634687;
-        TGFbR_a = 0.966718661034664;
-        TGFbR_EE = 12.55032566215;
-        TGFbR_Cav = 9.66718661034664;
-        Smad2 = 72.3164
-        pSmad2 = 4.02876;
-        pSmad2n = 8.6;
-        pSmad2Tot := pSmad2 + pSmad2n;
-        Mek = 252.876273823102;
-        pMek = 56.0642557607438;
-        Erk = 183.331905604514;
-        pErk = 117.882228538386;
-        PI3K = 99.9603027531632;
-        pPI3K = 0.039697246836694;
-        Akt = 99.413240815732;
-        pAkt = 0.586759181268058;
-        mTORC1 = 90.2724562462086;
-        pmTORC1 = 9.72754375379144;
-        S6K = 90.5069860202662;
-        pS6K = 9.49301398073377;
-        Raf = 87.932595095561;
-        pRaf = 12.0674049063339;
-        ppMek = 29.0295122061532;
-        ppErk = 43.0862638108839;
-        Smad2Tot  := pSmad2 + Smad2 + pSmad2n
+        TGFbR       = 76.8396790634687;
+        TGFbR_a     = 0.966718661034664;
+        TGFbR_EE    = 12.55032566215;
+        TGFbR_Cav   = 9.66718661034664;
+        Smad2       = 84;
+        pSmad2      = 4;
+        pSmad2n     = 8;
+        Smad2n      = 4;
+        Smad2Tot    := pSmad2 + Smad2 + pSmad2n + Smad2n
+        pSmad2Tot   := pSmad2 + pSmad2n;
+        Mek         = 252.876273823102;
+        pMek        = 56.0642557607438;
+        Erk         = 183.331905604514;
+        pErk        = 117.882228538386;
+        PI3K        = 99.9603027531632;
+        pPI3K       = 0.039697246836694;
+        Akt         = 99.413240815732;
+        pAkt        = 0.586759181268058;
+        mTORC1      = 90.2724562462086;
+        pmTORC1     = 9.72754375379144;
+        S6K         = 90.5069860202662;
+        pS6K        = 9.49301398073377;
+        Raf         = 87.932595095561;
+        pRaf        = 12.0674049063339;
+        ppMek       = 29.0295122061532;
+        ppErk       = 43.0862638108839;
         
         // Variable initializations:                    
         TGFb                    = 0.005;                    
@@ -255,22 +272,22 @@ def cross_talk_model_antstr():
         kTGFbOff                = 0.04;                 
         kTGFbRIntern            = 0.3333333333;                 
         kTGFbRRecyc             = 0.03333333333;                    
-        kSmad2Prod              = 10;
-        kSmad2Deg               = 6;
-        // kSmad2Imp               = 2.5;
-        // kSmad2Exp               = 0.25;
-        kSmad2Imp_km            = 5
-        kSmad2Imp_Vmax          = 10
-        kSmad2Exp_km            = 20
-        kSmad2Exp_Vmax          = 2.5
         kSmad2Phos_km           = 50;                  
         kSmad2Phos_kcat         = 1;                    
-        kSmad2Dephos_km         = 35;                 
-        kSmad2Dephos_Vmax       = 20;    
-        kSmad2PhosByAkt_km      = 500;                  
-        kSmad2PhosByAkt_kcat    = 30;                   
-        kSmad2DegByErk_km       = 45;                   
-        kSmad2DegByErk_kcat     = 12.5;                   
+        kSmad2PhosByAkt_km      = 250;                  
+        kSmad2PhosByAkt_kcat    = 0.5;                   
+        kpSmad2Dephos_km         = 35;                 
+        kpSmad2Dephos_Vmax       = 1;
+        kpSmad2Imp_km           = 125;
+        kpSmad2Imp_Vmax         = 10;
+        kpSmad2Exp_km           = 105;
+        kpSmad2Exp_Vmax         = 1;
+        kSmad2DephosByErk_km    = 30;                   
+        kSmad2DephosByErk_kcat  = 2;   
+        kSmad2Imp_km            = 250;
+        kSmad2Imp_Vmax          = 5;
+        kSmad2Exp_km            = 105;
+        kSmad2Exp_Vmax          = 65;
         kRafPhos_km             = 10;                   
         kRafPhos_ki             = 3.5;                  
         kRafPhos_Vmax           = 9000;                 
@@ -278,13 +295,13 @@ def cross_talk_model_antstr():
         kRafDephos_km           = 8;                    
         kRafDephosVmax          = 3602.5;                   
         kMekPhos_km1            = 15;                   
-        kMekPhos_ki1            = 0.3;  //original 0.25                 
-        kMekPhos_kcat1          = 140;                  
+        kMekPhos_ki1            = 0.25;  //original 0.25                 
+        kMekPhos_kcat1          = 90;                  
         AZD                     = 0;                    
         kMekDephos_km1          = 15;                   
         kMekDephos_Vmax1        = 2700;                 
-        kErkPhos_km1            = 100;                  
-        kErkPhos_kcat1          = 85.0103161451182;                 
+        kErkPhos_km1            = 50;                  
+        kErkPhos_kcat1          = 200;                 
         kErkDephos_km1          = 15;                   
         kErkDephos_Vmax1        = 1800;                 
         kPI3KPhosByGF           = 0.239474698704283;                    
@@ -298,7 +315,6 @@ def cross_talk_model_antstr():
         kmTORC1Phos_km          = 3;                    
         kmTORC1Phos_ki          = 0.001;                    
         kmTORC1Phos_kcat        = 0.35;        
-        //kmTORC1PhosByTSCs       = 0.05;           
         Everolimus              = 0;                    
         kmTORC1Dephos_km        = 100;                  
         kmTORC1Dephos_Vmax      = 1;                    
@@ -314,8 +330,6 @@ def cross_talk_model_antstr():
         kPI3KPhosByTGFbR_kcat   = 50;                   
         kPI3KDephosByErk        = 0.5;                  
         //kTGFbRInternByAkt     = 0.01;           
-             
-        
 
         unit volume = 1 litre;
         unit time_unit = 3600 second;
@@ -1369,31 +1383,30 @@ if __name__ == '__main__':
 
 
     if GET_PARAMETERS_FROM_COPASI:
-        get_parameters_from_copasi_in_antimony_format('E')
+        get_parameters_from_copasi_in_antimony_format(MODEL_CODE)
 
     if OPEN_CONDITION_WITH_COPASI:
-        open_condition_with_copasi(cross_talk_model_antstr(), 'E')
+        open_condition_with_copasi(cross_talk_model_antstr(), MODEL_CODE)
 
     if CONFIGURE_PARAMETER_ESTIMATION:
-        m = configure_parameter_estimation(cross_talk_model_antstr(), 'T')
+        m = configure_parameter_estimation(cross_talk_model_antstr(), MODEL_CODE)
         m.open()
 
     phos = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
             'pPI3K', 'pPI3K', 'pmTORC1', 'pS6K']
     erk = ['Erk', 'pErk', 'ppErk']
-    pSmad2  =   ['pSmad2', 'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
-                 'pSmad2Tot', 'pSmad2n']
-    pSmad2  =   ['pSmad2Tot']
+
+    # pSmad2  =   ['pSmad2Tot']
 
     if SIMULATE_TIME_SERIES:
-        for i in pSmad2:
+        for i in CURRENT_SPECIES:
             simulate_model_component_timecourse([i], AZD_CONDITIONS.keys(), filename='AZD_'+i)
             simulate_model_component_timecourse([i], MK_CONDITIONS.keys(), filename='MK_'+i)
 
     if SIMULATE_BAR_GRAPHS:
         # for i in ['AZD', 'MK2206']:
         for i in ['MK2206', 'AZD']:
-            for j in pSmad2:
+            for j in CURRENT_SPECIES:
                 simulate_conditions_and_plot_as_bargraph(j, i)
 
 
