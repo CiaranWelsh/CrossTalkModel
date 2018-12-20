@@ -30,6 +30,24 @@ These are arguments for the conditions simulation functions.
     
 """
 
+SIMULATE_TIME_SERIES            = False
+SIMULATE_BAR_GRAPHS             = True
+OPEN_CONDITION_WITH_COPASI      = False
+
+QUALITATIVE_FITTING             = False
+OPTIMIZE                        = False
+
+GET_PARAMETERS_FROM_COPASI      = False
+
+CONFIGURE_PARAMETER_ESTIMATION  = False
+
+DOSE_RESPONSE_GROWTH_FACTOR     = False
+DOSE_RESPONSE_TGFB              = False
+GET_ODES_WITH_ANTIMONY          = False
+GET_MODEL_AS_SBML               = False
+SIMULATE_INPUTS                 = False
+
+
 AZD_CONDITIONS = OrderedDict()
 AZD_CONDITIONS['D']         =   [1,  None,     None,       0,  True,   False]
 AZD_CONDITIONS['T']         =   [1,  None,     None,       0,  True,   True]
@@ -61,7 +79,9 @@ MODEL_SPECIES = ['TGFbR',   'TGFbR_a',  'TGFbR_EE', 'TGFbR_Cav',
                  'Smad2',   'pSmad2',   'Raf',      'pRaf',
                  'Mek',     'pMek',     'ppMek',    'Erk',        'pErk',
                  'ppErk',   'PI3K',     'pPI3K',    'Akt',        'pAkt',
-                 'mTORC1',  'pmTORC1',  'S6K',      'pS6K']
+                 'mTORC1',  'pmTORC1',  'S6K',      'pS6K', 'pSmad2Tot', 'pSmad2n',
+                 'Smad2Tot'
+                 ]
 
 MODEL_INPUTS = ['TGFb', 'Everolimus', 'MK2206', 'AZD', 'GrowthFactors']
 
@@ -124,6 +144,7 @@ def cross_talk_model_antstr():
         var TGFbR_Cav       in Cell
         var Smad2           in Cell  
         var pSmad2          in Cell  
+        var pSmad2n         in Cell  
         var Mek             in Cell
         var pMek            in Cell  
         var Erk             in Cell
@@ -153,14 +174,18 @@ def cross_talk_model_antstr():
     
     
         //TGFb module
-        TGF_R1: TGFbR       => TGFbR_a    ; Cell * kTGFbOn       *TGFbR      *TGFb      ;
-        TGF_R2: TGFbR_a     => TGFbR      ; Cell * kTGFbOff      *TGFbR_a               ;
-        TGF_R3: TGFbR_a     => TGFbR_EE   ; Cell * kTGFbRIntern  *TGFbR_a               ; 
-        TGF_R4: TGFbR_EE    => TGFbR_a    ; Cell * kTGFbRRecyc   *TGFbR_EE              ;
-        TGF_R5: TGFbR_a     => TGFbR_Cav  ; Cell * kTGFbRIntern  *TGFbR_a               ;
-        TGF_R6: TGFbR_Cav   => TGFbR_a    ; Cell * kTGFbRRecyc   *TGFbR_Cav             ;
-        TGF_R7: Smad2       => pSmad2     ; Cell * MMWithKcat(kSmad2Phos_km, kSmad2Phos_kcat, Smad2, TGFbR_EE  );
-        TGF_R8: pSmad2      => Smad2      ; Cell * MM(kSmad2Dephos_km, kSmad2Dephos_Vmax, pSmad2               );
+        TGF_R1 : TGFbR       => TGFbR_a    ; Cell * kTGFbOn       *TGFbR      *TGFb      ;
+        TGF_R2 : TGFbR_a     => TGFbR      ; Cell * kTGFbOff      *TGFbR_a               ;
+        TGF_R3 : TGFbR_a     => TGFbR_EE   ; Cell * kTGFbRIntern  *TGFbR_a               ; 
+        TGF_R4 : TGFbR_EE    => TGFbR_a    ; Cell * kTGFbRRecyc   *TGFbR_EE              ;
+        TGF_R5 : TGFbR_a     => TGFbR_Cav  ; Cell * kTGFbRIntern  *TGFbR_a               ;
+        TGF_R6 : TGFbR_Cav   => TGFbR_a    ; Cell * kTGFbRRecyc   *TGFbR_Cav             ;
+        TGF_R7 :             => Smad2      ; Cell * kSmad2Prod
+        TGF_R8 : Smad2       => pSmad2     ; Cell * MMWithKcat(kSmad2Phos_km, kSmad2Phos_kcat, Smad2, TGFbR_EE  );
+        TGF_R9 : pSmad2      => Smad2      ; Cell * MM(kSmad2Dephos_km, kSmad2Dephos_Vmax, pSmad2               );
+        TGF_R10: pSmad2      => pSmad2n    ; Cell * MM(kSmad2Imp_km, kSmad2Imp_Vmax, pSmad2)                ;
+        TGF_R11: pSmad2n     => pSmad2     ; Cell * MM(kSmad2Exp_km, kSmad2Exp_Vmax, pSmad2n)               ;
+        TGF_R12: pSmad2n     =>            ; Cell * kSmad2Deg     *pSmad2n               ;
         
         //MAPK module
         MAPK_R0  : Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kRafPhos_km,  kRafPhos_ki, kRafPhos_Vmax, kRafPhos_n, ppErk, Raf);
@@ -181,7 +206,8 @@ def cross_talk_model_antstr():
         PI3K_R2 :   pPI3K   => PI3K     ;   Cell *  kPI3KDephosByS6K    *pPI3K      *pS6K        ;
         PI3K_R3 :   Akt    => pAkt      ;   Cell *  CompetitiveInhibition(kAktPhos_km, kAktPhos_ki, kAktPhos_kcat, pPI3K, MK2206, Akt)              ;
         PI3K_R4 :   pAkt    => Akt      ;   Cell *  MM(kAktDephos_km, kAktDephos_Vmax,pAkt)         ;
-        PI3K_R5 :   mTORC1 => pmTORC1   ;   Cell *  CompetitiveInhibition(kmTORC1Phos_km, kmTORC1Phos_ki, kmTORC1Phos_kcat, pAkt, Everolimus, mTORC1)  ;
+        PI3K_R5_1 :   mTORC1 => pmTORC1   ;   Cell *  CompetitiveInhibition(kmTORC1Phos_km, kmTORC1Phos_ki, kmTORC1Phos_kcat, pAkt, Everolimus, mTORC1)  ;
+        //PI3K_R5_2 :   mTORC1 => pmTORC1   ;   Cell *  kmTORC1PhosByTSCs * mTORC1  ;
         PI3K_R6 :   pmTORC1 => mTORC1   ;   Cell *  MM(kmTORC1Dephos_km, kmTORC1Dephos_Vmax, pmTORC1);
         PI3K_R7 :   S6K     => pS6K     ;   Cell *  MMWithKcat(kS6KPhosBymTORC1_km, kS6KPhosBymTORC1_kcat, S6K, pmTORC1) ;
         PI3K_R8 :   pS6K    => S6K      ;   Cell *  MM(kS6KDephos_km,kS6KDephos_Vmax, pS6K)                    ;
@@ -193,43 +219,17 @@ def cross_talk_model_antstr():
         CrossTalkR4  :    pPI3K   => PI3K       ;   Cell *  kPI3KDephosByErk    *pPI3K      *ppErk        ;
         //CrossTalkR5  :    TGFbR_a => TGFbR_EE ;   Cell *  kTGFbRInternByAkt     *TGFbR_a    *pAkt     ;
         CrossTalkR5  :    Smad2 => pSmad2       ;   Cell *  MMWithKcat(kSmad2PhosByAkt_km, kSmad2PhosByAkt_kcat, Smad2, pAkt)       ;
-        CrossTalkR6  :    pSmad2 => Smad2       ;   Cell *  MMWithKcat(kSmad2DephosByErk_km, kSmad2DephosByErk_kcat, pSmad2, ppErk)       ;
-        
-        // These two reactions counteract Everolimus
-        // CroosTalkR4:    mTORC1  => pmTORC1  ;   Cell *  kmTORC1PhosByErk    *mTORC1     *ppErk        ;
-        // CroosTalkR5:    S6K     => pS6K     ;   Cell *  kS6KPhosByErk       *S6K        *ppErk        ;
- 
-        // Species initializations:
-        //TGFbR = 79.2268594035644;
-        //TGFbR_a = 0.990335742544554;
-        //TGFbR_EE = 9.90335742544554;
-        //TGFbR_Cav = 9.90335742544554;
-        //Smad2 = 99.2797087027586; //reduce the amount of pSmad2 in the system to see if you can get satruation. 
-        //pSmad2 = 0.720291296241358;
-        //Mek = 247.170754159532;
-        //pMek = 59.4531153440792;
-        //Erk = 151.699432609618;
-        //pErk = 124.207966835816;
-        //PI3K = 98.0170832641768;
-        //pPI3K = 1.98291673582305;
-        //Akt = 98.552882578315;
-        //pAkt = 1.44711741868509;
-        //mTORC1 = 6.07399999546496;
-        //pmTORC1 = 93.9260000045351;
-        //S6K = 91.8304175078014;
-        //pS6K = 8.16958249319855;
-        //Raf = 83.6651695492243;
-        //pRaf = 16.3348304526706;
-        //ppMek = 31.3461722863883;
-        //ppErk = 68.3929985083502;
+        CrossTalkR6  :    pSmad2n =>            ;   Cell *  MMWithKcat(kSmad2DegByErk_km, kSmad2DegByErk_kcat, pSmad2n, ppErk)       ;
         
         // Species initializations:
         TGFbR = 76.8396790634687;
         TGFbR_a = 0.966718661034664;
         TGFbR_EE = 12.55032566215;
         TGFbR_Cav = 9.66718661034664;
-        Smad2 = 90.7578601099753;
-        pSmad2 = 9.24213988902463;
+        Smad2 = 72.3164
+        pSmad2 = 4.02876;
+        pSmad2n = 8.6;
+        pSmad2Tot := pSmad2 + pSmad2n;
         Mek = 252.876273823102;
         pMek = 56.0642557607438;
         Erk = 183.331905604514;
@@ -246,6 +246,7 @@ def cross_talk_model_antstr():
         pRaf = 12.0674049063339;
         ppMek = 29.0295122061532;
         ppErk = 43.0862638108839;
+        Smad2Tot  := pSmad2 + Smad2 + pSmad2n
         
         // Variable initializations:                    
         TGFb                    = 0.005;                    
@@ -254,14 +255,22 @@ def cross_talk_model_antstr():
         kTGFbOff                = 0.04;                 
         kTGFbRIntern            = 0.3333333333;                 
         kTGFbRRecyc             = 0.03333333333;                    
+        kSmad2Prod              = 10;
+        kSmad2Deg               = 6;
+        // kSmad2Imp               = 2.5;
+        // kSmad2Exp               = 0.25;
+        kSmad2Imp_km            = 5
+        kSmad2Imp_Vmax          = 10
+        kSmad2Exp_km            = 20
+        kSmad2Exp_Vmax          = 2.5
         kSmad2Phos_km           = 50;                  
-        kSmad2Phos_kcat         = 5;                    
+        kSmad2Phos_kcat         = 1;                    
         kSmad2Dephos_km         = 35;                 
         kSmad2Dephos_Vmax       = 20;    
-        kSmad2PhosByAkt_km      = 150;                  
-        kSmad2PhosByAkt_kcat    = 10;                   
-        kSmad2DephosByErk_km    = 45;                   
-        kSmad2DephosByErk_kcat  = 5;                   
+        kSmad2PhosByAkt_km      = 500;                  
+        kSmad2PhosByAkt_kcat    = 30;                   
+        kSmad2DegByErk_km       = 45;                   
+        kSmad2DegByErk_kcat     = 12.5;                   
         kRafPhos_km             = 10;                   
         kRafPhos_ki             = 3.5;                  
         kRafPhos_Vmax           = 9000;                 
@@ -288,7 +297,8 @@ def cross_talk_model_antstr():
         kAktDephos_Vmax         = 30;                   
         kmTORC1Phos_km          = 3;                    
         kmTORC1Phos_ki          = 0.001;                    
-        kmTORC1Phos_kcat        = 0.5;                  
+        kmTORC1Phos_kcat        = 0.35;        
+        //kmTORC1PhosByTSCs       = 0.05;           
         Everolimus              = 0;                    
         kmTORC1Dephos_km        = 100;                  
         kmTORC1Dephos_Vmax      = 1;                    
@@ -303,16 +313,13 @@ def cross_talk_model_antstr():
         kPI3KPhosByTGFbR_km     = 10;                   
         kPI3KPhosByTGFbR_kcat   = 50;                   
         kPI3KDephosByErk        = 0.5;                  
-        //kTGFbRInternByAkt     = 0.01;                 
+        //kTGFbRInternByAkt     = 0.01;           
              
         
 
-      unit volume = 1 litre;
-      unit time_unit = 3600 second;
-      unit substance = 1e-9 mole;
-      
-      //pAktReadout = 0
-      //pAktReadoutEvent: at (time>72): pAktReadout = pAkt;
+        unit volume = 1 litre;
+        unit time_unit = 3600 second;
+        unit substance = 1e-9 mole;
         
 end
 """
@@ -1359,22 +1366,7 @@ if __name__ == '__main__':
         :return:
         """
 
-    SIMULATE_TIME_SERIES            = False
-    SIMULATE_BAR_GRAPHS             = True
-    OPEN_CONDITION_WITH_COPASI      = False
 
-    QUALITATIVE_FITTING             = False
-    OPTIMIZE                        = False
-
-    GET_PARAMETERS_FROM_COPASI      = False
-
-    CONFIGURE_PARAMETER_ESTIMATION  = False
-
-    DOSE_RESPONSE_GROWTH_FACTOR     = False
-    DOSE_RESPONSE_TGFB              = False
-    GET_ODES_WITH_ANTIMONY          = False
-    GET_MODEL_AS_SBML               = False
-    SIMULATE_INPUTS                 = False
 
     if GET_PARAMETERS_FROM_COPASI:
         get_parameters_from_copasi_in_antimony_format('E')
@@ -1389,8 +1381,9 @@ if __name__ == '__main__':
     phos = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
             'pPI3K', 'pPI3K', 'pmTORC1', 'pS6K']
     erk = ['Erk', 'pErk', 'ppErk']
-    pSmad2  =   ['pSmad2', 'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1']
-    pSmad2  =   ['pSmad2']
+    pSmad2  =   ['pSmad2', 'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
+                 'pSmad2Tot', 'pSmad2n']
+    pSmad2  =   ['pSmad2Tot']
 
     if SIMULATE_TIME_SERIES:
         for i in pSmad2:
