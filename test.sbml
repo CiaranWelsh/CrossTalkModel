@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by libAntimony version v2.9.4 with libSBML version 5.15.0. -->
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
+  <model id="TGFbModule" name="TGFbModule" substanceUnits="substance" timeUnits="time_unit" volumeUnits="volume">
+    <listOfFunctionDefinitions>
+      <functionDefinition id="MM">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> km </ci>
+            </bvar>
+            <bvar>
+              <ci> S </ci>
+            </bvar>
+            <bvar>
+              <ci> Vmax </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> Vmax </ci>
+                <ci> S </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> km </ci>
+                <ci> S </ci>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="MMWithKcat">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> km </ci>
+            </bvar>
+            <bvar>
+              <ci> S </ci>
+            </bvar>
+            <bvar>
+              <ci> E </ci>
+            </bvar>
+            <bvar>
+              <ci> kcat </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> kcat </ci>
+                <ci> E </ci>
+                <ci> S </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> km </ci>
+                <ci> S </ci>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="NonCompetitiveInhibition">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> km </ci>
+            </bvar>
+            <bvar>
+              <ci> Ki </ci>
+            </bvar>
+            <bvar>
+              <ci> I </ci>
+            </bvar>
+            <bvar>
+              <ci> E </ci>
+            </bvar>
+            <bvar>
+              <ci> V </ci>
+            </bvar>
+            <bvar>
+              <ci> n </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> V </ci>
+                <ci> E </ci>
+              </apply>
+              <apply>
+                <times/>
+                <apply>
+                  <plus/>
+                  <cn type="integer"> 1 </cn>
+                  <apply>
+                    <power/>
+                    <apply>
+                      <divide/>
+                      <ci> I </ci>
+                      <ci> Ki </ci>
+                    </apply>
+                    <ci> n </ci>
+                  </apply>
+                </apply>
+                <apply>
+                  <plus/>
+                  <ci> km </ci>
+                  <ci> E </ci>
+                </apply>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="MA1Mod">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> k </ci>
+            </bvar>
+            <bvar>
+              <ci> S </ci>
+            </bvar>
+            <bvar>
+              <ci> M </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> k </ci>
+              <ci> M </ci>
+              <ci> S </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="MA2Mod">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> k </ci>
+            </bvar>
+            <bvar>
+              <ci> S1 </ci>
+            </bvar>
+            <bvar>
+              <ci> S2 </ci>
+            </bvar>
+            <bvar>
+              <ci> M </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> k </ci>
+              <ci> M </ci>
+              <ci> S1 </ci>
+              <ci> S2 </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="MA0">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> k </ci>
+            </bvar>
+            <ci> k </ci>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="MA1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> k </ci>
+            </bvar>
+            <bvar>
+              <ci> S </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> k </ci>
+              <ci> S </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="MA2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> k </ci>
+            </bvar>
+            <bvar>
+              <ci> S1 </ci>
+            </bvar>
+            <bvar>
+              <ci> S2 </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> k </ci>
+              <ci> S1 </ci>
+              <ci> S2 </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="MA3">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> k </ci>
+            </bvar>
+            <bvar>
+              <ci> S1 </ci>
+            </bvar>
+            <bvar>
+              <ci> S2 </ci>
+            </bvar>
+            <bvar>
+              <ci> S3 </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> k </ci>
+              <ci> S1 </ci>
+              <ci> S2 </ci>
+              <ci> S3 </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+    </listOfFunctionDefinitions>
+    <listOfUnitDefinitions>
+      <unitDefinition id="volume">
+        <listOfUnits>
+          <unit kind="litre" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="time_unit">
+        <listOfUnits>
+          <unit kind="second" exponent="1" scale="3" multiplier="3.6"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="substance">
+        <listOfUnits>
+          <unit kind="mole" exponent="1" scale="-9" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment id="Cell" spatialDimensions="3" size="1" constant="true"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="TGFbR" compartment="Cell" initialConcentration="100" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="TGFbR_a" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Smad2" compartment="Cell" initialConcentration="100" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pSmad2" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="GFR" compartment="Cell" initialConcentration="86.221" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pGFR" compartment="Cell" initialConcentration="13.779" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="PI3K" compartment="Cell" initialConcentration="100" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pPI3K" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="TGFb" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter id="Mek" value="100" constant="false"/>
+      <parameter id="pMek" value="0" constant="false"/>
+      <parameter id="Erk" value="100" constant="false"/>
+      <parameter id="pErk" value="0" constant="false"/>
+      <parameter id="Akt" value="100" constant="false"/>
+      <parameter id="pAkt" value="0" constant="false"/>
+      <parameter id="mTORC1" value="100" constant="false"/>
+      <parameter id="pmTORC1" value="0" constant="false"/>
+      <parameter id="S6K" value="100" constant="false"/>
+      <parameter id="pS6K" value="0" constant="false"/>
+      <parameter id="AZD" value="0" constant="false"/>
+      <parameter id="GrowthFactors" value="100" constant="false"/>
+      <parameter id="MK2206" value="0" constant="false"/>
+      <parameter id="Everolimus" value="0" constant="false"/>
+      <parameter id="kFluxTGFbR" value="0.1" constant="true"/>
+      <parameter id="kTGFbRDeg" value="0.001" constant="true"/>
+      <parameter id="kTGFbOn" value="0.01" constant="true"/>
+      <parameter id="kTGFbOff" value="0.01" constant="true"/>
+      <parameter id="kSmad2Phos" value="0.01" constant="true"/>
+      <parameter id="kSmad2Dephos" value="0.01" constant="true"/>
+      <parameter id="kIGFRPhos_kcat" value="100" constant="true"/>
+      <parameter id="kIGFRPhos_km" value="2500" constant="true"/>
+      <parameter id="kIGFRPhos_h" value="2" constant="true"/>
+      <parameter id="kIGFRDephos" value="0.01" constant="true"/>
+      <parameter id="kPI3KPhosByIGFR" value="0.01" constant="true"/>
+      <parameter id="kMekPhosByPI3K" value="0.01" constant="true"/>
+      <parameter id="kMekPhosByTGFbR_a" value="0.01" constant="true"/>
+      <parameter id="kMekPhosByIGFR" value="0.01" constant="true"/>
+      <parameter id="kMekDephosByAkt" value="0.01" constant="true"/>
+      <parameter id="kMekDephosByAZD" value="0.01" constant="true"/>
+      <parameter id="kErkPhosByMek" value="0.01" constant="true"/>
+      <parameter id="kErkDephos" value="0.01" constant="true"/>
+      <parameter id="kPI3KPhosByMek" value="0.01" constant="true"/>
+      <parameter id="kPI3KDephosByS6K" value="0.01" constant="true"/>
+      <parameter id="kPI3KDephosByErk" value="0.01" constant="true"/>
+      <parameter id="kAktPhos" value="0.1" constant="true"/>
+      <parameter id="kAktDephos" value="0.01" constant="true"/>
+      <parameter id="kmTORC1PhosByAkt" value="0.001" constant="true"/>
+      <parameter id="kmTORC1PhosByErk" value="0.001" constant="true"/>
+      <parameter id="kmTORC1Dephos" value="0.01" constant="true"/>
+      <parameter id="kmTORC1DephosByEv" value="0.01" constant="true"/>
+      <parameter id="kS6KPhosBymTORC1" value="0.001" constant="true"/>
+      <parameter id="kS6KPhosByErk" value="0.001" constant="true"/>
+      <parameter id="kS6KDephos" value="0.01" constant="true"/>
+    </listOfParameters>
+    <listOfReactions>
+      <reaction id="R1" reversible="false" fast="false">
+        <listOfProducts>
+          <speciesReference species="TGFbR" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> MA0 </ci>
+                <ci> kFluxTGFbR </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R2" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="TGFbR" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> MA1 </ci>
+                <ci> kTGFbRDeg </ci>
+                <ci> TGFbR </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R3" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="TGFbR" stoichiometry="1" constant="true"/>
+          <speciesReference species="TGFb" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="TGFbR_a" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> MA2 </ci>
+                <ci> kTGFbOn </ci>
+                <ci> TGFbR </ci>
+                <ci> TGFb </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R4" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="TGFbR_a" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="TGFbR" stoichiometry="1" constant="true"/>
+          <speciesReference species="TGFb" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> MA1 </ci>
+                <ci> kTGFbOff </ci>
+                <ci> TGFbR_a </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R5" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="Smad2" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pSmad2" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="TGFbR_a"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> MA1Mod </ci>
+                <ci> kSmad2Phos </ci>
+                <ci> Smad2 </ci>
+                <ci> TGFbR_a </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R6" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pSmad2" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Smad2" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> MA1 </ci>
+                <ci> kSmad2Dephos </ci>
+                <ci> pSmad2 </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R11" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="GFR" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pGFR" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <divide/>
+                <apply>
+                  <times/>
+                  <ci> kIGFRPhos_kcat </ci>
+                  <ci> GrowthFactors </ci>
+                  <ci> GFR </ci>
+                </apply>
+                <apply>
+                  <plus/>
+                  <apply>
+                    <power/>
+                    <ci> kIGFRPhos_km </ci>
+                    <ci> kIGFRPhos_h </ci>
+                  </apply>
+                  <apply>
+                    <power/>
+                    <ci> GFR </ci>
+                    <ci> kIGFRPhos_h </ci>
+                  </apply>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R12" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pGFR" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="GFR" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> MA1 </ci>
+                <ci> kIGFRDephos </ci>
+                <ci> pGFR </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R13_1" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="PI3K" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pPI3K" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pGFR"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> MA1Mod </ci>
+                <ci> kPI3KPhosByIGFR </ci>
+                <ci> PI3K </ci>
+                <ci> pGFR </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

@@ -1,0 +1,147 @@
+Issues with current model
+=========================
+
+pAkt
+-----
+- 
+	
+pErk
+-----
+
+pS6K
+----
+- Under MK2206 pretreatment, the amount of predicted S6K
+  phos in response to TGFb decreases with length of pretreatment time
+- This is true for both Everolimus + MK and MK only conditions, though lowers
+  in magnitude for Everolimus conditions. 
+- This behaviour is not predicted by the experimental data for MK/MK+EV
+
+
+
+
+pSmad2
+-------
+- Everolimus pretreatment enhances TGFb-mediated phos of Smad2
+- AZD pretreatment also enhances TGFb-mediated phos of Smad2
+	- Thus this must be by a different mechanism
+- When Everolimus and AZD are added together there is a small synergistic 
+  effect, specifically in the second two bars (compare E_A_1.25 Vs A_1.25 and E_A_48 Vs A_48). 
+  - However, it appears there is a non-linearity as maximal level of phos may be saturating (looking at E_A_48, E_A_72, A_48 and A_72)
+  
+Some questions
+--------------
+1) How does Everolimus increase TGFb-mediated phos of Smad2? 
+2) How does AZD increase TGFb-mediated phos of Smad2? 
+3) How do Everolimus and AZD synergise in the increase TGFb-mediated Smad2 phos? 
+
+Hypothesis 1: Akt phosphorylates an intermediate which leads to increase in Smad2 phos
+--------------------------------------------------------------------------------------
+1) If this is the mechanism then Everolimus phos Smad2 by increasing pAkt by inhibiting the S6K FB. 
+2) In which case, AZD inhibits Mek, which inhibits Erk which causes dephos of PI3K
+   which lowers Akt phos and therefore Smad2 phosphorylation!
+   - i.e. this hypothesis leads me to predict Smad2 would be dephosphorylated by AZD
+   - This prediction is reflected in current simulations
+3) Because of point 2), this hypothesis does not lend itself to synergy between AZD and Everolimus 
+   mechanism of enhanced TGFb-mediated Smad2 phos 
+
+- It may be that the links between MAPK and PI3K are not accurately represented, in which case
+  this can still be the correct hypothesis. For instance, removing the dephos reaction by ppErk 
+  may help with reproducing the Smad2 behaviour. But at present, this reaction is responsible for 
+  being able to fit the pErk data for Everolimus
+	
+Hypothesis 2: Erk phosphorylates an intermediate which leads to increase in Smad2 phos
+======================================================================================
+1) Everolimus enhances pPI3K phos which phos Raf then Mek and Erk. Increased Erk increases pSmad2. 
+2) Inhibition of Mek leads to reduced Erk phos and subsequently would reduce Smad2 phos. 
+3) Similar to hypothesis 1, because of point 2) this hypothesis does not lend itself to the idea of 
+   synergy between AZD and Everolimus mechanisms. 
+   
+Hypothesis 3: Both pAkt and pErk are capable of independently phosphorylating Smad2
+===================================================================================
+1) Everolimus enhances Akt phosphorylation. Akt phosphorylation increases Smad2 phosphorylation.
+	- Smad2 phosphorylation would be subsidised by the mechanism in hypothesis 2, point 1. 
+2) AZD inhibits Mek phos leading to less Erk phos, causing less phosphorylation of Smad2
+3) same as for hypothesis 2, point 3.
+
+Hypothesis 4: pAkt leads to pSmad2 phosphorylation while pErk leads to inhibition of pSmad2 phos. 
+=================================================================================================
+1) Same as Hypothesis 1, point 1.
+2) 
+	i)	AZD inihbits Mek which inhibits Erk which increases Smad2 phos, by disinhibition. 
+	ii)	AZD inihbits Mek which inhibits Erk which increases inhibitor of Smad2 phos
+	
+	- We would not be able to distinguish between this level of detail in the mechanism with this data/model pair. 
+	
+3) It looks like mechanisms 1 and 2 would synergise. 
+
+
+
+
+
+
+
+
+
+
+Because we have so many conditions, some of which need to be simulated with events, 
+I find it diffict to ma pthe experimental to simulated variables. 
+
+consequently its hard to use full parameter estimation procedures, as implemented in COPASI. 
+
+This does not preclude the implementation of a parameter estimation algorithm myself, but	
+	- this will not be as good as preexisting ones
+	- will take time to develop
+	- will be very slow
+	- Will only be a local method, since global method will take more time and understanding
+	
+If I can't see a way to use parameter estimation, then I'm also unsure as to how we can rigerously 
+rule out specific topologies. An alternative is to try this by eye. 
+
+For instance, the topology 2 has been falsified by S6K under MK condition.
+
+Is there any scope for changing the shape of the paper such that the model is used, not to 
+disprove other hypotheses, but to provide the most feasible explaination 
+
+
+
+Bottom line 
+
+Send patricia pMek
+
+
+
+
+
+
+
+
+
+
+
+
+	
+I haven't built all these models because quite frankly its a lot of 
+work just to fiddle the parameters for a single model. 6 would probably take
+me a long time - It is better to think a little more about the network structure
+before diving further into the modelling. 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

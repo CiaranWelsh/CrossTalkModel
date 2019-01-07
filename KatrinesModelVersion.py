@@ -16,19 +16,16 @@ from decimal import Decimal, getcontext
 from multiprocessing import Process, Pool, cpu_count
 from collections import Counter
 
+
+"""
+Idea: Simulate 100 models with random parameters. Record whether each model satisifies each condition. Or better 
+yet, compute a semi RSS. Then use the values of the parameters to as a regressor neural network for prediction of 
+best parameters for satisfying certain conditions. 
+"""
+
 seaborn.set_style('white')
 seaborn.set_context('talk', font_scale=1)
 
-"""
-These are arguments for the conditions simulation functions. 
-    :param GF: starting amount of GrowthFactors
-    :param pretreatment: either 'AZD', or 'MK2206'. This is added as an event at the time specified by pretreatment time
-    :param pretreatment_time: The time at which the variable specified by 'pretreatment' is added
-    :param EV: Starting amount of Everolimus
-    :param serum_starve_event: Boolean, whether to remove serum, aka GrowthFactors by event
-    :param TGFb_event: Boolean. Whether to add 1 unit TGF at t=-45min (71.75h)
-    
-"""
 
 MODEL_CODE                      = 'E_A_48'
 CURRENT_SPECIES = [
@@ -39,17 +36,17 @@ CURRENT_SPECIES = [
     'pSmad2Tot', 'pMek', 'ppMek',
     'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
 ]
-CURRENT_SPECIES = ['pSmad2Tot']
-CURRENT_SPECIES = [
-    'pSmad2Tot', 'pSmad2', 'pSmad2n', 'Smad2n', 'Smad2Tot',
-
-]
+# CURRENT_SPECIES = ['pSmad2Tot']
+# CURRENT_SPECIES = [
+#     'pSmad2Tot', 'pSmad2', 'pSmad2n', 'Smad2n', 'Smad2Tot',
+#
+# ]
 
 SIMULATE_TIME_SERIES            = False
-SIMULATE_BAR_GRAPHS             = True
+SIMULATE_BAR_GRAPHS             = False
 OPEN_CONDITION_WITH_COPASI      = False
 
-QUALITATIVE_FITTING             = False
+QUALITATIVE_FITTING             = True
 OPTIMIZE                        = False
 
 GET_PARAMETERS_FROM_COPASI      = False
@@ -62,6 +59,16 @@ GET_ODES_WITH_ANTIMONY          = False
 GET_MODEL_AS_SBML               = False
 SIMULATE_INPUTS                 = False
 
+"""
+These are arguments for the conditions simulation functions. 
+    :param GF: starting amount of GrowthFactors
+    :param pretreatment: either 'AZD', or 'MK2206'. This is added as an event at the time specified by pretreatment time
+    :param pretreatment_time: The time at which the variable specified by 'pretreatment' is added
+    :param EV: Starting amount of Everolimus
+    :param serum_starve_event: Boolean, whether to remove serum, aka GrowthFactors by event
+    :param TGFb_event: Boolean. Whether to add 1 unit TGF at t=-45min (71.75h)
+
+"""
 
 AZD_CONDITIONS = OrderedDict()
 AZD_CONDITIONS['D']         =   [1,  None,     None,       0,  True,   False]
@@ -159,8 +166,8 @@ def cross_talk_model_antstr():
         var TGFbR_Cav       in Cell
         var Smad2           in Cell  
         var pSmad2          in Cell  
-        var pSmad2n         in Cell  
-        var Smad2n          in Cell  
+        var pSmad2n         in Cell
+        var Smad2n          in Cell 
         var Mek             in Cell
         var pMek            in Cell  
         var Erk             in Cell
@@ -197,12 +204,11 @@ def cross_talk_model_antstr():
         TGF_R5 : TGFbR_a     => TGFbR_Cav  ; Cell * kTGFbRIntern  *TGFbR_a               ;
         TGF_R6 : TGFbR_Cav   => TGFbR_a    ; Cell * kTGFbRRecyc   *TGFbR_Cav             ;
         TGF_R8 : Smad2       => pSmad2     ; Cell * MMWithKcat(kSmad2Phos_km, kSmad2Phos_kcat, Smad2, TGFbR_EE );
-        //TGF_R9 : pSmad2      => Smad2      ; Cell * MM(kpSmad2Dephos_km, kpSmad2Dephos_Vmax, pSmad2            );
-        TGF_R10: pSmad2      => pSmad2n    ; Cell * MM(kpSmad2Imp_km, kpSmad2Imp_Vmax, pSmad2                  );
-        TGF_R11: pSmad2n     => pSmad2     ; Cell * MM(kpSmad2Exp_km, kpSmad2Exp_Vmax, pSmad2n                 );
-        TGF_R12: Smad2       => Smad2n     ; Cell * MM(kSmad2Imp_km, kSmad2Imp_Vmax, Smad2                     );
+        TGF_R10: pSmad2      => pSmad2n    ; Cell  * MM(kpSmad2Imp_km, kpSmad2Imp_Vmax, pSmad2                  );
+        TGF_R11: pSmad2n     => pSmad2     ; Cell * MM(kSmad2Exp_km, kSmad2Exp_Vmax, pSmad2n                 );
+        TGF_R12: Smad2       => Smad2n     ; Cell  * MM(kSmad2Imp_km, kSmad2Imp_Vmax, Smad2                     );
         TGF_R13: Smad2n      => Smad2      ; Cell * MM(kSmad2Exp_km, kSmad2Exp_Vmax, Smad2n                    );
-        TGF_R14: pSmad2n     => Smad2n     ; Cell * MM(kpSmad2Dephos_km, kpSmad2Dephos_Vmax, pSmad2n);
+        TGF_R14: pSmad2n     => Smad2n     ; Cell  * MM(kpSmad2Dephos_km, kpSmad2Dephos_Vmax, pSmad2n);
         
         //MAPK module
         MAPK_R0  : Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kRafPhos_km,  kRafPhos_ki, kRafPhos_Vmax, kRafPhos_n, ppErk, Raf);
@@ -242,10 +248,10 @@ def cross_talk_model_antstr():
         TGFbR_a     = 0.966718661034664;
         TGFbR_EE    = 12.55032566215;
         TGFbR_Cav   = 9.66718661034664;
-        Smad2       = 84;
-        pSmad2      = 4;
-        pSmad2n     = 8;
-        Smad2n      = 4;
+        Smad2       = 49.6779
+        pSmad2      = 0.500563;
+        pSmad2n     = 0.0447836;
+        Smad2n      = 49.7768;
         Smad2Tot    := pSmad2 + Smad2 + pSmad2n + Smad2n
         pSmad2Tot   := pSmad2 + pSmad2n;
         Mek         = 252.876273823102;
@@ -272,22 +278,24 @@ def cross_talk_model_antstr():
         kTGFbOff                = 0.04;                 
         kTGFbRIntern            = 0.3333333333;                 
         kTGFbRRecyc             = 0.03333333333;                    
+        
         kSmad2Phos_km           = 50;                  
-        kSmad2Phos_kcat         = 1;                    
-        kSmad2PhosByAkt_km      = 250;                  
-        kSmad2PhosByAkt_kcat    = 0.5;                   
-        kpSmad2Dephos_km         = 35;                 
-        kpSmad2Dephos_Vmax       = 1;
-        kpSmad2Imp_km           = 125;
-        kpSmad2Imp_Vmax         = 10;
-        kpSmad2Exp_km           = 105;
-        kpSmad2Exp_Vmax         = 1;
+        kSmad2Phos_kcat         = 0.1;                    
+        kSmad2PhosByAkt_km      = 40;                  
+        kSmad2PhosByAkt_kcat    = 0.1;                   
+        kpSmad2Dephos_km         = 60;                 
+        kpSmad2Dephos_Vmax       = 65;
         kSmad2DephosByErk_km    = 30;                   
-        kSmad2DephosByErk_kcat  = 2;   
-        kSmad2Imp_km            = 250;
-        kSmad2Imp_Vmax          = 5;
-        kSmad2Exp_km            = 105;
-        kSmad2Exp_Vmax          = 65;
+        kSmad2DephosByErk_kcat  = 7.5;   
+        
+        mul = 3
+        kSmad2Imp_km           = 90;
+        kpSmad2Imp_km         := kSmad2Imp_km 
+        kpSmad2Imp_Vmax       := kSmad2Imp_Vmax * mul
+        kSmad2Imp_Vmax         = 38.466;
+        kSmad2Exp_km           = 20;
+        kSmad2Exp_Vmax         = 20;
+        
         kRafPhos_km             = 10;                   
         kRafPhos_ki             = 3.5;                  
         kRafPhos_Vmax           = 9000;                 
@@ -941,7 +949,7 @@ def get_parameters_from_copasi_in_antimony_format(condition):
     pm = model.Model(fname)
     pm.to_sbml(sbml)
     mod = te.loadSBMLModel(sbml)
-    print(mod.getCurrentAntimony())
+    print(te.getCurrentAntimony(mod))
 
 def get_model_parameters(mod):
     return dict(zip(mod.getGlobalParameterIds(), mod.getGlobalParameterValues()))
@@ -967,15 +975,41 @@ class Inequality(object):
         elif self.operator == '<':
             return left < right
 
+    def __str__(self):
+        return 'Inequality(left="{}", operator="{}", right="{}", name="{}")'.format(
+            self.left, self.operator, self.right, self.name
+        )
+
+    def __repr__(self):
+        return self.__str__()
+
 
 class InequalityGroup(object):
     def __init__(self, inequalities):
         self.inequalities = inequalities
 
-        self.memory = {
-            'old': None,
-            'new': None
-        }
+        for ineq in self.inequalities:
+            self.__dict__[ineq.name] = ineq
+
+    def __iter__(self):
+        return self
+
+    def __getitem__(self, item):
+        return self.__dict__[item]
+
+    def __setitem__(self, key, value):
+        self.__dict__[key] = value
+
+    def __delitem__(self, key):
+        del self.__dict__[key]
+
+    def next(self):
+        count = 0
+        if count > self.__len__():
+            raise StopIteration
+        else:
+            count += 1
+            return self.inequalities.keys()[count]
 
     def inequality_keys(self):
         return cycle(range(len(self)))
@@ -993,24 +1027,10 @@ class InequalityGroup(object):
             ev = ineq.evaluate(df)
             eval_dct[ineq.name] = ev
 
-        ## replace old memory slot with previous iteration
-        ## and the new slot with inequalities just calculated.
-        self.memory['old'] = self.memory['new']
-        self.memory['new'] = eval_dct
-
-        # self.memory.pop(0)
-        #
-        # self.memory.append(eval_dct)
-        if len(self.memory) != 2:
-            raise ValueError('Inequality memory must be of length 2. Got "{}" instead.'.format(len(self.memory)))
-
         return eval_dct
 
     def __len__(self):
         return len(self.inequalities)
-
-
-
 
 
 class OptimizeQualitative(object):
@@ -1022,36 +1042,21 @@ class OptimizeQualitative(object):
         return cycle(self.inequality_group.names)
 
     def __init__(self, model_string, free_parameters,
-                 inequality_group, delta, iterations=10
+                 inequality_group, exp_data, delta, iterations=10
                  ):
         self.model_string = model_string
         self.free_parameters = free_parameters
-        self.new_free_parameters = free_parameters
+        self.exp_data = exp_data
         self.inequality_group = inequality_group
         self.delta = delta
-        # if self.fname is None:
         self.fname_param = os.path.join(working_directory, 'parameters.csv')
         self.fname_prob = os.path.join(working_directory, 'prob.csv')
         self.iterations = iterations
 
-        self.probability_matrix = self.get_probablity_matrix()
+        self.mod = self.load_model()
 
-        self.mod = self._load_model()
-
-    def _load_model(self):
-        return te.loada(model_string)
-
-    def get_probablity_matrix(self):
-        mat_shape = (len(self.free_parameters), len(self.inequality_group))
-        starting_prob = 1.0 / len(self.free_parameters)
-        if starting_prob < delta:
-            raise ValueError(" delta must be smaller than the starting probabilities. ")
-
-        prob_mat = pandas.DataFrame(numpy.full(mat_shape, starting_prob))
-        prob_mat.columns = self.inequality_group.names
-        prob_mat['parameter_names'] = self.free_parameters.keys()
-        prob_mat.set_index('parameter_names', inplace=True)
-        return prob_mat
+    def load_model(self):
+        return te.loada(self.model_string)
 
     @staticmethod
     def simulate_condition(model_string, condition):
@@ -1133,43 +1138,9 @@ class OptimizeQualitative(object):
         print('old parameter value is "{}". New is "{}"'.format(old, new_parameter_value))
         return mod, new_parameter_value
 
-    def _update_probabilities(self, cond, param, reinforcement_direction):
-        if cond not in self.probability_matrix.columns:
-            raise ValueError('The "{}" condition is not in your dataframe'.format(cond))
-        from copy import deepcopy
-
-        original_probabilities = self.probability_matrix[cond]
-        if reinforcement_direction == 'positive_reinforcement':
-            original_probabilities[param] = Decimal(original_probabilities[param]) + Decimal(delta)
-            for i in original_probabilities.index:
-                # print(i)
-                if i != param:
-                    original_probabilities[i] = Decimal(original_probabilities[i]) - \
-                                                (  Decimal(delta) / Decimal( (len(original_probabilities) - 1.0) )  )
-
-        elif reinforcement_direction == 'negative_reinforcement':
-            original_probabilities[param] = Decimal(original_probabilities[param]) - Decimal(delta)
-            for i in original_probabilities.index:
-                if i != param:
-                    original_probabilities[i] = Decimal(original_probabilities[i]) + \
-                                                (  Decimal(delta) / Decimal( (len(original_probabilities) - 1.0) )  )
-        else:
-            raise ValueError
-
-        # print('original probabilities', original_probabilities)
-        self.probability_matrix[cond] = original_probabilities
-        # print('self.prob matrix', self.probability_matrix[cond])
-
-
-    def save_parameters_and_prob_to_file(self):
-        self.probability_matrix.to_csv(self.fname_prob)
-        pandas.DataFrame(self.free_parameters, index=[0]).transpose().to_csv(self.fname_param)
-
     def _load_parameters_from_dict(self, free_params):
         for i in free_params:
-            # print('Parameter i is {}, {}'.format(i, getattr(self.mod, i)))
             setattr(self.mod, i, free_params[i])
-            # print('Parameter i is {}, {}'.format(i, getattr(self.mod, i)))
 
     def fit(self):
         """
@@ -1265,8 +1236,8 @@ class RSS(object):
         self.experimental_data = experimental_data
         self.mappings = mappings
 
-        self.residuals = self._compute()
-        self.rss = self.residuals.sum().sum()
+        # self.residuals = self._compute()
+        # self.rss = self.residuals.sum().sum()
 
     def _compute(self):
         dct = OrderedDict()
@@ -1282,19 +1253,93 @@ class RSS(object):
         return pandas.concat(dct, axis=1)
 
 
-class Optimize(object):
-    def __init__(self, model_string, exp_data, mappings, free_parameters, iterations):
+class QualitativeObj(object):
+    """
+
+    """
+    def __init__(self, simulated_data, inequalities):
+        self.simulated_data = simulated_data
+        self.inequalities = inequalities
+        # print(self.simulated_data)
+        # print(self.inequalities)
+
+        self.residuals = self._compute()
+        self.residual_values = numpy.array(self.residuals.values())
+        self.negative_loss = sum([i for i in self.residual_values if i < 0])
+        self.positive_loss = sum([i for i in self.residual_values if i > 0])
+
+    def __str__(self):
+        return 'QualitativeObj(positive_loss={}, negative_loss={})'.format(self.positive_loss, self.negative_loss)
+
+    def __repr__(self):
+        return self.__str__()
+
+    def _compute(self):
+        """
+        Value of 0 means that inequality is satisified
+        +ve value means that left is bigger than right
+        -ve value means that left is smaller than right
+        :return:
+        """
+        obj = OrderedDict()
+        dct = self.inequalities.evaluate(self.simulated_data)
+        for k, v in dct.items():
+
+            if v == True:
+                obj[k] = 0
+            else:
+                ineq = self.inequalities[k]
+                ## left is always small
+                if ineq.operator == '<':
+                    left = self.simulated_data.loc[ineq.right[0], ineq.right[1]]
+                    right = self.simulated_data.loc[ineq.left[0], ineq.left[1]]
+                else:
+                    left = self.simulated_data.loc[ineq.left[0], ineq.left[1]]
+                    right = self.simulated_data.loc[ineq.right[0], ineq.right[1]]
+
+                obj[k] = right - left
+        return obj
+
+
+
+class RandomSimulation(object):
+    """
+
+    I am trying to produce some simulation data for anaysis with a neural net.
+
+    To do this I need to:
+        1) simulate data with parameter set
+        2) evaluate truth of inequalities
+            - Also compute the qualitative objecctive function
+            - 0 if True and +/- if not
+        3) return dataset including the parameters and the inequality results.
+
+
+    """
+    def __init__(self, model_string, exp_data, inequalities, mappings, free_parameters, iterations):
         self.model_string = model_string
         self.exp_data = exp_data
+        self.inequalities = inequalities
         self.mappings = mappings
         self.free_parameters = free_parameters
         self.iterations = iterations
+
+        self.model = self._load_model()
+
+        self.params = {}
+        self.resid = {}
+
+        self.fname_params = os.path.join(working_directory, 'parameters.csv')
+        self.fname_resid = os.path.join(working_directory, 'residuals.csv')
+
+    def _load_model(self):
+        return te.loada(self.model_string)
 
     def _simulate_condition(self, condition):
         if condition not in AZD_CONDITIONS.keys() + MK_CONDITIONS.keys():
             raise ValueError
 
-        model_string = make_condition(self.model_string, condition)
+        model_string = make_condition(self.model.getCurrentAntimony(), condition)
         mod = te.loada(model_string)
         ## Add 1 to intervals for 0 indexed python
         start = 0
@@ -1340,25 +1385,73 @@ class Optimize(object):
         df = df.drop('time', axis=1)
         return df
 
-    def _compute_obj_fun(self):
-        sim_data = self._simulate_conditions()
+    def _compute_obj_fun(self, sim_data):
         sim_names = [i.simulation for i in self.mappings]
         exp_names = [i.experimental for i in self.mappings]
         sim_data = sim_data[sim_names]
-        # print(sim_data)
-        return RSS(sim_data, self.exp_data, mappings)
+        qual = QualitativeObj(sim_data, self.inequalities)
+        return qual
 
     @staticmethod
-    def _load_parameters_from_dict(model, free_params):
+    def _load_parameters_from_dict(mod, free_params):
         if not isinstance(free_params, dict):
             raise TypeError
-
         for i in free_params:
-            setattr(model, i, free_params[i])
+            setattr(mod, i, free_params[i])
+        return mod
+
+    def fit1(self, i):
+        # params = {}
+        # resid = {}
+        new_params = numpy.random.uniform(0.01, 1000, len(self.free_parameters))
+        new_params = OrderedDict(zip(self.free_parameters.keys(), new_params))
+        self.model = self._load_parameters_from_dict(self.model, new_params)
+        sim_data = self._simulate_conditions()
+        obj = self._compute_obj_fun(sim_data)
+        # params[i] = new_params
+        # resid[i] = obj.residuals
+        return new_params, obj.residuals#params, resid
+
+    def to_file(self, params, resid):
+        if os.path.isfile(self.fname_params):
+            with open(self.fname_params, 'a') as f:
+                params.to_csv(f, header=False)
+        else:
+            params.to_csv(self.fname_params)
+
+        if os.path.isfile(self.fname_resid):
+            with open(self.fname_resid, 'a') as f:
+                resid.to_csv(f, header=False)
+        else:
+            resid.to_csv(self.fname_resid)
+
+        print('parameters saved to "{}"'.format(self.fname_params))
+        print('residuals saved to "{}"'.format(self.fname_resid))
 
 
     def fit(self):
-        pass
+        import time
+        resid = {}
+        params = {}
+
+        try:
+            for i in (j for j in range(self.iterations)):
+                print('iteration {}'.format(i))
+                now = time.clock()
+                params[i], resid[i] = self.fit1(i)
+                print("loop took '{}' seconds".format(time.clock() - now))
+
+        except KeyboardInterrupt:
+            print('Warning: Keyboard Interupt. Saving progress.')
+
+        params = pandas.DataFrame(params).transpose()
+        resid = pandas.DataFrame(resid).transpose()
+
+        self.to_file(params, resid)
+
+        return params, resid
+
+
 
 
 
@@ -1379,8 +1472,6 @@ if __name__ == '__main__':
         the flags
         :return:
         """
-
-
 
     if GET_PARAMETERS_FROM_COPASI:
         get_parameters_from_copasi_in_antimony_format(MODEL_CODE)
@@ -1435,8 +1526,20 @@ if __name__ == '__main__':
     if QUALITATIVE_FITTING:
         model_string = cross_talk_model_antstr()
 
+        azd_data = os.path.join(working_directory, r'data\HardCopy\AZD_calculations - v3.xlsx')
+        mk_data = os.path.join(working_directory, r'data\HardCopy\MK2206_calculations - v3.xlsx')
+
+        assert os.path.isfile(azd_data)
+        assert os.path.isfile(mk_data)
+
+        azd_data = pandas.read_excel(azd_data, sheet_name='AZDAverage', index_col='Condition')
+        mk_data = pandas.read_excel(mk_data, sheet_name='MKAverage', index_col='Condition')
+
+        mk_data = mk_data.iloc[3:]
+
+        exp_data = pandas.concat([azd_data, mk_data])
+
         free_parameters = OrderedDict({
-            'kSmad2Phos_kcat': 2.0,
             'kmTORC1Phos_ki': 0.001,
             'kPI3KPhosByTGFbR_kcat': 50.0,
             'kAktDephos_Vmax': 31.1252344504785,
@@ -1455,7 +1558,7 @@ if __name__ == '__main__':
             'kMekPhos_ki1': 0.25,
             'kTGFbOn': 0.100647860357268,
             'kSmad2PhosByAkt_kcat': 1.0,
-            'kSmad2Dephos_Vmax': 58.8712661228653,
+            'kpSmad2Dephos_Vmax': 58.8712661228653,
             'kAktPhos_ki': 0.01,
             'kmTORC1Phos_kcat': 0.1,
         })
@@ -1487,16 +1590,16 @@ if __name__ == '__main__':
             akt_ineq10,
         ]
 
-        erk_ineq1 = Inequality(['E',        'ppErk'],  '>', ['D',        'ppErk'], 'pErk_1')
-        erk_ineq2 = Inequality(['E',        'ppErk'],  '>', ['T',        'ppErk'], 'pErk_2')
-        erk_ineq3 = Inequality(['E_A_72',   'ppErk'],  '<', ['E',        'ppErk'], 'pErk_3')
-        erk_ineq4 = Inequality(['E_A_72',   'ppErk'],  '<', ['D',        'ppErk'], 'pErk_4')
-        erk_ineq5 = Inequality(['E_A_72',   'ppErk'],  '<', ['T',        'ppErk'], 'pErk_5')
-        erk_ineq6 = Inequality(['A_72',     'ppErk'],  '<', ['E',        'ppErk'], 'pErk_6')
-        erk_ineq7 = Inequality(['A_72',     'ppErk'],  '<', ['D',        'ppErk'], 'pErk_7')
-        erk_ineq8 = Inequality(['A_72',     'ppErk'],  '<', ['T',        'ppErk'], 'pErk_8')
-        erk_ineq9 = Inequality(['E_M_72',   'ppErk'],  '>', ['E',        'ppErk'], 'pErk_9')
-        erk_ineq10 = Inequality(['M_72',     'ppErk'],  '<', ['E_M_72',   'ppErk'],'pErk_10')
+        erk_ineq1 = Inequality(['E',        'ppErk'],  '>', ['D',        'ppErk'], 'ppErk_1')
+        erk_ineq2 = Inequality(['E',        'ppErk'],  '>', ['T',        'ppErk'], 'ppErk_2')
+        erk_ineq3 = Inequality(['E_A_72',   'ppErk'],  '<', ['E',        'ppErk'], 'ppErk_3')
+        erk_ineq4 = Inequality(['E_A_72',   'ppErk'],  '<', ['D',        'ppErk'], 'ppErk_4')
+        erk_ineq5 = Inequality(['E_A_72',   'ppErk'],  '<', ['T',        'ppErk'], 'ppErk_5')
+        erk_ineq6 = Inequality(['A_72',     'ppErk'],  '<', ['E',        'ppErk'], 'ppErk_6')
+        erk_ineq7 = Inequality(['A_72',     'ppErk'],  '<', ['D',        'ppErk'], 'ppErk_7')
+        erk_ineq8 = Inequality(['A_72',     'ppErk'],  '<', ['T',        'ppErk'], 'ppErk_8')
+        erk_ineq9 = Inequality(['E_M_72',   'ppErk'],  '>', ['E',        'ppErk'], 'ppErk_9')
+        erk_ineq10 = Inequality(['M_72',     'ppErk'],  '<', ['E_M_72',   'ppErk'],'ppErk_10')
 
         erk = [
             erk_ineq1,
@@ -1547,13 +1650,21 @@ if __name__ == '__main__':
         all_ineq = akt + erk + s6k + smad
         ineq = InequalityGroup(all_ineq)
 
-        O = OptimizeQualitative(
-            cross_talk_model_antstr(), free_parameters,
-            ineq, delta, iterations=30
+        # SemiRSS()
+        akt_mapping = Mapping('pAkt', 'pAkt')
+        erk_mapping = Mapping('pErk', 'ppErk')
+        s6k_mapping = Mapping('pS6K', 'pS6K')
+        smad2_mapping = Mapping('pSmad2', 'pSmad2')
+
+        mappings = [akt_mapping, erk_mapping, s6k_mapping, smad2_mapping]
+
+        O = RandomSimulation(
+            cross_talk_model_antstr(), exp_data=exp_data, inequalities= ineq, mappings=mappings,
+            free_parameters=free_parameters, iterations=100
             )
 
-
         O.fit()
+
 
         # do_robustness(model_string)
 
@@ -1582,7 +1693,6 @@ if __name__ == '__main__':
         mappings = [akt_mapping, erk_mapping, s6k_mapping, smad2_mapping]
 
         free_parameters = OrderedDict({
-            'kSmad2Phos_kcat': 2.0,
             'kmTORC1Phos_ki': 0.001,
             'kPI3KPhosByTGFbR_kcat': 50.0,
             'kAktDephos_Vmax': 31.1252344504785,
@@ -1607,11 +1717,11 @@ if __name__ == '__main__':
         })
         free_parameters = free_parameters.keys()
 
-        o = Optimize(cross_talk_model_antstr(), exp_data*10, mappings, iterations=10,
-                     free_parameters=free_parameters)
-        RSS = o._compute_obj_fun()
-        print(RSS.residuals)
-        print(RSS.rss)
+        # o = RandomSimulation(cross_talk_model_antstr(), exp_data * 10, mappings, iterations=10,
+        #                      free_parameters=free_parameters)
+        # RSS = o._compute_obj_fun()
+        # print(RSS.residuals)
+        # print(RSS.rss)
 
         # print(exp_data*10)
 
