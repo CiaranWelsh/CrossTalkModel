@@ -43,10 +43,10 @@ CURRENT_SPECIES = [
 # ]
 
 SIMULATE_TIME_SERIES            = False
-SIMULATE_BAR_GRAPHS             = False
+SIMULATE_BAR_GRAPHS             = True
 OPEN_CONDITION_WITH_COPASI      = False
 
-QUALITATIVE_FITTING             = True
+QUALITATIVE_FITTING             = False
 OPTIMIZE                        = False
 
 GET_PARAMETERS_FROM_COPASI      = False
@@ -1464,14 +1464,6 @@ if __name__ == '__main__':
     """
     Set flags to determine which part of the script will run
     """
-
-    def set_flags():
-        """
-        Dummy function to get clickable button on
-        PyCharm structure tab to take me directly to
-        the flags
-        :return:
-        """
 
     if GET_PARAMETERS_FROM_COPASI:
         get_parameters_from_copasi_in_antimony_format(MODEL_CODE)
