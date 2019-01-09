@@ -17406,3 +17406,30 @@ INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure
 INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage118" as iconphoto: not a photo image
 INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage127" as iconphoto: not a photo image
 INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage136" as iconphoto: not a photo image
+DEBUG:matplotlib.font_manager:font_manager:findfont:1346:findfont: Matching :family=sans-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=18.0 to Arial (u'c:\\windows\\fonts\\arial.ttf') with score of 0.050000
+DEBUG:matplotlib.font_manager:font_manager:findfont:1346:findfont: Matching :family=sans-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=36.0 to Arial (u'c:\\windows\\fonts\\arial.ttf') with score of 0.050000
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage10" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage19" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage28" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage37" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage46" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage55" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage64" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage73" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage82" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage91" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage100" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage109" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage118" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage127" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage136" as iconphoto: not a photo image
+DEBUG:matplotlib.font_manager:font_manager:findfont:1346:findfont: Matching :family=sans-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=18.0 to Arial (u'c:\\windows\\fonts\\arial.ttf') with score of 0.050000
+DEBUG:matplotlib.font_manager:font_manager:findfont:1346:findfont: Matching :family=sans-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=36.0 to Arial (u'c:\\windows\\fonts\\arial.ttf') with score of 0.050000
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage10" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage19" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage28" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage37" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage46" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage55" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage64" as iconphoto: not a photo image
+INFO:matplotlib.backends._backend_tk:_backend_tk:new_figure_manager_given_figure:1060:Could not load matplotlib icon: can't use "pyimage73" as iconphoto: not a photo image

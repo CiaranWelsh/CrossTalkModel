@@ -3,6 +3,7 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 import os, glob, pandas, numpy
+import pickle
 try:
     from pycotools import model, viz, tasks
 except ImportError:
@@ -34,15 +35,15 @@ seaborn.set_context('talk', font_scale=1)
 
 
 
-def load_model_with_pyco(ant, copasi_filename):
+def load_model_with_pyco(ant, COPASI_FILENAME):
     """
     Load an antimony model into copasi using Pycotools wrapper around
     tellurium functions
-    :param copasi_filename:
+    :param COPASI_FILENAME:
     :param ant:
     :return:
     """
-    with model.BuildAntimony(copasi_filename) as loader:
+    with model.BuildAntimony(COPASI_FILENAME) as loader:
         mod = loader.load(
             ant
         )
@@ -114,7 +115,7 @@ def __dep__dose_response_for_growth_factors():
         # print(mod.model.keys())
         fig = dose_response(CROSS_TALK_MODEL, 'GrowthFactors', 1, 10000, 1000, [i, j])
         plt.title('Dose Response of {} and \n{} to GrowthFactors (log10 nM)'.format(i, j))
-        fname = os.path.join(graphs_directory, 'GrowthFactorsDoseResponse{}.png'.format(i))
+        fname = os.path.join(GRAPHS_DIRECTORY, 'GrowthFactorsDoseResponse{}.png'.format(i))
         fig.savefig(fname, dpi=150, bbox_inches='tight')
         # plt.show()
 
@@ -181,7 +182,7 @@ def add_AZD_event(model_string, time):
     return model_string
 
 
-def make_condition(model_string, condition):
+def make_condition(model_string, condition, from_pickle=False):
     """
     Take the model string and create condition
 
@@ -196,6 +197,14 @@ def make_condition(model_string, condition):
     :param open_with_copasi: open the model with copasi
     :return:
     """
+    if from_pickle:
+        if not os.path.isfile(PICKLE_PATH):
+            raise ValueError('pickle path "{}" does not exist.'.format(PICKLE_PATH))
+
+        with open(PICKLE_PATH, 'r') as f:
+            models_dct = f.load()
+        return models_dct[condition]
+
     if condition not in AZD_CONDITIONS.keys() + MK_CONDITIONS.keys():
         raise ValueError('No key. These keys "{}"'.format(AZD_CONDITIONS.keys()+MK_CONDITIONS.keys()))
     try:
@@ -337,9 +346,9 @@ def simulate_conditions_and_plot_as_bargraph(y, type='AZD'):
     plt.yticks(fontsize=18)
 
     if type == 'AZD':
-        dire = os.path.join(graphs_directory, 'AZDSimulations')
+        dire = os.path.join(GRAPHS_DIRECTORY, 'AZDSimulations')
     else:
-        dire = os.path.join(graphs_directory, 'MKSimulations')
+        dire = os.path.join(GRAPHS_DIRECTORY, 'MKSimulations')
     os.makedirs(dire) if not os.path.isdir(dire) else None
     fname = os.path.join(dire, "{}.png".format(y))
     fig.savefig(fname, dpi=300, bbox_inches='tight')
@@ -497,7 +506,7 @@ def simulate_inputs_only(AZD_or_MK='AZD'):
     if AZD_or_MK not in ['AZD', 'MK2206']:
         raise ValueError
 
-    dire = os.path.join(graphs_directory, 'InputSimulations')
+    dire = os.path.join(GRAPHS_DIRECTORY, 'InputSimulations')
     os.makedirs(dire) if not os.path.isdir(dire) else None
 
     if AZD_or_MK == 'AZD':
@@ -528,7 +537,7 @@ def open_condition_with_copasi(model_string, condition):
     :return:
     """
     mod_string = make_condition(model_string, condition)
-    copasi_dir = os.path.join(working_directory, 'copasi_models')
+    copasi_dir = os.path.join(WORKING_DIRECTORY, 'copasi_models')
     if not os.path.isdir(copasi_dir):
         os.makedirs(copasi_dir)
     fname = os.path.join(copasi_dir, "{}.cps".format(condition))
@@ -540,7 +549,7 @@ def open_condition_with_copasi(model_string, condition):
 
 def configure_parameter_estimation(model_string, condition):
     mod_string = make_condition(model_string, condition)
-    copasi_dir = os.path.join(working_directory, 'copasi_models')
+    copasi_dir = os.path.join(WORKING_DIRECTORY, 'copasi_models')
     if not os.path.isdir(copasi_dir):
         os.makedirs(copasi_dir)
     fname = os.path.join(copasi_dir, "{}.cps".format(condition))
@@ -619,7 +628,7 @@ def simulate_model_component_timecourse(vars, cond, filename=None, **kwargs):
     plt.legend(loc=[1, 1])
     plt.setp(ax[-1].get_xticklabels(), visible=True)
 
-    dire = os.path.join(graphs_directory, 'TimeSeriesSimulations')
+    dire = os.path.join(GRAPHS_DIRECTORY, 'TimeSeriesSimulations')
     os.makedirs(dire) if not os.path.isdir(dire) else None
     if filename is None:
         fname = os.path.join(dire, reduce(lambda x, y: "{}__{}".format(x, y), cond) + '.png')
@@ -630,7 +639,7 @@ def simulate_model_component_timecourse(vars, cond, filename=None, **kwargs):
 
 
 def get_parameters_from_copasi_in_antimony_format(condition):
-    copasi_dir = os.path.join(working_directory, 'copasi_models')
+    copasi_dir = os.path.join(WORKING_DIRECTORY, 'copasi_models')
     fname = os.path.join(copasi_dir, "{}.cps".format(condition))
     sbml = os.path.join(copasi_dir, "{}.sbml".format(condition))
     pm = model.Model(fname)
@@ -736,8 +745,8 @@ class OptimizeQualitative(object):
         self.exp_data = exp_data
         self.inequality_group = inequality_group
         self.delta = delta
-        self.fname_param = os.path.join(working_directory, 'parameters.csv')
-        self.fname_prob = os.path.join(working_directory, 'prob.csv')
+        self.fname_param = os.path.join(WORKING_DIRECTORY, 'parameters.csv')
+        self.fname_prob = os.path.join(WORKING_DIRECTORY, 'prob.csv')
         self.iterations = iterations
 
         self.mod = self.load_model()
@@ -1016,8 +1025,8 @@ class RandomSimulation(object):
         self.params = {}
         self.resid = {}
 
-        self.fname_params = os.path.join(working_directory, 'parameters.csv')
-        self.fname_resid = os.path.join(working_directory, 'residuals.csv')
+        self.fname_params = os.path.join(WORKING_DIRECTORY, 'parameters.csv')
+        self.fname_resid = os.path.join(WORKING_DIRECTORY, 'residuals.csv')
 
     def _load_model(self):
         return te.loada(self.model_string)
@@ -1143,11 +1152,6 @@ class RandomSimulation(object):
 
 
 if __name__ == '__main__':
-
-    working_directory = r'D:\MesiSTRAT\CrossTalkModel'
-    copasi_filename = os.path.join(working_directory, 'KatrinesTopology.cps')
-    graphs_directory = os.path.join(working_directory, 'SimulationGraphs')
-
     """
     Set flags to determine which part of the script will run
     """
@@ -1185,8 +1189,8 @@ if __name__ == '__main__':
         simulate_inputs_only('AZD')
         simulate_inputs_only('MK2206')
 
-    if not os.path.isdir(graphs_directory):
-        os.makedirs(graphs_directory)
+    if not os.path.isdir(GRAPHS_DIRECTORY):
+        os.makedirs(GRAPHS_DIRECTORY)
 
     if GET_ODES_WITH_ANTIMONY:
         mod = te.loada(CROSS_TALK_MODEL)
@@ -1205,8 +1209,8 @@ if __name__ == '__main__':
     if QUALITATIVE_FITTING:
         model_string = CROSS_TALK_MODEL
 
-        azd_data = os.path.join(working_directory, r'data\HardCopy\AZD_calculations - v3.xlsx')
-        mk_data = os.path.join(working_directory, r'data\HardCopy\MK2206_calculations - v3.xlsx')
+        azd_data = os.path.join(WORKING_DIRECTORY, r'data\HardCopy\AZD_calculations - v3.xlsx')
+        mk_data = os.path.join(WORKING_DIRECTORY, r'data\HardCopy\MK2206_calculations - v3.xlsx')
 
         assert os.path.isfile(azd_data)
         assert os.path.isfile(mk_data)

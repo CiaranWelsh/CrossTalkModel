@@ -1,4 +1,5 @@
-
+import os
+from collections import OrderedDict
 
 MODEL_CODE                      = 'E_A_48'
 
@@ -18,10 +19,10 @@ CURRENT_SPECIES = [
 # ]
 
 SIMULATE_TIME_SERIES            = False
-SIMULATE_BAR_GRAPHS             = False
+SIMULATE_BAR_GRAPHS             = True
 OPEN_CONDITION_WITH_COPASI      = False
 
-QUALITATIVE_FITTING             = True
+QUALITATIVE_FITTING             = False
 
 GET_PARAMETERS_FROM_COPASI      = False
 
@@ -88,3 +89,27 @@ ALL_CONDITIONS = ['D', 'T', 'E', 'E_A_72', 'E_A_48',
                   'A_24', 'A_1.25', 'E_M_72',
                   'E_M_48', 'E_M_24', 'E_M_1.25', 'M_72',
                   'M_48', 'M_24', 'M_1.25']
+
+
+WORKING_DIRECTORY = r'D:\MesiSTRAT\CrossTalkModel'
+COPASI_FILENAME = os.path.join(WORKING_DIRECTORY, 'KatrinesTopology.cps')
+GRAPHS_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'SimulationGraphs')
+PICKLE_PATH = os.path.join(WORKING_DIRECTORY, 'models.pickle')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
