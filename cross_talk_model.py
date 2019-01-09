@@ -16,336 +16,22 @@ from decimal import Decimal, getcontext
 from multiprocessing import Process, Pool, cpu_count
 from collections import Counter
 
+from cross_talk_model_string import CROSS_TALK_MODEL
+from constants import *
+
 
 """
 Idea: Simulate 100 models with random parameters. Record whether each model satisifies each condition. Or better 
-yet, compute a semi RSS. Then use the values of the parameters to as a regressor neural network for prediction of 
+yet, compute a semi RSS. Then use the values of the parameters to classify neural network for prediction of 
 best parameters for satisfying certain conditions. 
+
+Classifications = range(1, len(conditions)
+
 """
 
 seaborn.set_style('white')
 seaborn.set_context('talk', font_scale=1)
 
-
-MODEL_CODE                      = 'E_A_48'
-
-CURRENT_SPECIES = [
-    'pSmad2Tot', 'pSmad2', 'pSmad2n', 'Smad2n', 'Smad2Tot',
-    'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
-]
-CURRENT_SPECIES = [
-    'pSmad2Tot', 'pMek', 'ppMek',
-    'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
-]
-# CURRENT_SPECIES = ['pSmad2Tot']
-# CURRENT_SPECIES = [
-#     'pSmad2Tot', 'pSmad2', 'pSmad2n', 'Smad2n', 'Smad2Tot',
-#
-# ]
-
-SIMULATE_TIME_SERIES            = False
-SIMULATE_BAR_GRAPHS             = True
-OPEN_CONDITION_WITH_COPASI      = False
-
-QUALITATIVE_FITTING             = False
-OPTIMIZE                        = False
-
-GET_PARAMETERS_FROM_COPASI      = False
-
-CONFIGURE_PARAMETER_ESTIMATION  = False
-
-DOSE_RESPONSE_GROWTH_FACTOR     = False
-DOSE_RESPONSE_TGFB              = False
-GET_ODES_WITH_ANTIMONY          = False
-GET_MODEL_AS_SBML               = False
-SIMULATE_INPUTS                 = False
-
-"""
-These are arguments for the conditions simulation functions. 
-    :param GF: starting amount of GrowthFactors
-    :param pretreatment: either 'AZD', or 'MK2206'. This is added as an event at the time specified by pretreatment time
-    :param pretreatment_time: The time at which the variable specified by 'pretreatment' is added
-    :param EV: Starting amount of Everolimus
-    :param serum_starve_event: Boolean, whether to remove serum, aka GrowthFactors by event
-    :param TGFb_event: Boolean. Whether to add 1 unit TGF at t=-45min (71.75h)
-
-"""
-
-AZD_CONDITIONS = OrderedDict()
-AZD_CONDITIONS['D']         =   [1,  None,     None,       0,  True,   False]
-AZD_CONDITIONS['T']         =   [1,  None,     None,       0,  True,   True]
-AZD_CONDITIONS['E']         =   [1,  None,     None,       1,  True,   True]
-AZD_CONDITIONS['E_A_72']    =   [1,  "AZD",    0.0,        1,  True,   True]
-AZD_CONDITIONS['E_A_48']    =   [1,  "AZD",    24,         1,  True,   True]
-AZD_CONDITIONS['E_A_24']    =   [1,  "AZD",    48.0,       1,  True,   True]
-AZD_CONDITIONS['E_A_1.25']  =   [1,  "AZD",    70.75,      1,  True,   True]
-AZD_CONDITIONS['A_72']      =   [1,  "AZD",    0.0,        0,  True,   True]
-AZD_CONDITIONS['A_48']      =   [1,  "AZD",    24,         0,  True,   True]
-AZD_CONDITIONS['A_24']      =   [1,  "AZD",    48.0,       0,  True,   True]
-AZD_CONDITIONS['A_1.25']    =   [1,  "AZD",    70.75,      0,  True,   True]
-
-MK_CONDITIONS = OrderedDict()
-MK_CONDITIONS['D']          =     [1, None,      None,   0, True, False]
-MK_CONDITIONS['T']          =     [1, None,      None,   0, True, True]
-MK_CONDITIONS['E']          =     [1, None,      None,   1, True, True]
-MK_CONDITIONS['E_M_72']     =     [1, "MK2206",  0.0,    1, True, True]
-MK_CONDITIONS['E_M_48']     =     [1, "MK2206",  24.0,   1, True, True]
-MK_CONDITIONS['E_M_24']     =     [1, "MK2206",  48.0,   1, True, True]
-MK_CONDITIONS['E_M_1.25']   =     [1, "MK2206",  70.75,  1, True, True]
-MK_CONDITIONS['M_72']       =     [1, "MK2206",  0.0,    0, True, True]
-MK_CONDITIONS['M_48']       =     [1, "MK2206",  24.0,   0, True, True]
-MK_CONDITIONS['M_24']       =     [1, "MK2206",  48.0,   0, True, True]
-MK_CONDITIONS['M_1.25']     =     [1, "MK2206",  70.75,  0, True, True]
-
-
-MODEL_SPECIES = ['TGFbR',   'TGFbR_a',  'TGFbR_EE', 'TGFbR_Cav',
-                 'Smad2',   'pSmad2',   'Raf',      'pRaf',
-                 'Mek',     'pMek',     'ppMek',    'Erk',        'pErk',
-                 'ppErk',   'PI3K',     'pPI3K',    'Akt',        'pAkt',
-                 'mTORC1',  'pmTORC1',  'S6K',      'pS6K',
-                 'pSmad2Tot', 'pSmad2n', 'Smad2Tot', 'Smad2n'
-                 ]
-
-MODEL_INPUTS = ['TGFb', 'Everolimus', 'MK2206', 'AZD', 'GrowthFactors']
-
-MODEL_SPECIES += MODEL_INPUTS
-
-ALL_CONDITIONS = ['D', 'T', 'E', 'E_A_72', 'E_A_48',
-                  'E_A_24', 'E_A_1.25', 'A_72', 'A_48',
-                  'A_24', 'A_1.25', 'E_M_72',
-                  'E_M_48', 'E_M_24', 'E_M_1.25', 'M_72',
-                  'M_48', 'M_24', 'M_1.25']
-
-
-
-def cross_talk_model_antstr():
-    """
-    Antimony string model containing the most currect version of
-    the CrossTalk model from Katrine and Patricia's project.
-    :return:
-    """
-    return """
-    function MM(km, Vmax, S)
-        Vmax * S / (km + S)
-    end
-
-    function MMWithKcat(km, kcat, S, E)
-        kcat * E * S / (km + S)
-    end
-    
-
-    function NonCompetitiveInhibition(km, ki, Vmax, n, I, S)
-        Vmax * S / ( (km + S) * (1 + (I / ki)^n ) )
-    end
-    
-    function MA1(k, S)
-        k * S
-    end
-    
-    function MA2(k, S1, S2)
-        k * S1 * S2
-    end
-    
-    function MA1Mod(k, S, M)
-        k * S * M
-    end
-    
-    function MA2Mod(k, S1, S2, M)
-        k * S1 * S2 * M
-    end
-    
-    function CompetitiveInhibition(km, ki, kcat, E, I, S)
-        kcat * E * S / (km + S + ((km * I )/ ki)  )
-    end
-    
-    model TGFbModule()
-        compartment Cell = 1.0
-        
-        var TGFbR           in Cell  
-        var TGFbR_a         in Cell  
-        var TGFbR_EE        in Cell
-        var TGFbR_Cav       in Cell
-        var Smad2           in Cell  
-        var pSmad2          in Cell  
-        var pSmad2n         in Cell
-        var Smad2n          in Cell 
-        var Mek             in Cell
-        var pMek            in Cell  
-        var Erk             in Cell
-        var pErk            in Cell  
-        var PI3K            in Cell  
-        var pPI3K           in Cell  
-        var Akt             in Cell
-        var pAkt            in Cell  
-        var mTORC1          in Cell  
-        var pmTORC1         in Cell  
-        var S6K             in Cell
-        var pS6K            in Cell  
-        var Raf             in Cell
-        var pRaf            in Cell
-        var pMek            in Cell
-        var ppMek           in Cell
-        var pMek            in Cell
-        var pErk            in Cell
-        var ppErk           in Cell
-        
-        
-        const TGFb             in Cell
-        const AZD              in Cell
-        const GrowthFactors    in Cell
-        const MK2206           in Cell
-        const Everolimus       in Cell
-    
-    
-        //TGFb module
-        TGF_R1 : TGFbR       => TGFbR_a    ; Cell * kTGFbOn       *TGFbR      *TGFb      ;
-        TGF_R2 : TGFbR_a     => TGFbR      ; Cell * kTGFbOff      *TGFbR_a               ;
-        TGF_R3 : TGFbR_a     => TGFbR_EE   ; Cell * kTGFbRIntern  *TGFbR_a               ; 
-        TGF_R4 : TGFbR_EE    => TGFbR_a    ; Cell * kTGFbRRecyc   *TGFbR_EE              ;
-        TGF_R5 : TGFbR_a     => TGFbR_Cav  ; Cell * kTGFbRIntern  *TGFbR_a               ;
-        TGF_R6 : TGFbR_Cav   => TGFbR_a    ; Cell * kTGFbRRecyc   *TGFbR_Cav             ;
-        TGF_R8 : Smad2       => pSmad2     ; Cell * MMWithKcat(kSmad2Phos_km, kSmad2Phos_kcat, Smad2, TGFbR_EE );
-        TGF_R10: pSmad2      => pSmad2n    ; Cell  * MM(kpSmad2Imp_km, kpSmad2Imp_Vmax, pSmad2                  );
-        TGF_R11: pSmad2n     => pSmad2     ; Cell * MM(kSmad2Exp_km, kSmad2Exp_Vmax, pSmad2n                 );
-        TGF_R12: Smad2       => Smad2n     ; Cell  * MM(kSmad2Imp_km, kSmad2Imp_Vmax, Smad2                     );
-        TGF_R13: Smad2n      => Smad2      ; Cell * MM(kSmad2Exp_km, kSmad2Exp_Vmax, Smad2n                    );
-        TGF_R14: pSmad2n     => Smad2n     ; Cell  * MM(kpSmad2Dephos_km, kpSmad2Dephos_Vmax, pSmad2n);
-        
-        //MAPK module
-        MAPK_R0  : Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kRafPhos_km,  kRafPhos_ki, kRafPhos_Vmax, kRafPhos_n, ppErk, Raf);
-        MAPK_R1  : pRaf    => Raf       ; Cell*MM(            kRafDephos_km ,   kRafDephosVmax,      pRaf           );
-        MAPK_R2  : Mek     => pMek      ; Cell*CompetitiveInhibition(    kMekPhos_km1 , kMekPhos_ki1, kMekPhos_kcat1, pRaf, AZD, Mek       );
-        MAPK_R3  : pMek    => ppMek     ; Cell*CompetitiveInhibition(    kMekPhos_km1 , kMekPhos_ki1, kMekPhos_kcat1, pRaf, AZD, pMek     );
-        MAPK_R4  : ppMek   => pMek      ; Cell*MM(            kMekDephos_km1,   kMekDephos_Vmax1,     ppMek         );
-        MAPK_R5  : pMek    => Mek       ; Cell*MM(            kMekDephos_km1,   kMekDephos_Vmax1,     pMek          );
-        MAPK_R6  : Erk     => pErk      ; Cell*MMWithKcat(    kErkPhos_km1,     kErkPhos_kcat1, Erk,  ppMek         );
-        MAPK_R7  : pErk    => ppErk     ; Cell*MMWithKcat(    kErkPhos_km1,     kErkPhos_kcat1, pErk, ppMek         );
-        MAPK_R8  : ppErk   => pErk      ; Cell*MM(            kErkDephos_km1,   kErkDephos_Vmax1,     ppErk         );
-        MAPK_R9  : pErk    => Erk       ; Cell*MM(            kErkDephos_km1,   kErkDephos_Vmax1,     pErk          );
-
-        
-        //PI3K Module
-        //n(km, ki, kcat, E, I, S)
-        PI3K_R1 :   PI3K    => pPI3K    ;  Cell *  kPI3KPhosByGF       *PI3K       *GrowthFactors ;
-        PI3K_R2 :   pPI3K   => PI3K     ;   Cell *  kPI3KDephosByS6K    *pPI3K      *pS6K        ;
-        PI3K_R3 :   Akt    => pAkt      ;   Cell *  CompetitiveInhibition(kAktPhos_km, kAktPhos_ki, kAktPhos_kcat, pPI3K, MK2206, Akt)              ;
-        PI3K_R4 :   pAkt    => Akt      ;   Cell *  MM(kAktDephos_km, kAktDephos_Vmax,pAkt)         ;
-        PI3K_R5_1 :   mTORC1 => pmTORC1   ;   Cell *  CompetitiveInhibition(kmTORC1Phos_km, kmTORC1Phos_ki, kmTORC1Phos_kcat, pAkt, Everolimus, mTORC1)  ;
-        //PI3K_R5_2 :   mTORC1 => pmTORC1   ;   Cell *  kmTORC1PhosByTSCs * mTORC1  ;
-        PI3K_R6 :   pmTORC1 => mTORC1   ;   Cell *  MM(kmTORC1Dephos_km, kmTORC1Dephos_Vmax, pmTORC1);
-        PI3K_R7 :   S6K     => pS6K     ;   Cell *  MMWithKcat(kS6KPhosBymTORC1_km, kS6KPhosBymTORC1_kcat, S6K, pmTORC1) ;
-        PI3K_R8 :   pS6K    => S6K      ;   Cell *  MM(kS6KDephos_km,kS6KDephos_Vmax, pS6K)                    ;
-        
-        // Cross talk reactions
-        CrossTalkR1  :    Raf       => pRaf      ;   Cell *  MMWithKcat(kRafPhosByTGFbR_km, kRafPhosByTGFbR_kcat, Raf, TGFbR_Cav)    ;
-        CrossTalkR2  :    Raf       => pRaf      ;   Cell *  MMWithKcat(kRafPhosByPI3K_km,kRafPhosByPI3K_kcat, Raf, pPI3K)           ;
-        CrossTalkR3  :    PI3K      => pPI3K     ;   Cell *  MMWithKcat(kPI3KPhosByTGFbR_km, kPI3KPhosByTGFbR_kcat, PI3K, TGFbR_Cav) ;
-        CrossTalkR4  :    pPI3K     => PI3K      ;   Cell *  kPI3KDephosByErk    *pPI3K      *ppErk        ;
-        CrossTalkR5  :    Smad2     => pSmad2    ;   Cell *  MMWithKcat(kSmad2PhosByAkt_km, kSmad2PhosByAkt_kcat, Smad2, pAkt)       ;
-        CrossTalkR6  :    pSmad2n   =>  Smad2n   ;   Cell *  MMWithKcat(kSmad2DephosByErk_km, kSmad2DephosByErk_kcat, pSmad2n, ppErk)       ;
-        
-        // Species initializations:
-        TGFbR       = 76.8396790634687;
-        TGFbR_a     = 0.966718661034664;
-        TGFbR_EE    = 12.55032566215;
-        TGFbR_Cav   = 9.66718661034664;
-        Smad2       = 49.6779
-        pSmad2      = 0.500563;
-        pSmad2n     = 0.0447836;
-        Smad2n      = 49.7768;
-        Smad2Tot    := pSmad2 + Smad2 + pSmad2n + Smad2n
-        pSmad2Tot   := pSmad2 + pSmad2n;
-        Mek         = 252.876273823102;
-        pMek        = 56.0642557607438;
-        Erk         = 183.331905604514;
-        pErk        = 117.882228538386;
-        PI3K        = 99.9603027531632;
-        pPI3K       = 0.039697246836694;
-        Akt         = 99.413240815732;
-        pAkt        = 0.586759181268058;
-        mTORC1      = 90.2724562462086;
-        pmTORC1     = 9.72754375379144;
-        S6K         = 90.5069860202662;
-        pS6K        = 9.49301398073377;
-        Raf         = 87.932595095561;
-        pRaf        = 12.0674049063339;
-        ppMek       = 29.0295122061532;
-        ppErk       = 43.0862638108839;
-        
-        // Variable initializations:                    
-        TGFb                    = 0.005;                    
-        GrowthFactors           = 1;                    
-        kTGFbOn                 = 0.1;                  
-        kTGFbOff                = 0.04;                 
-        kTGFbRIntern            = 0.3333333333;                 
-        kTGFbRRecyc             = 0.03333333333;                    
-        
-        kSmad2Phos_km           = 50;                  
-        kSmad2Phos_kcat         = 0.1;                    
-        kSmad2PhosByAkt_km      = 40;                  
-        kSmad2PhosByAkt_kcat    = 0.1;                   
-        kpSmad2Dephos_km         = 60;                 
-        kpSmad2Dephos_Vmax       = 65;
-        kSmad2DephosByErk_km    = 30;                   
-        kSmad2DephosByErk_kcat  = 7.5;   
-        
-        mul = 3
-        kSmad2Imp_km           = 90;
-        kpSmad2Imp_km         := kSmad2Imp_km 
-        kpSmad2Imp_Vmax       := kSmad2Imp_Vmax * mul
-        kSmad2Imp_Vmax         = 38.466;
-        kSmad2Exp_km           = 20;
-        kSmad2Exp_Vmax         = 20;
-        
-        kRafPhos_km             = 10;                   
-        kRafPhos_ki             = 3.5;                  
-        kRafPhos_Vmax           = 9000;                 
-        kRafPhos_n              = 1;                    
-        kRafDephos_km           = 8;                    
-        kRafDephosVmax          = 3602.5;                   
-        kMekPhos_km1            = 15;                   
-        kMekPhos_ki1            = 0.25;  //original 0.25                 
-        kMekPhos_kcat1          = 90;                  
-        AZD                     = 0;                    
-        kMekDephos_km1          = 15;                   
-        kMekDephos_Vmax1        = 2700;                 
-        kErkPhos_km1            = 50;                  
-        kErkPhos_kcat1          = 200;                 
-        kErkDephos_km1          = 15;                   
-        kErkDephos_Vmax1        = 1800;                 
-        kPI3KPhosByGF           = 0.239474698704283;                    
-        kPI3KDephosByS6K        = 25;                   
-        kAktPhos_km             = 12.5;                 
-        kAktPhos_ki             = 0.01;                 
-        kAktPhos_kcat           = 1.5; // original: 2.9215;                 
-        MK2206                  = 0;                    
-        kAktDephos_km           = 15;                   
-        kAktDephos_Vmax         = 30;                   
-        kmTORC1Phos_km          = 3;                    
-        kmTORC1Phos_ki          = 0.001;                    
-        kmTORC1Phos_kcat        = 0.35;        
-        Everolimus              = 0;                    
-        kmTORC1Dephos_km        = 100;                  
-        kmTORC1Dephos_Vmax      = 1;                    
-        kS6KPhosBymTORC1_km     = 100;                  
-        kS6KPhosBymTORC1_kcat   = 0.5;                  
-        kS6KDephos_km           = 10;                   
-        kS6KDephos_Vmax         = 50;                   
-        kRafPhosByTGFbR_km      = 25;                   
-        kRafPhosByTGFbR_kcat    = 265;                  
-        kRafPhosByPI3K_km       = 50;                   
-        kRafPhosByPI3K_kcat     = 5;                    
-        kPI3KPhosByTGFbR_km     = 10;                   
-        kPI3KPhosByTGFbR_kcat   = 50;                   
-        kPI3KDephosByErk        = 0.5;                  
-        //kTGFbRInternByAkt     = 0.01;           
-
-        unit volume = 1 litre;
-        unit time_unit = 3600 second;
-        unit substance = 1e-9 mole;
-        
-end
-"""
 
 
 def load_model_with_pyco(ant, copasi_filename):
@@ -426,7 +112,7 @@ def __dep__dose_response_for_growth_factors():
 
     for i, j in l:
         # print(mod.model.keys())
-        fig = dose_response(cross_talk_model_antstr(), 'GrowthFactors', 1, 10000, 1000, [i, j])
+        fig = dose_response(CROSS_TALK_MODEL, 'GrowthFactors', 1, 10000, 1000, [i, j])
         plt.title('Dose Response of {} and \n{} to GrowthFactors (log10 nM)'.format(i, j))
         fname = os.path.join(graphs_directory, 'GrowthFactorsDoseResponse{}.png'.format(i))
         fig.savefig(fname, dpi=150, bbox_inches='tight')
@@ -590,7 +276,7 @@ def simulate_conditions(model_str=None, type='azd'):
     :return:
     """
     if model_str is None:
-        model_str = cross_talk_model_antstr()
+        model_str = CROSS_TALK_MODEL
 
     seaborn.set_context('talk', font_scale=2)
     if type not in ['AZD', 'MK2206']:
@@ -607,7 +293,7 @@ def simulate_conditions(model_str=None, type='azd'):
 
     dct = OrderedDict()
     for k, v in conditions.items():
-        # p = Process(target=simulate_condition, args=(tuple([cross_talk_model_antstr()] + conditions[k])))
+        # p = Process(target=simulate_condition, args=(tuple([CROSS_TALK_MODEL] + conditions[k])))
         # p.start()
         # p.join()
         df = simulate_condition(model_str, k)
@@ -691,7 +377,7 @@ def simulate_timecourse(type='MK2206'):
 
     dct = OrderedDict()
     for k, v in conditions.items():
-        df = simulate_condition(cross_talk_model_antstr(), k)
+        df = simulate_condition(CROSS_TALK_MODEL, k)
         dct[k] = df
     # print(dct)
 
@@ -907,7 +593,7 @@ def simulate_model_component_timecourse(vars, cond, filename=None, **kwargs):
         if c not in list(MK_CONDITIONS.keys()) + list(AZD_CONDITIONS.keys()):
             raise ValueError('condition "{}" not in "{}"'.format(c, MK_CONDITIONS.keys() + AZD_CONDITIONS.keys()))
 
-        model_str = make_condition(cross_talk_model_antstr(), c)
+        model_str = make_condition(CROSS_TALK_MODEL, c)
         mod = te.loada(model_str)
         res = mod.simulate(0, 72, 73, ['time'] + vars)
         gs = GridSpec(len(cond), 1, wspace=0.3)
@@ -1470,10 +1156,10 @@ if __name__ == '__main__':
         get_parameters_from_copasi_in_antimony_format(MODEL_CODE)
 
     if OPEN_CONDITION_WITH_COPASI:
-        open_condition_with_copasi(cross_talk_model_antstr(), MODEL_CODE)
+        open_condition_with_copasi(CROSS_TALK_MODEL, MODEL_CODE)
 
     if CONFIGURE_PARAMETER_ESTIMATION:
-        m = configure_parameter_estimation(cross_talk_model_antstr(), MODEL_CODE)
+        m = configure_parameter_estimation(CROSS_TALK_MODEL, MODEL_CODE)
         m.open()
 
     phos = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
@@ -1503,21 +1189,21 @@ if __name__ == '__main__':
         os.makedirs(graphs_directory)
 
     if GET_ODES_WITH_ANTIMONY:
-        mod = te.loada(cross_talk_model_antstr())
+        mod = te.loada(CROSS_TALK_MODEL)
         odes = te.utils.misc.getODEsFromModel(mod)
         print(odes)
 
     if GET_MODEL_AS_SBML:
-        sbml = te.antimonyToSBML(cross_talk_model_antstr())
+        sbml = te.antimonyToSBML(CROSS_TALK_MODEL)
         print(sbml)
 
     if DOSE_RESPONSE_TGFB:
-        fig = dose_response(cross_talk_model_antstr(), 'TGFb', 0.01, 1000, 100, ['TGFbR'])
+        fig = dose_response(CROSS_TALK_MODEL, 'TGFb', 0.01, 1000, 100, ['TGFbR'])
         plt.show()
 
 
     if QUALITATIVE_FITTING:
-        model_string = cross_talk_model_antstr()
+        model_string = CROSS_TALK_MODEL
 
         azd_data = os.path.join(working_directory, r'data\HardCopy\AZD_calculations - v3.xlsx')
         mk_data = os.path.join(working_directory, r'data\HardCopy\MK2206_calculations - v3.xlsx')
@@ -1652,71 +1338,14 @@ if __name__ == '__main__':
         mappings = [akt_mapping, erk_mapping, s6k_mapping, smad2_mapping]
 
         O = RandomSimulation(
-            cross_talk_model_antstr(), exp_data=exp_data, inequalities= ineq, mappings=mappings,
-            free_parameters=free_parameters, iterations=100
+            CROSS_TALK_MODEL, exp_data=exp_data, inequalities=ineq, mappings=mappings,
+            free_parameters=free_parameters, iterations=1000
             )
 
         O.fit()
 
 
-        # do_robustness(model_string)
 
-
-    if OPTIMIZE:
-        print(working_directory)
-        azd_data = os.path.join(working_directory, r'data\HardCopy\AZD_calculations - v3.xlsx')
-        mk_data = os.path.join(working_directory, r'data\HardCopy\MK2206_calculations - v3.xlsx')
-
-        assert os.path.isfile(azd_data)
-        assert os.path.isfile(mk_data)
-
-        azd_data = pandas.read_excel(azd_data, sheet_name='AZDAverage', index_col='Condition')
-        mk_data = pandas.read_excel(mk_data, sheet_name='MKAverage', index_col='Condition')
-
-        mk_data = mk_data.iloc[3:]
-
-        exp_data = pandas.concat([azd_data, mk_data])
-        # print(exp_data)
-
-        akt_mapping = Mapping('pAkt', 'pAkt')
-        erk_mapping = Mapping('pErk', 'pErk')
-        s6k_mapping = Mapping('pS6K', 'pS6K')
-        smad2_mapping = Mapping('pSmad2', 'pSmad2')
-
-        mappings = [akt_mapping, erk_mapping, s6k_mapping, smad2_mapping]
-
-        free_parameters = OrderedDict({
-            'kmTORC1Phos_ki': 0.001,
-            'kPI3KPhosByTGFbR_kcat': 50.0,
-            'kAktDephos_Vmax': 31.1252344504785,
-            'kPI3KDephosByErk': 5.014,
-            'kS6KPhosBymTORC1_kcat': 2.77975221288272,
-            'kPI3KPhosByGF': 0.239474698704283,
-            'kPI3KDephosByS6K': 25.0,
-            'kErkPhos_kcat1': 85.0103161451182,
-            'kmTORC1Dephos_Vmax': 1.0,
-            'kS6KDephos_Vmax': 50.0,
-            'kAktPhos_kcat': 2.9215,
-            'kRafPhos_ki': 3.5,
-            'kRafPhosByTGFbR_kcat': 265.0,
-            'kRafPhosByPI3K_kcat': 50.0,
-            'kMekPhos_kcat1': 149.5209856,
-            'kMekPhos_ki1': 0.25,
-            'kTGFbOn': 0.100647860357268,
-            'kSmad2PhosByAkt_kcat': 1.0,
-            'kSmad2Dephos_Vmax': 58.8712661228653,
-            'kAktPhos_ki': 0.01,
-            'kmTORC1Phos_kcat': 0.1,
-        })
-        free_parameters = free_parameters.keys()
-
-        # o = RandomSimulation(cross_talk_model_antstr(), exp_data * 10, mappings, iterations=10,
-        #                      free_parameters=free_parameters)
-        # RSS = o._compute_obj_fun()
-        # print(RSS.residuals)
-        # print(RSS.rss)
-
-        # print(exp_data*10)
 
 
 
