@@ -9,7 +9,7 @@ CURRENT_SPECIES = [
 ]
 
 CURRENT_SPECIES = [
-    'pSmad2Tot', 'pMek', 'ppMek',
+    'pSmad2Tot',
     'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
 ]
 # CURRENT_SPECIES = ['pSmad2Tot']
