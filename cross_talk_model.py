@@ -671,6 +671,15 @@ def get_parameters_from_copasi_in_antimony_format(condition):
     mod = te.loadSBMLModel(sbml)
     print(te.getCurrentAntimony(mod))
 
+def get_parameters_from_copasi(copasi_file):
+    pm = model.Model(copasi_file)
+    sbml = copasi_file[:-4]+'.sbml'
+    pm.to_sbml(sbml)
+    mod = te.loadSBMLModel(sbml)
+    print(mod, type(mod))
+    print(mod.getCurrentAntimony())
+    # print(te.getCurrentAntimony(mod))
+
 def get_model_parameters(mod):
     return dict(zip(mod.getGlobalParameterIds(), mod.getGlobalParameterValues()))
 
@@ -1181,7 +1190,8 @@ if __name__ == '__main__':
     """
 
     if GET_PARAMETERS_FROM_COPASI:
-        get_parameters_from_copasi_in_antimony_format(MODEL_CODE)
+        # get_parameters_from_copasi_in_antimony_format(MODEL_CODE)
+        get_parameters_from_copasi(OTHER_COPASI_MODEL)
 
     if OPEN_CONDITION_WITH_COPASI:
         open_condition_with_copasi(CROSS_TALK_MODEL, MODEL_CODE)

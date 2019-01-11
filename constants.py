@@ -9,7 +9,7 @@ CURRENT_SPECIES = [
 ]
 
 CURRENT_SPECIES = [
-    'pSmad2Tot',
+    'pSmad2',
     'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
 ]
 # CURRENT_SPECIES = ['pSmad2Tot']
@@ -19,13 +19,13 @@ CURRENT_SPECIES = [
 # ]
 
 SIMULATE_TIME_SERIES            = False
-SIMULATE_BAR_GRAPHS             = False
-OPEN_CONDITION_WITH_COPASI      = True
+SIMULATE_BAR_GRAPHS             = True
+OPEN_CONDITION_WITH_COPASI      = False
 CONFIGURE_PARAMETER_ESTIMATION  = False
+GET_PARAMETERS_FROM_COPASI      = False
 
 QUALITATIVE_FITTING             = False
 
-GET_PARAMETERS_FROM_COPASI      = False
 
 
 DOSE_RESPONSE_GROWTH_FACTOR     = False
@@ -128,7 +128,7 @@ for i in DATA_FILES:
     assert os.path.isfile(i)
 
 
-
+OTHER_COPASI_MODEL = r'D:\MesiSTRAT\CrossTalkModel\copasi_models\E_A_48_2.cps'
 
 
 

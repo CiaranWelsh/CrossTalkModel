@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- generated with COPASI 4.24 (Build 197) (http://www.copasi.org) at 2019-01-11 13:25:07 UTC -->
+<!-- generated with COPASI 4.24 (Build 197) (http://www.copasi.org) at 2019-01-11 13:59:50 UTC -->
 <?oxygen RNGSchema="http://www.copasi.org/static/schema/CopasiML.rng" type="xml"?>
 <COPASI xmlns="http://www.copasi.org/static/schema" versionMajor="4" versionMinor="24" versionDevel="197" copasiSourcesModified="0">
   <ListOfFunctions>
@@ -669,7 +669,7 @@ Reaction scheme where the products are created from the reactants and the change
           <Modifier metabolite="Metabolite_2" stoichiometry="1"/>
         </ListOfModifiers>
         <ListOfConstants>
-          <Constant key="Parameter_5006" name="kSmad2Phos_kcat" value="0.1"/>
+          <Constant key="Parameter_5006" name="kSmad2Phos_kcat" value="0.00183203"/>
           <Constant key="Parameter_5005" name="kSmad2Phos_km" value="50"/>
         </ListOfConstants>
         <KineticLaw function="Function_42" unitType="Default" scalingCompartment="CN=Root,Model=TGFbModule,Vector=Compartments[Cell]">
@@ -697,7 +697,7 @@ Reaction scheme where the products are created from the reactants and the change
           <Product metabolite="Metabolite_4" stoichiometry="1"/>
         </ListOfProducts>
         <ListOfConstants>
-          <Constant key="Parameter_5004" name="kSmad2Dephos_Vmax" value="65"/>
+          <Constant key="Parameter_5004" name="kSmad2Dephos_Vmax" value="0.00987093"/>
           <Constant key="Parameter_5003" name="kSmad2Dephos_km" value="60"/>
         </ListOfConstants>
         <KineticLaw function="Function_43" unitType="Default" scalingCompartment="CN=Root,Model=TGFbModule,Vector=Compartments[Cell]">
@@ -794,7 +794,7 @@ Reaction scheme where the products are created from the reactants and the change
         </ListOfModifiers>
         <ListOfConstants>
           <Constant key="Parameter_4995" name="AZD" value="0"/>
-          <Constant key="Parameter_4994" name="kMekPhos_kcat1" value="90"/>
+          <Constant key="Parameter_4994" name="kMekPhos_kcat1" value="0.00182215"/>
           <Constant key="Parameter_4993" name="kMekPhos_ki1" value="0.25"/>
           <Constant key="Parameter_4992" name="kMekPhos_km1" value="15"/>
         </ListOfConstants>
@@ -833,7 +833,7 @@ Reaction scheme where the products are created from the reactants and the change
         </ListOfModifiers>
         <ListOfConstants>
           <Constant key="Parameter_4991" name="AZD" value="0"/>
-          <Constant key="Parameter_4990" name="kMekPhos_kcat1" value="90"/>
+          <Constant key="Parameter_4990" name="kMekPhos_kcat1" value="0.00182215"/>
           <Constant key="Parameter_4989" name="kMekPhos_ki1" value="0.25"/>
           <Constant key="Parameter_4988" name="kMekPhos_km1" value="15"/>
         </ListOfConstants>
@@ -921,7 +921,7 @@ Reaction scheme where the products are created from the reactants and the change
           <Modifier metabolite="Metabolite_22" stoichiometry="1"/>
         </ListOfModifiers>
         <ListOfConstants>
-          <Constant key="Parameter_4983" name="kErkPhos_kcat1" value="200"/>
+          <Constant key="Parameter_4983" name="kErkPhos_kcat1" value="4.07363"/>
           <Constant key="Parameter_4982" name="kErkPhos_km1" value="50"/>
         </ListOfConstants>
         <KineticLaw function="Function_50" unitType="Default" scalingCompartment="CN=Root,Model=TGFbModule,Vector=Compartments[Cell]">
@@ -952,7 +952,7 @@ Reaction scheme where the products are created from the reactants and the change
           <Modifier metabolite="Metabolite_22" stoichiometry="1"/>
         </ListOfModifiers>
         <ListOfConstants>
-          <Constant key="Parameter_4981" name="kErkPhos_kcat1" value="200"/>
+          <Constant key="Parameter_4981" name="kErkPhos_kcat1" value="4.07363"/>
           <Constant key="Parameter_4980" name="kErkPhos_km1" value="50"/>
         </ListOfConstants>
         <KineticLaw function="Function_51" unitType="Default" scalingCompartment="CN=Root,Model=TGFbModule,Vector=Compartments[Cell]">
@@ -1031,7 +1031,7 @@ Reaction scheme where the products are created from the reactants and the change
         </ListOfProducts>
         <ListOfConstants>
           <Constant key="Parameter_4975" name="GrowthFactors" value="1"/>
-          <Constant key="Parameter_4974" name="kPI3KPhosByGF" value="0.239475"/>
+          <Constant key="Parameter_4974" name="kPI3KPhosByGF" value="0.0236646"/>
         </ListOfConstants>
         <KineticLaw function="Function_54" unitType="Default" scalingCompartment="CN=Root,Model=TGFbModule,Vector=Compartments[Cell]">
           <ListOfCallParameters>
@@ -1058,7 +1058,7 @@ Reaction scheme where the products are created from the reactants and the change
           <Modifier metabolite="Metabolite_19" stoichiometry="1"/>
         </ListOfModifiers>
         <ListOfConstants>
-          <Constant key="Parameter_4973" name="kPI3KDephosByS6K" value="25"/>
+          <Constant key="Parameter_4973" name="kPI3KDephosByS6K" value="14.2863"/>
         </ListOfConstants>
         <KineticLaw function="Function_55" unitType="Default" scalingCompartment="CN=Root,Model=TGFbModule,Vector=Compartments[Cell]">
           <ListOfCallParameters>
@@ -1086,8 +1086,8 @@ Reaction scheme where the products are created from the reactants and the change
         </ListOfModifiers>
         <ListOfConstants>
           <Constant key="Parameter_4972" name="MK2206" value="0"/>
-          <Constant key="Parameter_4971" name="kAktPhos_kcat" value="1.5"/>
-          <Constant key="Parameter_4970" name="kAktPhos_ki" value="0.01"/>
+          <Constant key="Parameter_4971" name="kAktPhos_kcat" value="35.3455"/>
+          <Constant key="Parameter_4970" name="kAktPhos_ki" value="0.25388"/>
           <Constant key="Parameter_4969" name="kAktPhos_km" value="12.5"/>
         </ListOfConstants>
         <KineticLaw function="Function_56" unitType="Default" scalingCompartment="CN=Root,Model=TGFbModule,Vector=Compartments[Cell]">
@@ -1151,8 +1151,8 @@ Reaction scheme where the products are created from the reactants and the change
         <ListOfConstants>
           <Constant key="Parameter_4966" name="Everolimus" value="1"/>
           <Constant key="Parameter_4965" name="kmTORC1Phos_kcat" value="0.35"/>
-          <Constant key="Parameter_4964" name="kmTORC1Phos_ki" value="0.001"/>
-          <Constant key="Parameter_4963" name="kmTORC1Phos_km" value="3"/>
+          <Constant key="Parameter_4964" name="kmTORC1Phos_ki" value="0.0816473"/>
+          <Constant key="Parameter_4963" name="kmTORC1Phos_km" value="14.7957"/>
         </ListOfConstants>
         <KineticLaw function="Function_58" unitType="Default" scalingCompartment="CN=Root,Model=TGFbModule,Vector=Compartments[Cell]">
           <ListOfCallParameters>
@@ -1213,7 +1213,7 @@ Reaction scheme where the products are created from the reactants and the change
           <Modifier metabolite="Metabolite_17" stoichiometry="1"/>
         </ListOfModifiers>
         <ListOfConstants>
-          <Constant key="Parameter_4960" name="kS6KPhosBymTORC1_kcat" value="0.5"/>
+          <Constant key="Parameter_4960" name="kS6KPhosBymTORC1_kcat" value="0.564311"/>
           <Constant key="Parameter_4959" name="kS6KPhosBymTORC1_km" value="100"/>
         </ListOfConstants>
         <KineticLaw function="Function_60" unitType="Default" scalingCompartment="CN=Root,Model=TGFbModule,Vector=Compartments[Cell]">
@@ -1269,7 +1269,7 @@ Reaction scheme where the products are created from the reactants and the change
           <Modifier metabolite="Metabolite_3" stoichiometry="1"/>
         </ListOfModifiers>
         <ListOfConstants>
-          <Constant key="Parameter_4956" name="kRafPhosByTGFbR_kcat" value="265"/>
+          <Constant key="Parameter_4956" name="kRafPhosByTGFbR_kcat" value="0.00615818"/>
           <Constant key="Parameter_4955" name="kRafPhosByTGFbR_km" value="25"/>
         </ListOfConstants>
         <KineticLaw function="Function_62" unitType="Default" scalingCompartment="CN=Root,Model=TGFbModule,Vector=Compartments[Cell]">
@@ -1300,7 +1300,7 @@ Reaction scheme where the products are created from the reactants and the change
           <Modifier metabolite="Metabolite_13" stoichiometry="1"/>
         </ListOfModifiers>
         <ListOfConstants>
-          <Constant key="Parameter_4954" name="kRafPhosByPI3K_kcat" value="5"/>
+          <Constant key="Parameter_4954" name="kRafPhosByPI3K_kcat" value="0.00688252"/>
           <Constant key="Parameter_4953" name="kRafPhosByPI3K_km" value="50"/>
         </ListOfConstants>
         <KineticLaw function="Function_63" unitType="Default" scalingCompartment="CN=Root,Model=TGFbModule,Vector=Compartments[Cell]">
@@ -1331,7 +1331,7 @@ Reaction scheme where the products are created from the reactants and the change
           <Modifier metabolite="Metabolite_3" stoichiometry="1"/>
         </ListOfModifiers>
         <ListOfConstants>
-          <Constant key="Parameter_4952" name="kPI3KPhosByTGFbR_kcat" value="50"/>
+          <Constant key="Parameter_4952" name="kPI3KPhosByTGFbR_kcat" value="3.39067"/>
           <Constant key="Parameter_4951" name="kPI3KPhosByTGFbR_km" value="10"/>
         </ListOfConstants>
         <KineticLaw function="Function_64" unitType="Default" scalingCompartment="CN=Root,Model=TGFbModule,Vector=Compartments[Cell]">
@@ -1362,7 +1362,7 @@ Reaction scheme where the products are created from the reactants and the change
           <Modifier metabolite="Metabolite_23" stoichiometry="1"/>
         </ListOfModifiers>
         <ListOfConstants>
-          <Constant key="Parameter_4950" name="kPI3KDephosByErk" value="0.5"/>
+          <Constant key="Parameter_4950" name="kPI3KDephosByErk" value="0.112816"/>
         </ListOfConstants>
         <KineticLaw function="Function_65" unitType="Default" scalingCompartment="CN=Root,Model=TGFbModule,Vector=Compartments[Cell]">
           <ListOfCallParameters>
@@ -1389,7 +1389,7 @@ Reaction scheme where the products are created from the reactants and the change
           <Modifier metabolite="Metabolite_15" stoichiometry="1"/>
         </ListOfModifiers>
         <ListOfConstants>
-          <Constant key="Parameter_4949" name="kSmad2PhosByAkt_kcat" value="0.1"/>
+          <Constant key="Parameter_4949" name="kSmad2PhosByAkt_kcat" value="0.0139867"/>
           <Constant key="Parameter_4948" name="kSmad2PhosByAkt_km" value="40"/>
         </ListOfConstants>
         <KineticLaw function="Function_66" unitType="Default" scalingCompartment="CN=Root,Model=TGFbModule,Vector=Compartments[Cell]">
@@ -1420,7 +1420,7 @@ Reaction scheme where the products are created from the reactants and the change
           <Modifier metabolite="Metabolite_23" stoichiometry="1"/>
         </ListOfModifiers>
         <ListOfConstants>
-          <Constant key="Parameter_4947" name="kSmad2DephosByErk_kcat" value="7.5"/>
+          <Constant key="Parameter_4947" name="kSmad2DephosByErk_kcat" value="58.4701"/>
           <Constant key="Parameter_4946" name="kSmad2DephosByErk_km" value="30"/>
         </ListOfConstants>
         <KineticLaw function="Function_67" unitType="Default" scalingCompartment="CN=Root,Model=TGFbModule,Vector=Compartments[Cell]">
@@ -1546,9 +1546,9 @@ Reaction scheme where the products are created from the reactants and the change
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kTGFbRIntern]" value="0.33333333329999998" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kTGFbRRecyc]" value="0.033333333329999999" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kSmad2Phos_km]" value="50" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kSmad2Phos_kcat]" value="0.10000000000000001" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kSmad2Phos_kcat]" value="0.0018320300999691912" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kSmad2Dephos_km]" value="60" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kSmad2Dephos_Vmax]" value="65" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kSmad2Dephos_Vmax]" value="0.009870929716525324" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[GrowthFactors]" value="1" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kRafPhos_km]" value="10" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kRafPhos_ki]" value="3.5" type="ModelValue" simulationType="fixed"/>
@@ -1558,43 +1558,43 @@ Reaction scheme where the products are created from the reactants and the change
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kRafDephosVmax]" value="3602.5" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kMekPhos_km1]" value="15" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kMekPhos_ki1]" value="0.25" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kMekPhos_kcat1]" value="90" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kMekPhos_kcat1]" value="0.0018221517422162437" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[AZD]" value="0" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kMekDephos_km1]" value="15" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kMekDephos_Vmax1]" value="2700" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kErkPhos_km1]" value="50" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kErkPhos_kcat1]" value="200" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kErkPhos_kcat1]" value="4.0736259601110634" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kErkDephos_km1]" value="15" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kErkDephos_Vmax1]" value="1800" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kPI3KPhosByGF]" value="0.23947469870428301" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kPI3KDephosByS6K]" value="25" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kPI3KPhosByGF]" value="0.023664582444014624" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kPI3KDephosByS6K]" value="14.286264659818388" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kAktPhos_km]" value="12.5" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kAktPhos_ki]" value="0.01" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kAktPhos_kcat]" value="1.5" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kAktPhos_ki]" value="0.25387984777500988" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kAktPhos_kcat]" value="35.345538828458906" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[MK2206]" value="0" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kAktDephos_km]" value="15" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kAktDephos_Vmax]" value="30" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kmTORC1Phos_km]" value="3" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kmTORC1Phos_ki]" value="0.001" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kmTORC1Phos_km]" value="14.79574934432835" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kmTORC1Phos_ki]" value="0.081647330034504847" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kmTORC1Phos_kcat]" value="0.34999999999999998" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[Everolimus]" value="1" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kmTORC1Dephos_km]" value="100" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kmTORC1Dephos_Vmax]" value="1" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kS6KPhosBymTORC1_km]" value="100" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kS6KPhosBymTORC1_kcat]" value="0.5" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kS6KPhosBymTORC1_kcat]" value="0.56431130627860104" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kS6KDephos_km]" value="10" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kS6KDephos_Vmax]" value="50" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kRafPhosByTGFbR_km]" value="25" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kRafPhosByTGFbR_kcat]" value="265" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kRafPhosByTGFbR_kcat]" value="0.0061581775738410406" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kRafPhosByPI3K_km]" value="50" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kRafPhosByPI3K_kcat]" value="5" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kRafPhosByPI3K_kcat]" value="0.0068825217262729523" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kPI3KPhosByTGFbR_km]" value="10" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kPI3KPhosByTGFbR_kcat]" value="50" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kPI3KDephosByErk]" value="0.5" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kPI3KPhosByTGFbR_kcat]" value="3.3906674527194429" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kPI3KDephosByErk]" value="0.11281628951676112" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kSmad2PhosByAkt_km]" value="40" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kSmad2PhosByAkt_kcat]" value="0.10000000000000001" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kSmad2PhosByAkt_kcat]" value="0.013986693476163117" type="ModelValue" simulationType="fixed"/>
           <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kSmad2DephosByErk_km]" value="30" type="ModelValue" simulationType="fixed"/>
-          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kSmad2DephosByErk_kcat]" value="7.5" type="ModelValue" simulationType="fixed"/>
+          <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Values[kSmad2DephosByErk_kcat]" value="58.470101681308542" type="ModelValue" simulationType="fixed"/>
         </ModelParameterGroup>
         <ModelParameterGroup cn="String=Kinetic Parameters" type="Group">
           <ModelParameterGroup cn="CN=Root,Model=TGFbModule,Vector=Reactions[TGF_R1]" type="Reaction">
@@ -1645,7 +1645,7 @@ Reaction scheme where the products are created from the reactants and the change
             </ModelParameter>
           </ModelParameterGroup>
           <ModelParameterGroup cn="CN=Root,Model=TGFbModule,Vector=Reactions[TGF_R8]" type="Reaction">
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[TGF_R8],ParameterGroup=Parameters,Parameter=kSmad2Phos_kcat" value="0.10000000000000001" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[TGF_R8],ParameterGroup=Parameters,Parameter=kSmad2Phos_kcat" value="0.0018320300999691912" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kSmad2Phos_kcat],Reference=InitialValue>
               </InitialExpression>
@@ -1657,7 +1657,7 @@ Reaction scheme where the products are created from the reactants and the change
             </ModelParameter>
           </ModelParameterGroup>
           <ModelParameterGroup cn="CN=Root,Model=TGFbModule,Vector=Reactions[TGF_R9]" type="Reaction">
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[TGF_R9],ParameterGroup=Parameters,Parameter=kSmad2Dephos_Vmax" value="65" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[TGF_R9],ParameterGroup=Parameters,Parameter=kSmad2Dephos_Vmax" value="0.009870929716525324" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kSmad2Dephos_Vmax],Reference=InitialValue>
               </InitialExpression>
@@ -1713,7 +1713,7 @@ Reaction scheme where the products are created from the reactants and the change
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[AZD],Reference=InitialValue>
               </InitialExpression>
             </ModelParameter>
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[MAPK_R2],ParameterGroup=Parameters,Parameter=kMekPhos_kcat1" value="90" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[MAPK_R2],ParameterGroup=Parameters,Parameter=kMekPhos_kcat1" value="0.0018221517422162437" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kMekPhos_kcat1],Reference=InitialValue>
               </InitialExpression>
@@ -1735,7 +1735,7 @@ Reaction scheme where the products are created from the reactants and the change
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[AZD],Reference=InitialValue>
               </InitialExpression>
             </ModelParameter>
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[MAPK_R3],ParameterGroup=Parameters,Parameter=kMekPhos_kcat1" value="90" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[MAPK_R3],ParameterGroup=Parameters,Parameter=kMekPhos_kcat1" value="0.0018221517422162437" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kMekPhos_kcat1],Reference=InitialValue>
               </InitialExpression>
@@ -1776,7 +1776,7 @@ Reaction scheme where the products are created from the reactants and the change
             </ModelParameter>
           </ModelParameterGroup>
           <ModelParameterGroup cn="CN=Root,Model=TGFbModule,Vector=Reactions[MAPK_R6]" type="Reaction">
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[MAPK_R6],ParameterGroup=Parameters,Parameter=kErkPhos_kcat1" value="200" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[MAPK_R6],ParameterGroup=Parameters,Parameter=kErkPhos_kcat1" value="4.0736259601110634" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kErkPhos_kcat1],Reference=InitialValue>
               </InitialExpression>
@@ -1788,7 +1788,7 @@ Reaction scheme where the products are created from the reactants and the change
             </ModelParameter>
           </ModelParameterGroup>
           <ModelParameterGroup cn="CN=Root,Model=TGFbModule,Vector=Reactions[MAPK_R7]" type="Reaction">
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[MAPK_R7],ParameterGroup=Parameters,Parameter=kErkPhos_kcat1" value="200" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[MAPK_R7],ParameterGroup=Parameters,Parameter=kErkPhos_kcat1" value="4.0736259601110634" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kErkPhos_kcat1],Reference=InitialValue>
               </InitialExpression>
@@ -1829,14 +1829,14 @@ Reaction scheme where the products are created from the reactants and the change
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[GrowthFactors],Reference=InitialValue>
               </InitialExpression>
             </ModelParameter>
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[PI3K_R1],ParameterGroup=Parameters,Parameter=kPI3KPhosByGF" value="0.23947469870428301" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[PI3K_R1],ParameterGroup=Parameters,Parameter=kPI3KPhosByGF" value="0.023664582444014624" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kPI3KPhosByGF],Reference=InitialValue>
               </InitialExpression>
             </ModelParameter>
           </ModelParameterGroup>
           <ModelParameterGroup cn="CN=Root,Model=TGFbModule,Vector=Reactions[PI3K_R2]" type="Reaction">
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[PI3K_R2],ParameterGroup=Parameters,Parameter=kPI3KDephosByS6K" value="25" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[PI3K_R2],ParameterGroup=Parameters,Parameter=kPI3KDephosByS6K" value="14.286264659818388" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kPI3KDephosByS6K],Reference=InitialValue>
               </InitialExpression>
@@ -1848,12 +1848,12 @@ Reaction scheme where the products are created from the reactants and the change
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[MK2206],Reference=InitialValue>
               </InitialExpression>
             </ModelParameter>
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[PI3K_R3],ParameterGroup=Parameters,Parameter=kAktPhos_kcat" value="1.5" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[PI3K_R3],ParameterGroup=Parameters,Parameter=kAktPhos_kcat" value="35.345538828458906" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kAktPhos_kcat],Reference=InitialValue>
               </InitialExpression>
             </ModelParameter>
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[PI3K_R3],ParameterGroup=Parameters,Parameter=kAktPhos_ki" value="0.01" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[PI3K_R3],ParameterGroup=Parameters,Parameter=kAktPhos_ki" value="0.25387984777500988" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kAktPhos_ki],Reference=InitialValue>
               </InitialExpression>
@@ -1887,12 +1887,12 @@ Reaction scheme where the products are created from the reactants and the change
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kmTORC1Phos_kcat],Reference=InitialValue>
               </InitialExpression>
             </ModelParameter>
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[PI3K_R5_1],ParameterGroup=Parameters,Parameter=kmTORC1Phos_ki" value="0.001" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[PI3K_R5_1],ParameterGroup=Parameters,Parameter=kmTORC1Phos_ki" value="0.081647330034504847" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kmTORC1Phos_ki],Reference=InitialValue>
               </InitialExpression>
             </ModelParameter>
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[PI3K_R5_1],ParameterGroup=Parameters,Parameter=kmTORC1Phos_km" value="3" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[PI3K_R5_1],ParameterGroup=Parameters,Parameter=kmTORC1Phos_km" value="14.79574934432835" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kmTORC1Phos_km],Reference=InitialValue>
               </InitialExpression>
@@ -1911,7 +1911,7 @@ Reaction scheme where the products are created from the reactants and the change
             </ModelParameter>
           </ModelParameterGroup>
           <ModelParameterGroup cn="CN=Root,Model=TGFbModule,Vector=Reactions[PI3K_R7]" type="Reaction">
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[PI3K_R7],ParameterGroup=Parameters,Parameter=kS6KPhosBymTORC1_kcat" value="0.5" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[PI3K_R7],ParameterGroup=Parameters,Parameter=kS6KPhosBymTORC1_kcat" value="0.56431130627860104" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kS6KPhosBymTORC1_kcat],Reference=InitialValue>
               </InitialExpression>
@@ -1935,7 +1935,7 @@ Reaction scheme where the products are created from the reactants and the change
             </ModelParameter>
           </ModelParameterGroup>
           <ModelParameterGroup cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR1]" type="Reaction">
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR1],ParameterGroup=Parameters,Parameter=kRafPhosByTGFbR_kcat" value="265" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR1],ParameterGroup=Parameters,Parameter=kRafPhosByTGFbR_kcat" value="0.0061581775738410406" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kRafPhosByTGFbR_kcat],Reference=InitialValue>
               </InitialExpression>
@@ -1947,7 +1947,7 @@ Reaction scheme where the products are created from the reactants and the change
             </ModelParameter>
           </ModelParameterGroup>
           <ModelParameterGroup cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR2]" type="Reaction">
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR2],ParameterGroup=Parameters,Parameter=kRafPhosByPI3K_kcat" value="5" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR2],ParameterGroup=Parameters,Parameter=kRafPhosByPI3K_kcat" value="0.0068825217262729523" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kRafPhosByPI3K_kcat],Reference=InitialValue>
               </InitialExpression>
@@ -1959,7 +1959,7 @@ Reaction scheme where the products are created from the reactants and the change
             </ModelParameter>
           </ModelParameterGroup>
           <ModelParameterGroup cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR3]" type="Reaction">
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR3],ParameterGroup=Parameters,Parameter=kPI3KPhosByTGFbR_kcat" value="50" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR3],ParameterGroup=Parameters,Parameter=kPI3KPhosByTGFbR_kcat" value="3.3906674527194429" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kPI3KPhosByTGFbR_kcat],Reference=InitialValue>
               </InitialExpression>
@@ -1971,14 +1971,14 @@ Reaction scheme where the products are created from the reactants and the change
             </ModelParameter>
           </ModelParameterGroup>
           <ModelParameterGroup cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR4]" type="Reaction">
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR4],ParameterGroup=Parameters,Parameter=kPI3KDephosByErk" value="0.5" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR4],ParameterGroup=Parameters,Parameter=kPI3KDephosByErk" value="0.11281628951676112" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kPI3KDephosByErk],Reference=InitialValue>
               </InitialExpression>
             </ModelParameter>
           </ModelParameterGroup>
           <ModelParameterGroup cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR5]" type="Reaction">
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR5],ParameterGroup=Parameters,Parameter=kSmad2PhosByAkt_kcat" value="0.10000000000000001" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR5],ParameterGroup=Parameters,Parameter=kSmad2PhosByAkt_kcat" value="0.013986693476163117" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kSmad2PhosByAkt_kcat],Reference=InitialValue>
               </InitialExpression>
@@ -1990,7 +1990,7 @@ Reaction scheme where the products are created from the reactants and the change
             </ModelParameter>
           </ModelParameterGroup>
           <ModelParameterGroup cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR6]" type="Reaction">
-            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR6],ParameterGroup=Parameters,Parameter=kSmad2DephosByErk_kcat" value="7.5" type="ReactionParameter" simulationType="assignment">
+            <ModelParameter cn="CN=Root,Model=TGFbModule,Vector=Reactions[CrossTalkR6],ParameterGroup=Parameters,Parameter=kSmad2DephosByErk_kcat" value="58.470101681308542" type="ReactionParameter" simulationType="assignment">
               <InitialExpression>
                 &lt;CN=Root,Model=TGFbModule,Vector=Values[kSmad2DephosByErk_kcat],Reference=InitialValue>
               </InitialExpression>
@@ -2589,7 +2589,7 @@ Reaction scheme where the products are created from the reactants and the change
       <StateTemplateVariable objectReference="ModelValue_56"/>
     </StateTemplate>
     <InitialState type="initialState">
-      0 582171684778969.5 33762689754202348 70990349477934496 60197511655087616 52954255562812696 301446136082777 59868063199575336 54363353124623936 54504590279959088 46273944241830288 1.1040507301812789e+17 1.5228567762895856e+17 26969318906664.398 7557984064814293 29916735762944100 5821716847789695 5716827620643109 5858064775376091 353354698618055.75 17481983859999028 23906244912320.023 7267162338328442 29976294745247200 25947158987048860 100.0000466 0.54534660000000001 1 0.10000000000000001 0.0050000000000000001 0.040000000000000001 0.33333333329999998 0.033333333329999999 50 0.10000000000000001 60 65 1 10 3.5 9000 1 8 3602.5 15 0.25 90 0 15 2700 50 200 15 1800 0.23947469870428301 25 12.5 0.01 1.5 0 15 30 3 0.001 0.34999999999999998 1 100 1 100 0.5 10 50 25 265 50 5 10 50 0.5 40 0.10000000000000001 30 7.5 
+      0 582171684778969.5 33762689754202348 70990349477934496 60197511655087616 52954255562812696 301446136082777 59868063199575336 54363353124623936 54504590279959088 46273944241830288 1.1040507301812789e+17 1.5228567762895856e+17 26969318906664.398 7557984064814293 29916735762944100 5821716847789695 5716827620643109 5858064775376091 353354698618055.75 17481983859999028 23906244912320.023 7267162338328442 29976294745247200 25947158987048860 100.0000466 0.54534660000000001 1 0.10000000000000001 0.0050000000000000001 0.040000000000000001 0.33333333329999998 0.033333333329999999 50 0.0018320300999691912 60 0.009870929716525324 1 10 3.5 9000 1 8 3602.5 15 0.25 0.0018221517422162437 0 15 2700 50 4.0736259601110634 15 1800 0.023664582444014624 14.286264659818388 12.5 0.25387984777500988 35.345538828458906 0 15 30 14.79574934432835 0.081647330034504847 0.34999999999999998 1 100 1 100 0.56431130627860104 10 50 25 0.0061581775738410406 50 0.0068825217262729523 10 3.3906674527194429 0.11281628951676112 40 0.013986693476163117 30 58.470101681308542 
     </InitialState>
   </Model>
   <ListOfTasks>
@@ -2676,13 +2676,13 @@ Reaction scheme where the products are created from the reactants and the change
       <Problem>
         <Parameter name="Maximize" type="bool" value="0"/>
         <Parameter name="Randomize Start Values" type="bool" value="1"/>
-        <Parameter name="Calculate Statistics" type="bool" value="1"/>
+        <Parameter name="Calculate Statistics" type="bool" value="0"/>
         <ParameterGroup name="OptimizationItemList">
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kAktPhos_kcat],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="125.19932900000001"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="35.345538830000002"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -2690,9 +2690,9 @@ Reaction scheme where the products are created from the reactants and the change
           </ParameterGroup>
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kAktPhos_ki],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="1.0095107883446288"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="0.25387984777500988"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -2700,9 +2700,9 @@ Reaction scheme where the products are created from the reactants and the change
           </ParameterGroup>
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kErkPhos_kcat1],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="6.094606848940999"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="4.0736259600000002"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -2710,9 +2710,9 @@ Reaction scheme where the products are created from the reactants and the change
           </ParameterGroup>
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kMekPhos_kcat1],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="367.78529994742547"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="0.0018221517422162437"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -2720,9 +2720,9 @@ Reaction scheme where the products are created from the reactants and the change
           </ParameterGroup>
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kPI3KDephosByErk],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="959.85256272141294"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="0.11281628951676112"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -2730,9 +2730,9 @@ Reaction scheme where the products are created from the reactants and the change
           </ParameterGroup>
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kPI3KDephosByS6K],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="0.14583746119145918"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="14.286264659818388"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -2740,9 +2740,9 @@ Reaction scheme where the products are created from the reactants and the change
           </ParameterGroup>
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kPI3KPhosByGF],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="3.1473056022957691"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="0.023664582444014624"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -2750,9 +2750,9 @@ Reaction scheme where the products are created from the reactants and the change
           </ParameterGroup>
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kPI3KPhosByTGFbR_kcat],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="0.0078914714119060828"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="3.3906674527194429"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -2760,9 +2760,9 @@ Reaction scheme where the products are created from the reactants and the change
           </ParameterGroup>
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kRafPhosByPI3K_kcat],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="77997.481642653176"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="0.0068825217262729523"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -2770,9 +2770,9 @@ Reaction scheme where the products are created from the reactants and the change
           </ParameterGroup>
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kRafPhosByTGFbR_kcat],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="491.30673512119091"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="0.0061581775738410406"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -2780,9 +2780,9 @@ Reaction scheme where the products are created from the reactants and the change
           </ParameterGroup>
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kS6KPhosBymTORC1_kcat],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="895.99076554323904"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="0.56431130627860104"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -2790,9 +2790,9 @@ Reaction scheme where the products are created from the reactants and the change
           </ParameterGroup>
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kSmad2DephosByErk_kcat],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="0.01004117756067122"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="58.470101681308542"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -2800,9 +2800,9 @@ Reaction scheme where the products are created from the reactants and the change
           </ParameterGroup>
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kSmad2Dephos_Vmax],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="0.19153500172087468"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="0.009870929716525324"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -2810,9 +2810,9 @@ Reaction scheme where the products are created from the reactants and the change
           </ParameterGroup>
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kSmad2PhosByAkt_kcat],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="0.018732279447878409"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="0.013986693476163117"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -2820,9 +2820,9 @@ Reaction scheme where the products are created from the reactants and the change
           </ParameterGroup>
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kSmad2Phos_kcat],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="199289.38335434519"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="0.0018320300999691912"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -2830,9 +2830,9 @@ Reaction scheme where the products are created from the reactants and the change
           </ParameterGroup>
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kmTORC1Phos_ki],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="831.29371492507926"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="0.081647330034504847"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -2840,9 +2840,19 @@ Reaction scheme where the products are created from the reactants and the change
           </ParameterGroup>
           <ParameterGroup name="FitItem">
             <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kmTORC1Phos_km],Reference=InitialValue"/>
-            <Parameter name="LowerBound" type="cn" value="1e-6"/>
-            <Parameter name="UpperBound" type="cn" value="1000000"/>
-            <Parameter name="StartValue" type="float" value="3.3909820373112026e-06"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="14.79574934432835"/>
+            <ParameterGroup name="Affected Experiments">
+            </ParameterGroup>
+            <ParameterGroup name="Affected Cross Validation Experiments">
+            </ParameterGroup>
+          </ParameterGroup>
+          <ParameterGroup name="FitItem">
+            <Parameter name="ObjectCN" type="cn" value="CN=Root,Model=TGFbModule,Vector=Values[kTGFbOn],Reference=InitialValue"/>
+            <Parameter name="LowerBound" type="cn" value="0.001"/>
+            <Parameter name="UpperBound" type="cn" value="100"/>
+            <Parameter name="StartValue" type="float" value="0.10000000000000001"/>
             <ParameterGroup name="Affected Experiments">
             </ParameterGroup>
             <ParameterGroup name="Affected Cross Validation Experiments">
@@ -3889,8 +3899,8 @@ Reaction scheme where the products are created from the reactants and the change
       </Problem>
       <Method name="Genetic Algorithm" type="GeneticAlgorithm">
         <Parameter name="Log Verbosity" type="unsignedInteger" value="0"/>
-        <Parameter name="Number of Generations" type="unsignedInteger" value="200"/>
-        <Parameter name="Population Size" type="unsignedInteger" value="20"/>
+        <Parameter name="Number of Generations" type="unsignedInteger" value="1000"/>
+        <Parameter name="Population Size" type="unsignedInteger" value="50"/>
         <Parameter name="Random Number Generator" type="unsignedInteger" value="1"/>
         <Parameter name="Seed" type="unsignedInteger" value="0"/>
         <Parameter name="Mutation Variance" type="float" value="0.10000000000000001"/>
