@@ -547,7 +547,7 @@ def open_condition_with_copasi(model_string, condition):
     return copasi_mod
 
 
-def configure_parameter_estimation(model_string, condition):
+def configure_parameter_estimation_fake_steady_state(model_string, condition):
     mod_string = make_condition(model_string, condition)
     copasi_dir = os.path.join(WORKING_DIRECTORY, 'copasi_models')
     if not os.path.isdir(copasi_dir):
@@ -562,6 +562,30 @@ def configure_parameter_estimation(model_string, condition):
     # copasi_mod.open()
     PE = tasks.ParameterEstimation(copasi_mod, [f1, f2], metabolites=[], run_mode=False,
                                    experiment_type=['steadystate', 'steadystate'],
+                                   overwrite_config_file=False)
+    PE.write_config_file()
+    PE.setup()
+    return PE.model
+
+def configure_parameter_estimation(model_string, condition):
+    mod_string = make_condition(model_string, condition)
+    copasi_dir = os.path.join(WORKING_DIRECTORY, 'copasi_models')
+    if not os.path.isdir(copasi_dir):
+        os.makedirs(copasi_dir)
+    fname = os.path.join(copasi_dir, "{}.cps".format(condition))
+    copasi_mod = load_model_with_pyco(mod_string, fname)
+    # tasks.TimeCourse(copasi_mod, start=0, end=72, step_size=0.1, intervals=720, run=False)
+    # f1 = r'D:\MesiSTRAT\CrossTalkModel\copasi_models\fakeSteadyStateData.txt'
+    # f2 = r'D:\MesiSTRAT\CrossTalkModel\copasi_models\Smad2.txt'
+    # assert os.path.isfile(f1)
+    # assert os.path.isfile(f2)
+    # copasi_mod.open()
+    PE = tasks.ParameterEstimation(copasi_mod,
+                                   DATA_FILES,
+                                   separator=[',']*len(DATA_FILES),
+                                   metabolites=[],
+                                   global_quantities=list(FREE_PARAMETERS.keys()),
+                                   run_mode=False,
                                    overwrite_config_file=False)
     PE.write_config_file()
     PE.setup()
@@ -1222,29 +1246,6 @@ if __name__ == '__main__':
 
         exp_data = pandas.concat([azd_data, mk_data])
 
-        free_parameters = OrderedDict({
-            'kmTORC1Phos_ki': 0.001,
-            'kPI3KPhosByTGFbR_kcat': 50.0,
-            'kAktDephos_Vmax': 31.1252344504785,
-            'kPI3KDephosByErk': 5.014,
-            'kS6KPhosBymTORC1_kcat': 2.77975221288272,
-            'kPI3KPhosByGF': 0.239474698704283,
-            'kPI3KDephosByS6K': 25.0,
-            'kErkPhos_kcat1': 85.0103161451182,
-            'kmTORC1Dephos_Vmax': 1.0,
-            'kS6KDephos_Vmax': 50.0,
-            'kAktPhos_kcat': 2.9215,
-            'kRafPhos_ki': 3.5,
-            'kRafPhosByTGFbR_kcat': 265.0,
-            'kRafPhosByPI3K_kcat': 50.0,
-            'kMekPhos_kcat1': 149.5209856,
-            'kMekPhos_ki1': 0.25,
-            'kTGFbOn': 0.100647860357268,
-            'kSmad2PhosByAkt_kcat': 1.0,
-            'kpSmad2Dephos_Vmax': 58.8712661228653,
-            'kAktPhos_ki': 0.01,
-            'kmTORC1Phos_kcat': 0.1,
-        })
         # for i in free_parameters:
         #     free_parameters[i] = numpy.random.uniform(0, 100, 1)[0]
 

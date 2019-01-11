@@ -1,4 +1,4 @@
-﻿Time,pAkt,pSmad2,pErk,pS6K,GrowthFactors,TGFb,Everolimus,AZD,MK
+﻿Time,pAkt,pSmad2,ppErk,pS6K,GrowthFactors_indep,TGFb_indep,Everolimus_indep,AZD_indep,MK_indep
 0,,,,,1,0,1,0,1
 24,,,,,1,0,1,0,1
 48,,,,,1,0,1,0,1

@@ -82,12 +82,8 @@ CROSS_TALK_MODEL = """
         TGF_R5 : TGFbR_a     => TGFbR_Cav  ; Cell * kTGFbRIntern  *TGFbR_a               ;
         TGF_R6 : TGFbR_Cav   => TGFbR_a    ; Cell * kTGFbRRecyc   *TGFbR_Cav             ;
         TGF_R8 : Smad2       => pSmad2     ; Cell * MMWithKcat(kSmad2Phos_km, kSmad2Phos_kcat, Smad2, TGFbR_EE );
-        TGF_R10: pSmad2      => pSmad2n    ; Cell  * MM(kpSmad2Imp_km, kpSmad2Imp_Vmax, pSmad2                  );
-        TGF_R11: pSmad2n     => pSmad2     ; Cell * MM(kSmad2Exp_km, kSmad2Exp_Vmax, pSmad2n                 );
-        TGF_R12: Smad2       => Smad2n     ; Cell  * MM(kSmad2Imp_km, kSmad2Imp_Vmax, Smad2                     );
-        TGF_R13: Smad2n      => Smad2      ; Cell * MM(kSmad2Exp_km, kSmad2Exp_Vmax, Smad2n                    );
-        TGF_R14: pSmad2n     => Smad2n     ; Cell  * MM(kpSmad2Dephos_km, kpSmad2Dephos_Vmax, pSmad2n);
-
+        TGF_R9 : pSmad2      => Smad2      ; Cell * MM(kSmad2Dephos_km, kSmad2Dephos_Vmax, pSmad2 )
+        
         //MAPK module
         MAPK_R0  : Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kRafPhos_km,  kRafPhos_ki, kRafPhos_Vmax, kRafPhos_n, ppErk, Raf);
         MAPK_R1  : pRaf    => Raf       ; Cell*MM(            kRafDephos_km ,   kRafDephosVmax,      pRaf           );
@@ -154,25 +150,17 @@ CROSS_TALK_MODEL = """
         GrowthFactors           = 1;                    
         kTGFbOn                 = 0.1;                  
         kTGFbOff                = 0.04;                 
-        kTGFbRIntern            = 0.3333333333;                 
-        kTGFbRRecyc             = 0.03333333333;                    
+        // kTGFbRIntern            = 0.3333333333;                 
+        // kTGFbRRecyc             = 0.03333333333;                    
 
         kSmad2Phos_km           = 50;                  
         kSmad2Phos_kcat         = 0.1;                    
         kSmad2PhosByAkt_km      = 40;                  
         kSmad2PhosByAkt_kcat    = 0.1;                   
-        kpSmad2Dephos_km         = 60;                 
-        kpSmad2Dephos_Vmax       = 65;
+        kSmad2Dephos_km         = 60;                 
+        kSmad2Dephos_Vmax       = 65;
         kSmad2DephosByErk_km    = 30;                   
         kSmad2DephosByErk_kcat  = 7.5;   
-
-        mul = 3
-        kSmad2Imp_km           = 90;
-        kpSmad2Imp_km         := kSmad2Imp_km 
-        kpSmad2Imp_Vmax       := kSmad2Imp_Vmax * mul
-        kSmad2Imp_Vmax         = 38.466;
-        kSmad2Exp_km           = 20;
-        kSmad2Exp_Vmax         = 20;
 
         kRafPhos_km             = 10;                   
         kRafPhos_ki             = 3.5;                  
