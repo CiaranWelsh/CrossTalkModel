@@ -7,7 +7,7 @@ import pickle
 try:
     from pycotools import model, viz, tasks
 except ImportError:
-    print('Warning: Pycotools is not installed. Are you running Python3? ')
+    from pycotools3 import model, viz, tasks
 
 import tellurium as te
 import seaborn

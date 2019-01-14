@@ -19,8 +19,8 @@ CURRENT_SPECIES = [
 # ]
 
 SIMULATE_TIME_SERIES            = False
-SIMULATE_BAR_GRAPHS             = True
-OPEN_CONDITION_WITH_COPASI      = False
+SIMULATE_BAR_GRAPHS             = False
+OPEN_CONDITION_WITH_COPASI      = True
 
 QUALITATIVE_FITTING             = False
 
