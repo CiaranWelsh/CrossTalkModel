@@ -90,8 +90,11 @@ ALL_CONDITIONS = ['D', 'T', 'E', 'E_A_72', 'E_A_48',
                   'E_M_48', 'E_M_24', 'E_M_1.25', 'M_72',
                   'M_48', 'M_24', 'M_1.25']
 
-
+## windows
 WORKING_DIRECTORY = r'D:\MesiSTRAT\CrossTalkModel'
+
+## linux
+WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel'
 COPASI_FILENAME = os.path.join(WORKING_DIRECTORY, 'KatrinesTopology.cps')
 GRAPHS_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'SimulationGraphs')
 PICKLE_PATH = os.path.join(WORKING_DIRECTORY, 'models.pickle')
