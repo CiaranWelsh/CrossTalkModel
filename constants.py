@@ -38,6 +38,9 @@ CURRENT_SPECIES = [
     'pSmad2',
     'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
 ]
+
+# CURRENT_SPECIES = ['pS6K']
+
 # CURRENT_SPECIES = ['pSmad2Tot']
 # CURRENT_SPECIES = [
 #     'pSmad2Tot', 'pSmad2', 'pSmad2n', 'Smad2n', 'Smad2Tot',
