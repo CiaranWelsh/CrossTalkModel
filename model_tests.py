@@ -1,5 +1,5 @@
 import unittest
-from KatrinesModelVersion import *
+from .KatrinesModelVersion import *
 
 
 class TestTGFbQualitative(unittest.TestCase):
