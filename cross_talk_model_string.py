@@ -289,6 +289,19 @@ CROSS_TALK_MODEL = """
         //_kRafPhosByPI3K_kcat     = 5;                    
         //_kPI3KPhosByTGFbR_kcat   = 50;                   
         //_kPI3KDephosByErk        = 0.5;  
+        Experiment = 1
+        
+        SerumStarveRemoveTGFb: at (time>70.25): TGFb=0;
+        SerumStarveRemoveGrowthFactors: at (time>70.25): GrowthFactors=0;
+        AddTGFb:        at (time>71.25):   TGFb=1;
+        AddMK_1.25:     at (time>70.75):    MK2206=1
+        AddMK_24:       at (time>48):       MK2206=1
+        AddMK_48:       at (time>24):       MK2206=1
+        AddMK_72:       at (time>0):        MK2206=1
+        AddAZD_1.25:    at (time>70.75):    AZD=1
+        AddAZD_24:      at  (time>48):      AZD=1
+        AddAZD_48:      at  (time>24):      AZD=1
+        AddAZD_72:      at  (time>0):       AZD=1
         
         
         unit volume = 1 litre;

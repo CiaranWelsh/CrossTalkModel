@@ -9,6 +9,8 @@ import pickle
 import site
 
 site.addsitedir(r'/home/ncw135/Documents/pycotools3')
+site.addsitedir(r'D:\pycotools3')
+
 try:
     from pycotools import model, viz, tasks
 except ImportError:

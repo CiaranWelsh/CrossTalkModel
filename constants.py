@@ -13,7 +13,7 @@ SIMULATE_BAR_GRAPHS             = False
 OPEN_CONDITION_WITH_COPASI      = True
 PARAMETER_ESTIMATION            = False
 RUN_PYCOTOOLS_VIZ               = False
-GET_PARAMETERS_FROM_COPASI      = True
+GET_PARAMETERS_FROM_COPASI      = False
 
 
 
@@ -106,24 +106,15 @@ ALL_CONDITIONS = ['D', 'T', 'E', 'E_A_72', 'E_A_48',
                   'E_M_48', 'E_M_24', 'E_M_1.25', 'M_72',
                   'M_48', 'M_24', 'M_1.25']
 
-## on windows
-# WORKING_DIRECTORY = r'D:\MesiSTRAT\CrossTalkModel'
-## logic for if running in slurm environment
 CLUSTER = False
-
-# try:
-#     subprocess.check_call(['sbatch'])
-# except subprocess.CalledProcessError:
-#     CLUSTER = False
-#
-# print(CLUSTER)
 
 if CLUSTER:
     WORKING_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel'
 else:
     WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel'
-print(WORKING_DIRECTORY)
 
+## on windows
+WORKING_DIRECTORY = r'D:\MesiSTRAT\CrossTalkModel'
 
 DATA_DIR = os.path.join(WORKING_DIRECTORY, 'data')
 # COPASI_FILENAME = os.path.join(WORKING_DIRECTORY, 'KatrinesTopology.cps')
@@ -143,7 +134,7 @@ for i in DATA_FILES:
 # OTHER_COPASI_MODEL = r'D:\MesiSTRAT\CrossTalkModel\copasi_models\E_A_48_2.cps'
 OTHER_COPASI_MODEL = os.path.join(COPASI_MODELS_DIR, 'E/E_other.cps')
 
-assert os.path.isfile(OTHER_COPASI_MODEL)
+# assert os.path.isfile(OTHER_COPASI_MODEL)
 
 # FIT_DIR = os.path.join(WORKING_DIRECTORY, 'fitting')
 # FIT1_DIR = os.path.join(FIT_DIR, 'fit1')
