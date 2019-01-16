@@ -1,4 +1,5 @@
 import matplotlib
+from functools import reduce
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
@@ -449,8 +450,8 @@ def make_condition(model_string, condition):
     :param open_with_copasi: open the model with copasi
     :return:
     """
-    if condition not in AZD_CONDITIONS.keys() + MK_CONDITIONS.keys():
-        raise ValueError('No key. These keys "{}"'.format(AZD_CONDITIONS.keys()+MK_CONDITIONS.keys()))
+    if condition not in list(AZD_CONDITIONS.keys()) + list(MK_CONDITIONS.keys()):
+        raise ValueError('No key. These keys "{}"'.format(list(AZD_CONDITIONS.keys())+list(MK_CONDITIONS.keys())))
     try:
         GF, pretreatment, pretreatment_time, EV, serum_starve_event, TGFb_event = AZD_CONDITIONS[condition]
     except KeyError:
@@ -496,7 +497,7 @@ def simulate_condition(model_string, condition):
     :param TGFb_event: Boolean. Whether to add 1 unit TGF at t=-45min (71.75h)
     :return:
     """
-    if condition not in AZD_CONDITIONS.keys() + MK_CONDITIONS.keys():
+    if condition not in list(AZD_CONDITIONS.keys()) + list(MK_CONDITIONS.keys()):
         raise ValueError
 
     model_string = make_condition(model_string, condition)
@@ -545,7 +546,7 @@ def simulate_conditions(model_str=None, type='azd'):
     # from multiprocessing import Process
 
     dct = OrderedDict()
-    for k, v in conditions.items():
+    for k, v in list(conditions.items()):
         # p = Process(target=simulate_condition, args=(tuple([cross_talk_model_antstr()] + conditions[k])))
         # p.start()
         # p.join()
@@ -582,7 +583,7 @@ def simulate_conditions_and_plot_as_bargraph(y, type='AZD'):
     seaborn.barplot(x='Condition', y=y, data=df,
                     palette=['yellow'] * 2 + ['white'] * 1 + ['red'] * 4 + ['green'] * 4,
                     edgecolor='black', linewidth=2,
-                    order=MK_CONDITIONS.keys() if type == 'MK2206' else AZD_CONDITIONS.keys()
+                    order=list(MK_CONDITIONS.keys()) if type == 'MK2206' else list(AZD_CONDITIONS.keys())
                     )
     plt.title(y)
     seaborn.despine(fig, top=True, right=True)
@@ -596,7 +597,7 @@ def simulate_conditions_and_plot_as_bargraph(y, type='AZD'):
     os.makedirs(dire) if not os.path.isdir(dire) else None
     fname = os.path.join(dire, "{}.png".format(y))
     fig.savefig(fname, dpi=300, bbox_inches='tight')
-    print('line 485: Figure saved to "{}"'.format(fname))
+    print(('line 485: Figure saved to "{}"'.format(fname)))
 
 
 
@@ -629,7 +630,7 @@ def simulate_timecourse(type='MK2206'):
         raise ValueError
 
     dct = OrderedDict()
-    for k, v in conditions.items():
+    for k, v in list(conditions.items()):
         df = simulate_condition(cross_talk_model_antstr(), k)
         dct[k] = df
     # print(dct)
@@ -643,7 +644,7 @@ def simulate_timecourse(type='MK2206'):
 
 
 def plot_timecourse_single(vars, condition=None):
-    if condition not in AZD_CONDITIONS.keys() + MK_CONDITIONS.keys():
+    if condition not in list(AZD_CONDITIONS.keys()) + list(MK_CONDITIONS.keys()):
         raise ValueError
 
     df = simulate_timecourse()
@@ -691,12 +692,12 @@ def plot_timecourse_multiplot(vars, condition=None, multifig_shape=None, AZD_or_
         raise ValueError
 
     if AZD_or_MK == 'MK2206':
-        if condition not in MK_CONDITIONS.keys():
+        if condition not in list(MK_CONDITIONS.keys()):
             raise ValueError
 
     elif AZD_or_MK == 'AZD':
-        if condition not in AZD_CONDITIONS.keys():
-            raise ValueError('"{}" condition is not in "{}"'.format(condition, AZD_CONDITIONS.keys()))
+        if condition not in list(AZD_CONDITIONS.keys()):
+            raise ValueError('"{}" condition is not in "{}"'.format(condition, list(AZD_CONDITIONS.keys())))
 
     df = simulate_timecourse(AZD_or_MK)
 
@@ -754,9 +755,9 @@ def simulate_inputs_only(AZD_or_MK='AZD'):
     os.makedirs(dire) if not os.path.isdir(dire) else None
 
     if AZD_or_MK == 'AZD':
-        conditions = AZD_CONDITIONS.keys()
+        conditions = list(AZD_CONDITIONS.keys())
     elif AZD_or_MK == 'MK2206':
-        conditions = MK_CONDITIONS.keys()
+        conditions = list(MK_CONDITIONS.keys())
     else:
         raise ValueError
 
@@ -768,7 +769,7 @@ def simulate_inputs_only(AZD_or_MK='AZD'):
 
         fname = os.path.join(dire, "{}.png".format(cond))
         fig.savefig(fname, dpi=300, bobx_inches='tight')
-        print("Saved to '{}'".format(fname))
+        print(("Saved to '{}'".format(fname)))
 
 
 
@@ -844,7 +845,7 @@ def simulate_model_component_timecourse(vars, cond, filename=None, **kwargs):
     fig = plt.figure(figsize=figsize)
     for i, c in enumerate(cond):
         if c not in list(MK_CONDITIONS.keys()) + list(AZD_CONDITIONS.keys()):
-            raise ValueError('condition "{}" not in "{}"'.format(c, MK_CONDITIONS.keys() + AZD_CONDITIONS.keys()))
+            raise ValueError('condition "{}" not in "{}"'.format(c, list(MK_CONDITIONS.keys()) + list(AZD_CONDITIONS.keys())))
 
         model_str = make_condition(cross_talk_model_antstr(), c)
         mod = te.loada(model_str)
@@ -889,10 +890,10 @@ def get_parameters_from_copasi_in_antimony_format(condition):
     pm = model.Model(fname)
     pm.to_sbml(sbml)
     mod = te.loadSBMLModel(sbml)
-    print(mod.getCurrentAntimony())
+    print((mod.getCurrentAntimony()))
 
 def get_model_parameters(mod):
-    return dict(zip(mod.getGlobalParameterIds(), mod.getGlobalParameterValues()))
+    return dict(list(zip(mod.getGlobalParameterIds(), mod.getGlobalParameterValues())))
 
 class Inequality(object):
     def __init__(self, left, operator, right, name):
@@ -926,7 +927,7 @@ class InequalityGroup(object):
         }
 
     def inequality_keys(self):
-        return cycle(range(len(self)))
+        return cycle(list(range(len(self))))
 
     @property
     def names(self):
@@ -997,13 +998,13 @@ class OptimizeQualitative(object):
 
         prob_mat = pandas.DataFrame(numpy.full(mat_shape, starting_prob))
         prob_mat.columns = self.inequality_group.names
-        prob_mat['parameter_names'] = self.free_parameters.keys()
+        prob_mat['parameter_names'] = list(self.free_parameters.keys())
         prob_mat.set_index('parameter_names', inplace=True)
         return prob_mat
 
     @staticmethod
     def simulate_condition(model_string, condition):
-        if condition not in AZD_CONDITIONS.keys() + MK_CONDITIONS.keys():
+        if condition not in list(AZD_CONDITIONS.keys()) + list(MK_CONDITIONS.keys()):
             raise ValueError
 
         model_string = make_condition(model_string, condition)
@@ -1039,7 +1040,7 @@ class OptimizeQualitative(object):
         :return:
         """
         if conditions is None:
-            conditions = list(set(AZD_CONDITIONS.keys() + MK_CONDITIONS.keys()))
+            conditions = list(set(list(AZD_CONDITIONS.keys()) + list(MK_CONDITIONS.keys())))
 
         dct = OrderedDict()
         for cond in conditions:
@@ -1066,7 +1067,7 @@ class OptimizeQualitative(object):
         if all(inequality_dct.values()):
             ## return if all values are True
             print('all conditions are met')
-            print(self.free_parameters)
+            print((self.free_parameters))
             return True
         else:
             return False
@@ -1078,7 +1079,7 @@ class OptimizeQualitative(object):
         new_parameter_value = old + peterb_amount
         assert new_parameter_value > 0, "Be positive"
         setattr(mod, param, new_parameter_value)
-        print('old parameter value is "{}". New is "{}"'.format(old, new_parameter_value))
+        print(('old parameter value is "{}". New is "{}"'.format(old, new_parameter_value)))
         return mod, new_parameter_value
 
     def _update_probabilities(self, cond, param, reinforcement_direction):
@@ -1133,13 +1134,13 @@ class OptimizeQualitative(object):
 
         # mod = te.loada(self.model_string)
         for i in range(self.iterations):
-            print('\nIteration {}'.format(i))
+            print(('\nIteration {}'.format(i)))
             ## load self.free_parameters back into the model
             self._load_parameters_from_dict(self.free_parameters)
             # print(zip(self.mod.getGlobalParameterIds(), self.mod.getGlobalParameterValues()))
             current_condition = next(self.condition_list)
             ## choose one parameter to peterb, based on probabilities
-            choice = numpy.random.choice(self.free_parameters.keys(),
+            choice = numpy.random.choice(list(self.free_parameters.keys()),
                                          p=self.probability_matrix[current_condition].values)
 
             # print('Current choice is "{}", value "{}"'.format(choice, getattr(self.mod, choice)))
@@ -1151,16 +1152,16 @@ class OptimizeQualitative(object):
                 self.save_parameters_and_prob_to_file()
                 return self.free_parameters, self.probability_matrix
 
-            for k in ineq_memory['old'].keys():
+            for k in list(ineq_memory['old'].keys()):
                 if ineq_memory['old'][k] != ineq_memory['new'][k]:
-                    print ('ineq "{}" changed from "{}" to "{}"'.format(k, ineq_memory['old'][k], ineq_memory['new'][k]))
+                    print(('ineq "{}" changed from "{}" to "{}"'.format(k, ineq_memory['old'][k], ineq_memory['new'][k])))
 
-            print('old count: {}'.format(Counter(ineq_memory['old'].values())))
-            print('new count: {}'.format(Counter(ineq_memory['new'].values())))
+            print(('old count: {}'.format(Counter(list(ineq_memory['old'].values())))))
+            print(('new count: {}'.format(Counter(list(ineq_memory['new'].values())))))
 
             old_parameter_value = self.free_parameters[choice]
 
-            for cond, boolean in ineq_memory['new'].items():
+            for cond, boolean in list(ineq_memory['new'].items()):
                 # print ('cond={}, cond {}, ineq_memory old "{}", ineq_memory new "{}" eq {}'.format(
                 #     cond,
                 #     boolean,
@@ -1169,22 +1170,22 @@ class OptimizeQualitative(object):
                 #     (ineq_memory['old'][cond] == False) and (ineq_memory['old'][cond] == True)
                 # ))
                 if (ineq_memory['old'][cond] == False) and (ineq_memory['new'][cond] == True):
-                    print("Positively reinforcing '{}' parameter as changing it from '{}' to '{}' "
+                    print(("Positively reinforcing '{}' parameter as changing it from '{}' to '{}' "
                           "changed the '{}' condition from False to True".format(
                         choice, old_parameter_value, new_parameter_value, cond
-                    ))
+                    )))
                     self._update_probabilities(cond, choice, 'positive_reinforcement')
                     self.free_parameters[choice] = new_parameter_value
 
                 elif (ineq_memory['old'][cond] == True) and (ineq_memory['new'][cond] == False):
-                    print("Negatively reinforcing '{}' parameter as changing it from '{}' to '{}' "
+                    print(("Negatively reinforcing '{}' parameter as changing it from '{}' to '{}' "
                           "changed the '{}' condition from True to False".format(
                         choice, old_parameter_value, new_parameter_value, cond
-                    ))
+                    )))
                     self._update_probabilities(cond, choice, 'negative_reinforcement')
 
         self.save_parameters_and_prob_to_file()
-        print(self.free_parameters)
+        print((self.free_parameters))
         return self.free_parameters, self.probability_matrix
 
 
@@ -1243,8 +1244,8 @@ if __name__ == '__main__':
 
     if SIMULATE_TIME_SERIES:
         for i in pSmad2:
-            simulate_model_component_timecourse([i], AZD_CONDITIONS.keys(), filename='AZD_'+i)
-            simulate_model_component_timecourse([i], MK_CONDITIONS.keys(), filename='MK_'+i)
+            simulate_model_component_timecourse([i], list(AZD_CONDITIONS.keys()), filename='AZD_'+i)
+            simulate_model_component_timecourse([i], list(MK_CONDITIONS.keys()), filename='MK_'+i)
 
     if SIMULATE_BAR_GRAPHS:
         # for i in ['AZD', 'MK2206']:

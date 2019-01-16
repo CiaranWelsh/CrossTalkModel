@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created by COPASI version 4.24 (Build 197) on 2019-01-11 13:50 with libSBML version 5.17.0. -->
+<!-- Created by COPASI version 4.24 (Build 197) on 2019-01-15 14:09 with libSBML version 5.17.0. -->
 <sbml xmlns="http://www.sbml.org/sbml/level2/version4" level="2" version="4">
-  <model metaid="COPASI0" id="TGFbModule" name="TGFbModule">
+  <model metaid="COPASI0" id="CrossTalkModel" name="CrossTalkModel">
     <annotation>
       <COPASI xmlns="http://www.copasi.org/static/sbml">
         <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
           <rdf:Description rdf:about="#COPASI0">
             <dcterms:created>
               <rdf:Description>
-                <dcterms:W3CDTF>2019-01-11T13:03:58Z</dcterms:W3CDTF>
+                <dcterms:W3CDTF>2019-01-15T11:56:47Z</dcterms:W3CDTF>
               </rdf:Description>
             </dcterms:created>
           </rdf:Description>
@@ -26,7 +26,7 @@
               <ci> TGFbR_EE </ci>
             </bvar>
             <bvar>
-              <ci> kSmad2Phos_kcat </ci>
+              <ci> _kSmad2Phos_kcat </ci>
             </bvar>
             <bvar>
               <ci> kSmad2Phos_km </ci>
@@ -35,7 +35,7 @@
               <divide/>
               <apply>
                 <times/>
-                <ci> kSmad2Phos_kcat </ci>
+                <ci> _kSmad2Phos_kcat </ci>
                 <ci> TGFbR_EE </ci>
                 <ci> Smad2 </ci>
               </apply>
@@ -48,30 +48,23 @@
           </lambda>
         </math>
       </functionDefinition>
-      <functionDefinition id="MM_1" name="MM_1">
+      <functionDefinition id="Function_for_TGF_R1" name="Function for TGF_R1">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <lambda>
             <bvar>
-              <ci> kSmad2Dephos_Vmax </ci>
+              <ci> TGFb </ci>
             </bvar>
             <bvar>
-              <ci> kSmad2Dephos_km </ci>
+              <ci> TGFbR </ci>
             </bvar>
             <bvar>
-              <ci> pSmad2 </ci>
+              <ci> _kTGFbOn </ci>
             </bvar>
             <apply>
-              <divide/>
-              <apply>
-                <times/>
-                <ci> kSmad2Dephos_Vmax </ci>
-                <ci> pSmad2 </ci>
-              </apply>
-              <apply>
-                <plus/>
-                <ci> kSmad2Dephos_km </ci>
-                <ci> pSmad2 </ci>
-              </apply>
+              <times/>
+              <ci> _kTGFbOn </ci>
+              <ci> TGFbR </ci>
+              <ci> TGFb </ci>
             </apply>
           </lambda>
         </math>
@@ -129,23 +122,58 @@
           </lambda>
         </math>
       </functionDefinition>
-      <functionDefinition id="Function_for_TGF_R1" name="Function for TGF_R1">
+      <functionDefinition id="MM_5" name="MM_5">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <lambda>
             <bvar>
-              <ci> TGFb </ci>
+              <ci> kErkDephos_Vmax </ci>
             </bvar>
             <bvar>
-              <ci> TGFbR </ci>
+              <ci> kErkDephos_km </ci>
             </bvar>
             <bvar>
-              <ci> kTGFbOn </ci>
+              <ci> ppErk </ci>
             </bvar>
             <apply>
-              <times/>
-              <ci> kTGFbOn </ci>
-              <ci> TGFbR </ci>
-              <ci> TGFb </ci>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> kErkDephos_Vmax </ci>
+                <ci> ppErk </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> kErkDephos_km </ci>
+                <ci> ppErk </ci>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="MM_6" name="MM_6">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> kErkDephos_Vmax </ci>
+            </bvar>
+            <bvar>
+              <ci> kErkDephos_km </ci>
+            </bvar>
+            <bvar>
+              <ci> pErk </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> kErkDephos_Vmax </ci>
+                <ci> pErk </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> kErkDephos_km </ci>
+                <ci> pErk </ci>
+              </apply>
             </apply>
           </lambda>
         </math>
@@ -178,35 +206,7 @@
           </lambda>
         </math>
       </functionDefinition>
-      <functionDefinition id="MM_5" name="MM_5">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> kErkDephos_Vmax1 </ci>
-            </bvar>
-            <bvar>
-              <ci> kErkDephos_km1 </ci>
-            </bvar>
-            <bvar>
-              <ci> ppErk </ci>
-            </bvar>
-            <apply>
-              <divide/>
-              <apply>
-                <times/>
-                <ci> kErkDephos_Vmax1 </ci>
-                <ci> ppErk </ci>
-              </apply>
-              <apply>
-                <plus/>
-                <ci> kErkDephos_km1 </ci>
-                <ci> ppErk </ci>
-              </apply>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="CompetitiveInhibition_1" name="CompetitiveInhibition_1">
+      <functionDefinition id="CompetitiveInhibitionWithKcat_1" name="CompetitiveInhibitionWithKcat_1">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <lambda>
             <bvar>
@@ -216,10 +216,10 @@
               <ci> Mek </ci>
             </bvar>
             <bvar>
-              <ci> kMekPhos_kcat1 </ci>
+              <ci> _kMekPhos_ki </ci>
             </bvar>
             <bvar>
-              <ci> kMekPhos_ki1 </ci>
+              <ci> kMekPhos_kcat </ci>
             </bvar>
             <bvar>
               <ci> kMekPhos_km1 </ci>
@@ -231,7 +231,7 @@
               <divide/>
               <apply>
                 <times/>
-                <ci> kMekPhos_kcat1 </ci>
+                <ci> kMekPhos_kcat </ci>
                 <ci> pRaf </ci>
                 <ci> Mek </ci>
               </apply>
@@ -246,7 +246,7 @@
                     <ci> kMekPhos_km1 </ci>
                     <ci> AZD </ci>
                   </apply>
-                  <ci> kMekPhos_ki1 </ci>
+                  <ci> _kMekPhos_ki </ci>
                 </apply>
               </apply>
             </apply>
@@ -257,10 +257,10 @@
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <lambda>
             <bvar>
-              <ci> kMekDephos_Vmax1 </ci>
+              <ci> kMekDephos_Vmax </ci>
             </bvar>
             <bvar>
-              <ci> kMekDephos_km1 </ci>
+              <ci> kMekDephos_km </ci>
             </bvar>
             <bvar>
               <ci> ppMek </ci>
@@ -269,12 +269,12 @@
               <divide/>
               <apply>
                 <times/>
-                <ci> kMekDephos_Vmax1 </ci>
+                <ci> kMekDephos_Vmax </ci>
                 <ci> ppMek </ci>
               </apply>
               <apply>
                 <plus/>
-                <ci> kMekDephos_km1 </ci>
+                <ci> kMekDephos_km </ci>
                 <ci> ppMek </ci>
               </apply>
             </apply>
@@ -285,598 +285,54 @@
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <lambda>
             <bvar>
-              <ci> kMekDephos_Vmax1 </ci>
+              <ci> kMekDephos_Vmax </ci>
             </bvar>
             <bvar>
-              <ci> kMekDephos_km1 </ci>
-            </bvar>
-            <bvar>
-              <ci> pMek </ci>
-            </bvar>
-            <apply>
-              <divide/>
-              <apply>
-                <times/>
-                <ci> kMekDephos_Vmax1 </ci>
-                <ci> pMek </ci>
-              </apply>
-              <apply>
-                <plus/>
-                <ci> kMekDephos_km1 </ci>
-                <ci> pMek </ci>
-              </apply>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="Function_for_PI3K_R1" name="Function for PI3K_R1">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> GrowthFactors </ci>
-            </bvar>
-            <bvar>
-              <ci> PI3K </ci>
-            </bvar>
-            <bvar>
-              <ci> kPI3KPhosByGF </ci>
-            </bvar>
-            <apply>
-              <times/>
-              <ci> kPI3KPhosByGF </ci>
-              <ci> PI3K </ci>
-              <ci> GrowthFactors </ci>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="MM_6" name="MM_6">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> kErkDephos_Vmax1 </ci>
-            </bvar>
-            <bvar>
-              <ci> kErkDephos_km1 </ci>
-            </bvar>
-            <bvar>
-              <ci> pErk </ci>
-            </bvar>
-            <apply>
-              <divide/>
-              <apply>
-                <times/>
-                <ci> kErkDephos_Vmax1 </ci>
-                <ci> pErk </ci>
-              </apply>
-              <apply>
-                <plus/>
-                <ci> kErkDephos_km1 </ci>
-                <ci> pErk </ci>
-              </apply>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="CompetitiveInhibition_3" name="CompetitiveInhibition_3">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> Akt </ci>
-            </bvar>
-            <bvar>
-              <ci> MK2206 </ci>
-            </bvar>
-            <bvar>
-              <ci> kAktPhos_kcat </ci>
-            </bvar>
-            <bvar>
-              <ci> kAktPhos_ki </ci>
-            </bvar>
-            <bvar>
-              <ci> kAktPhos_km </ci>
-            </bvar>
-            <bvar>
-              <ci> pPI3K </ci>
-            </bvar>
-            <apply>
-              <divide/>
-              <apply>
-                <times/>
-                <ci> kAktPhos_kcat </ci>
-                <ci> pPI3K </ci>
-                <ci> Akt </ci>
-              </apply>
-              <apply>
-                <plus/>
-                <ci> kAktPhos_km </ci>
-                <ci> Akt </ci>
-                <apply>
-                  <divide/>
-                  <apply>
-                    <times/>
-                    <ci> kAktPhos_km </ci>
-                    <ci> MK2206 </ci>
-                  </apply>
-                  <ci> kAktPhos_ki </ci>
-                </apply>
-              </apply>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="MM_7" name="MM_7">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> kAktDephos_Vmax </ci>
-            </bvar>
-            <bvar>
-              <ci> kAktDephos_km </ci>
-            </bvar>
-            <bvar>
-              <ci> pAkt </ci>
-            </bvar>
-            <apply>
-              <divide/>
-              <apply>
-                <times/>
-                <ci> kAktDephos_Vmax </ci>
-                <ci> pAkt </ci>
-              </apply>
-              <apply>
-                <plus/>
-                <ci> kAktDephos_km </ci>
-                <ci> pAkt </ci>
-              </apply>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="MMWithKcat_4" name="MMWithKcat_4">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> S6K </ci>
-            </bvar>
-            <bvar>
-              <ci> kS6KPhosBymTORC1_kcat </ci>
-            </bvar>
-            <bvar>
-              <ci> kS6KPhosBymTORC1_km </ci>
-            </bvar>
-            <bvar>
-              <ci> pmTORC1 </ci>
-            </bvar>
-            <apply>
-              <divide/>
-              <apply>
-                <times/>
-                <ci> kS6KPhosBymTORC1_kcat </ci>
-                <ci> pmTORC1 </ci>
-                <ci> S6K </ci>
-              </apply>
-              <apply>
-                <plus/>
-                <ci> kS6KPhosBymTORC1_km </ci>
-                <ci> S6K </ci>
-              </apply>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="MMWithKcat_5" name="MMWithKcat_5">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> Raf </ci>
-            </bvar>
-            <bvar>
-              <ci> TGFbR_Cav </ci>
-            </bvar>
-            <bvar>
-              <ci> kRafPhosByTGFbR_kcat </ci>
-            </bvar>
-            <bvar>
-              <ci> kRafPhosByTGFbR_km </ci>
-            </bvar>
-            <apply>
-              <divide/>
-              <apply>
-                <times/>
-                <ci> kRafPhosByTGFbR_kcat </ci>
-                <ci> TGFbR_Cav </ci>
-                <ci> Raf </ci>
-              </apply>
-              <apply>
-                <plus/>
-                <ci> kRafPhosByTGFbR_km </ci>
-                <ci> Raf </ci>
-              </apply>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="Function_for_CrossTalkR4" name="Function for CrossTalkR4">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> kPI3KDephosByErk </ci>
-            </bvar>
-            <bvar>
-              <ci> pPI3K </ci>
-            </bvar>
-            <bvar>
-              <ci> ppErk </ci>
-            </bvar>
-            <apply>
-              <times/>
-              <ci> kPI3KDephosByErk </ci>
-              <ci> pPI3K </ci>
-              <ci> ppErk </ci>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="MM_8" name="MM_8">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> kmTORC1Dephos_Vmax </ci>
-            </bvar>
-            <bvar>
-              <ci> kmTORC1Dephos_km </ci>
-            </bvar>
-            <bvar>
-              <ci> pmTORC1 </ci>
-            </bvar>
-            <apply>
-              <divide/>
-              <apply>
-                <times/>
-                <ci> kmTORC1Dephos_Vmax </ci>
-                <ci> pmTORC1 </ci>
-              </apply>
-              <apply>
-                <plus/>
-                <ci> kmTORC1Dephos_km </ci>
-                <ci> pmTORC1 </ci>
-              </apply>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="MMWithKcat_8" name="MMWithKcat_8">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> Smad2 </ci>
-            </bvar>
-            <bvar>
-              <ci> kSmad2PhosByAkt_kcat </ci>
-            </bvar>
-            <bvar>
-              <ci> kSmad2PhosByAkt_km </ci>
-            </bvar>
-            <bvar>
-              <ci> pAkt </ci>
-            </bvar>
-            <apply>
-              <divide/>
-              <apply>
-                <times/>
-                <ci> kSmad2PhosByAkt_kcat </ci>
-                <ci> pAkt </ci>
-                <ci> Smad2 </ci>
-              </apply>
-              <apply>
-                <plus/>
-                <ci> kSmad2PhosByAkt_km </ci>
-                <ci> Smad2 </ci>
-              </apply>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="MMWithKcat_2" name="MMWithKcat_2">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> Erk </ci>
-            </bvar>
-            <bvar>
-              <ci> kErkPhos_kcat1 </ci>
-            </bvar>
-            <bvar>
-              <ci> kErkPhos_km1 </ci>
-            </bvar>
-            <bvar>
-              <ci> ppMek </ci>
-            </bvar>
-            <apply>
-              <divide/>
-              <apply>
-                <times/>
-                <ci> kErkPhos_kcat1 </ci>
-                <ci> ppMek </ci>
-                <ci> Erk </ci>
-              </apply>
-              <apply>
-                <plus/>
-                <ci> kErkPhos_km1 </ci>
-                <ci> Erk </ci>
-              </apply>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="MMWithKcat_9" name="MMWithKcat_9">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> kSmad2DephosByErk_kcat </ci>
-            </bvar>
-            <bvar>
-              <ci> kSmad2DephosByErk_km </ci>
-            </bvar>
-            <bvar>
-              <ci> pSmad2n </ci>
-            </bvar>
-            <bvar>
-              <ci> ppErk </ci>
-            </bvar>
-            <apply>
-              <divide/>
-              <apply>
-                <times/>
-                <ci> kSmad2DephosByErk_kcat </ci>
-                <ci> ppErk </ci>
-                <ci> pSmad2n </ci>
-              </apply>
-              <apply>
-                <plus/>
-                <ci> kSmad2DephosByErk_km </ci>
-                <ci> pSmad2n </ci>
-              </apply>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="MM_9" name="MM_9">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> kS6KDephos_Vmax </ci>
-            </bvar>
-            <bvar>
-              <ci> kS6KDephos_km </ci>
-            </bvar>
-            <bvar>
-              <ci> pS6K </ci>
-            </bvar>
-            <apply>
-              <divide/>
-              <apply>
-                <times/>
-                <ci> kS6KDephos_Vmax </ci>
-                <ci> pS6K </ci>
-              </apply>
-              <apply>
-                <plus/>
-                <ci> kS6KDephos_km </ci>
-                <ci> pS6K </ci>
-              </apply>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="CompetitiveInhibition_2" name="CompetitiveInhibition_2">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> AZD </ci>
-            </bvar>
-            <bvar>
-              <ci> kMekPhos_kcat1 </ci>
-            </bvar>
-            <bvar>
-              <ci> kMekPhos_ki1 </ci>
-            </bvar>
-            <bvar>
-              <ci> kMekPhos_km1 </ci>
+              <ci> kMekDephos_km </ci>
             </bvar>
             <bvar>
               <ci> pMek </ci>
             </bvar>
-            <bvar>
-              <ci> pRaf </ci>
-            </bvar>
             <apply>
               <divide/>
               <apply>
                 <times/>
-                <ci> kMekPhos_kcat1 </ci>
-                <ci> pRaf </ci>
+                <ci> kMekDephos_Vmax </ci>
                 <ci> pMek </ci>
               </apply>
               <apply>
                 <plus/>
-                <ci> kMekPhos_km1 </ci>
+                <ci> kMekDephos_km </ci>
                 <ci> pMek </ci>
-                <apply>
-                  <divide/>
-                  <apply>
-                    <times/>
-                    <ci> kMekPhos_km1 </ci>
-                    <ci> AZD </ci>
-                  </apply>
-                  <ci> kMekPhos_ki1 </ci>
-                </apply>
               </apply>
             </apply>
           </lambda>
         </math>
       </functionDefinition>
-      <functionDefinition id="CompetitiveInhibition_4" name="CompetitiveInhibition_4">
+      <functionDefinition id="MM_1" name="MM_1">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <lambda>
             <bvar>
-              <ci> Everolimus </ci>
+              <ci> kSmad2Dephos_Vmax </ci>
             </bvar>
             <bvar>
-              <ci> kmTORC1Phos_kcat </ci>
+              <ci> kSmad2Dephos_km </ci>
             </bvar>
             <bvar>
-              <ci> kmTORC1Phos_ki </ci>
-            </bvar>
-            <bvar>
-              <ci> kmTORC1Phos_km </ci>
-            </bvar>
-            <bvar>
-              <ci> mTORC1 </ci>
-            </bvar>
-            <bvar>
-              <ci> pAkt </ci>
+              <ci> pSmad2 </ci>
             </bvar>
             <apply>
               <divide/>
               <apply>
                 <times/>
-                <ci> kmTORC1Phos_kcat </ci>
-                <ci> pAkt </ci>
-                <ci> mTORC1 </ci>
+                <ci> kSmad2Dephos_Vmax </ci>
+                <ci> pSmad2 </ci>
               </apply>
               <apply>
                 <plus/>
-                <ci> kmTORC1Phos_km </ci>
-                <ci> mTORC1 </ci>
-                <apply>
-                  <divide/>
-                  <apply>
-                    <times/>
-                    <ci> kmTORC1Phos_km </ci>
-                    <ci> Everolimus </ci>
-                  </apply>
-                  <ci> kmTORC1Phos_ki </ci>
-                </apply>
+                <ci> kSmad2Dephos_km </ci>
+                <ci> pSmad2 </ci>
               </apply>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="MMWithKcat_6" name="MMWithKcat_6">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> Raf </ci>
-            </bvar>
-            <bvar>
-              <ci> kRafPhosByPI3K_kcat </ci>
-            </bvar>
-            <bvar>
-              <ci> kRafPhosByPI3K_km </ci>
-            </bvar>
-            <bvar>
-              <ci> pPI3K </ci>
-            </bvar>
-            <apply>
-              <divide/>
-              <apply>
-                <times/>
-                <ci> kRafPhosByPI3K_kcat </ci>
-                <ci> pPI3K </ci>
-                <ci> Raf </ci>
-              </apply>
-              <apply>
-                <plus/>
-                <ci> kRafPhosByPI3K_km </ci>
-                <ci> Raf </ci>
-              </apply>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="MMWithKcat_3" name="MMWithKcat_3">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> kErkPhos_kcat1 </ci>
-            </bvar>
-            <bvar>
-              <ci> kErkPhos_km1 </ci>
-            </bvar>
-            <bvar>
-              <ci> pErk </ci>
-            </bvar>
-            <bvar>
-              <ci> ppMek </ci>
-            </bvar>
-            <apply>
-              <divide/>
-              <apply>
-                <times/>
-                <ci> kErkPhos_kcat1 </ci>
-                <ci> ppMek </ci>
-                <ci> pErk </ci>
-              </apply>
-              <apply>
-                <plus/>
-                <ci> kErkPhos_km1 </ci>
-                <ci> pErk </ci>
-              </apply>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="MMWithKcat_7" name="MMWithKcat_7">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> PI3K </ci>
-            </bvar>
-            <bvar>
-              <ci> TGFbR_Cav </ci>
-            </bvar>
-            <bvar>
-              <ci> kPI3KPhosByTGFbR_kcat </ci>
-            </bvar>
-            <bvar>
-              <ci> kPI3KPhosByTGFbR_km </ci>
-            </bvar>
-            <apply>
-              <divide/>
-              <apply>
-                <times/>
-                <ci> kPI3KPhosByTGFbR_kcat </ci>
-                <ci> TGFbR_Cav </ci>
-                <ci> PI3K </ci>
-              </apply>
-              <apply>
-                <plus/>
-                <ci> kPI3KPhosByTGFbR_km </ci>
-                <ci> PI3K </ci>
-              </apply>
-            </apply>
-          </lambda>
-        </math>
-      </functionDefinition>
-      <functionDefinition id="Function_for_PI3K_R2" name="Function for PI3K_R2">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <lambda>
-            <bvar>
-              <ci> kPI3KDephosByS6K </ci>
-            </bvar>
-            <bvar>
-              <ci> pPI3K </ci>
-            </bvar>
-            <bvar>
-              <ci> pS6K </ci>
-            </bvar>
-            <apply>
-              <times/>
-              <ci> kPI3KDephosByS6K </ci>
-              <ci> pPI3K </ci>
-              <ci> pS6K </ci>
             </apply>
           </lambda>
         </math>
@@ -921,6 +377,486 @@
           </lambda>
         </math>
       </functionDefinition>
+      <functionDefinition id="MMWithKcat_7" name="MMWithKcat_7">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> PI3K </ci>
+            </bvar>
+            <bvar>
+              <ci> TGFbR_Cav </ci>
+            </bvar>
+            <bvar>
+              <ci> _kPI3KPhosByTGFbR_kcat </ci>
+            </bvar>
+            <bvar>
+              <ci> kPI3KPhosByTGFbR_km </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> _kPI3KPhosByTGFbR_kcat </ci>
+                <ci> TGFbR_Cav </ci>
+                <ci> PI3K </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> kPI3KPhosByTGFbR_km </ci>
+                <ci> PI3K </ci>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="MM_7" name="MM_7">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> kAktDephos_Vmax </ci>
+            </bvar>
+            <bvar>
+              <ci> kAktDephos_km </ci>
+            </bvar>
+            <bvar>
+              <ci> pAkt </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> kAktDephos_Vmax </ci>
+                <ci> pAkt </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> kAktDephos_km </ci>
+                <ci> pAkt </ci>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="CompetitiveInhibitionWithKcat_4" name="CompetitiveInhibitionWithKcat_4">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> Everolimus </ci>
+            </bvar>
+            <bvar>
+              <ci> _kmTORC1Phos_kcat </ci>
+            </bvar>
+            <bvar>
+              <ci> _kmTORC1Phos_ki </ci>
+            </bvar>
+            <bvar>
+              <ci> kmTORC1Phos_km </ci>
+            </bvar>
+            <bvar>
+              <ci> mTORC1 </ci>
+            </bvar>
+            <bvar>
+              <ci> pAkt </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> _kmTORC1Phos_kcat </ci>
+                <ci> pAkt </ci>
+                <ci> mTORC1 </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> kmTORC1Phos_km </ci>
+                <ci> mTORC1 </ci>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <times/>
+                    <ci> kmTORC1Phos_km </ci>
+                    <ci> Everolimus </ci>
+                  </apply>
+                  <ci> _kmTORC1Phos_ki </ci>
+                </apply>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="MM_9" name="MM_9">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> kS6KDephos_Vmax </ci>
+            </bvar>
+            <bvar>
+              <ci> kS6KDephos_km </ci>
+            </bvar>
+            <bvar>
+              <ci> pS6K </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> kS6KDephos_Vmax </ci>
+                <ci> pS6K </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> kS6KDephos_km </ci>
+                <ci> pS6K </ci>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="MMWithKcat_5" name="MMWithKcat_5">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> Raf </ci>
+            </bvar>
+            <bvar>
+              <ci> TGFbR_Cav </ci>
+            </bvar>
+            <bvar>
+              <ci> _kRafPhosByTGFbR_kcat </ci>
+            </bvar>
+            <bvar>
+              <ci> kRafPhosByTGFbR_km </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> _kRafPhosByTGFbR_kcat </ci>
+                <ci> TGFbR_Cav </ci>
+                <ci> Raf </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> kRafPhosByTGFbR_km </ci>
+                <ci> Raf </ci>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="CompetitiveInhibitionWithKcat_3" name="CompetitiveInhibitionWithKcat_3">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> Akt </ci>
+            </bvar>
+            <bvar>
+              <ci> MK2206 </ci>
+            </bvar>
+            <bvar>
+              <ci> _kAktPhos_kcat </ci>
+            </bvar>
+            <bvar>
+              <ci> _kAktPhos_ki </ci>
+            </bvar>
+            <bvar>
+              <ci> kAktPhos_km </ci>
+            </bvar>
+            <bvar>
+              <ci> pPI3K </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> _kAktPhos_kcat </ci>
+                <ci> pPI3K </ci>
+                <ci> Akt </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> kAktPhos_km </ci>
+                <ci> Akt </ci>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <times/>
+                    <ci> kAktPhos_km </ci>
+                    <ci> MK2206 </ci>
+                  </apply>
+                  <ci> _kAktPhos_ki </ci>
+                </apply>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="MMWithKcat_3" name="MMWithKcat_3">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> kErkPhos_kcat </ci>
+            </bvar>
+            <bvar>
+              <ci> kErkPhos_km1 </ci>
+            </bvar>
+            <bvar>
+              <ci> pErk </ci>
+            </bvar>
+            <bvar>
+              <ci> ppMek </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> kErkPhos_kcat </ci>
+                <ci> ppMek </ci>
+                <ci> pErk </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> kErkPhos_km1 </ci>
+                <ci> pErk </ci>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_CrossTalkR4" name="Function for CrossTalkR4">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> _kPI3KDephosByErk </ci>
+            </bvar>
+            <bvar>
+              <ci> pPI3K </ci>
+            </bvar>
+            <bvar>
+              <ci> ppErk </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> _kPI3KDephosByErk </ci>
+              <ci> pPI3K </ci>
+              <ci> ppErk </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="MMWithKcat_6" name="MMWithKcat_6">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> Raf </ci>
+            </bvar>
+            <bvar>
+              <ci> _kRafPhosByPI3K_kcat </ci>
+            </bvar>
+            <bvar>
+              <ci> kRafPhosByPI3K_km </ci>
+            </bvar>
+            <bvar>
+              <ci> pPI3K </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> _kRafPhosByPI3K_kcat </ci>
+                <ci> pPI3K </ci>
+                <ci> Raf </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> kRafPhosByPI3K_km </ci>
+                <ci> Raf </ci>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="MM_8" name="MM_8">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> _kmTORC1Dephos_Vmax </ci>
+            </bvar>
+            <bvar>
+              <ci> kmTORC1Dephos_km </ci>
+            </bvar>
+            <bvar>
+              <ci> pmTORC1 </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> _kmTORC1Dephos_Vmax </ci>
+                <ci> pmTORC1 </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> kmTORC1Dephos_km </ci>
+                <ci> pmTORC1 </ci>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="MMWithKcat_4" name="MMWithKcat_4">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> S6K </ci>
+            </bvar>
+            <bvar>
+              <ci> _kS6KPhosBymTORC1_kcat </ci>
+            </bvar>
+            <bvar>
+              <ci> kS6KPhosBymTORC1_km </ci>
+            </bvar>
+            <bvar>
+              <ci> pmTORC1 </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> _kS6KPhosBymTORC1_kcat </ci>
+                <ci> pmTORC1 </ci>
+                <ci> S6K </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> kS6KPhosBymTORC1_km </ci>
+                <ci> S6K </ci>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="MMWithKcat_2" name="MMWithKcat_2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> Erk </ci>
+            </bvar>
+            <bvar>
+              <ci> kErkPhos_kcat </ci>
+            </bvar>
+            <bvar>
+              <ci> kErkPhos_km1 </ci>
+            </bvar>
+            <bvar>
+              <ci> ppMek </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> kErkPhos_kcat </ci>
+                <ci> ppMek </ci>
+                <ci> Erk </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> kErkPhos_km1 </ci>
+                <ci> Erk </ci>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="CompetitiveInhibitionWithKcat_2" name="CompetitiveInhibitionWithKcat_2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> AZD </ci>
+            </bvar>
+            <bvar>
+              <ci> _kMekPhos_ki </ci>
+            </bvar>
+            <bvar>
+              <ci> kMekPhos_kcat </ci>
+            </bvar>
+            <bvar>
+              <ci> kMekPhos_km1 </ci>
+            </bvar>
+            <bvar>
+              <ci> pMek </ci>
+            </bvar>
+            <bvar>
+              <ci> pRaf </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> kMekPhos_kcat </ci>
+                <ci> pRaf </ci>
+                <ci> pMek </ci>
+              </apply>
+              <apply>
+                <plus/>
+                <ci> kMekPhos_km1 </ci>
+                <ci> pMek </ci>
+                <apply>
+                  <divide/>
+                  <apply>
+                    <times/>
+                    <ci> kMekPhos_km1 </ci>
+                    <ci> AZD </ci>
+                  </apply>
+                  <ci> _kMekPhos_ki </ci>
+                </apply>
+              </apply>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_PI3K_R1" name="Function for PI3K_R1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> GrowthFactors </ci>
+            </bvar>
+            <bvar>
+              <ci> PI3K </ci>
+            </bvar>
+            <bvar>
+              <ci> _kPI3KPhosByGF </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> _kPI3KPhosByGF </ci>
+              <ci> PI3K </ci>
+              <ci> GrowthFactors </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition id="Function_for_PI3K_R2" name="Function for PI3K_R2">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> _kPI3KDephosByS6K </ci>
+            </bvar>
+            <bvar>
+              <ci> pPI3K </ci>
+            </bvar>
+            <bvar>
+              <ci> pS6K </ci>
+            </bvar>
+            <apply>
+              <times/>
+              <ci> _kPI3KDephosByS6K </ci>
+              <ci> pPI3K </ci>
+              <ci> pS6K </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
     </listOfFunctionDefinitions>
     <listOfUnitDefinitions>
       <unitDefinition id="time" name="time">
@@ -944,8 +880,6 @@
       <species id="TGFbR_Cav" name="TGFbR_Cav" compartment="Cell" initialConcentration="9.66718661034664" boundaryCondition="false" constant="false"/>
       <species id="Smad2" name="Smad2" compartment="Cell" initialConcentration="49.6779" boundaryCondition="false" constant="false"/>
       <species id="pSmad2" name="pSmad2" compartment="Cell" initialConcentration="0.500563" boundaryCondition="false" constant="false"/>
-      <species id="pSmad2n" name="pSmad2n" compartment="Cell" initialConcentration="0.0447836" boundaryCondition="false" constant="false"/>
-      <species id="Smad2n" name="Smad2n" compartment="Cell" initialConcentration="49.7768" boundaryCondition="false" constant="false"/>
       <species id="Mek" name="Mek" compartment="Cell" initialConcentration="252.876273823102" boundaryCondition="false" constant="false"/>
       <species id="pMek" name="pMek" compartment="Cell" initialConcentration="56.0642557607438" boundaryCondition="false" constant="false"/>
       <species id="Erk" name="Erk" compartment="Cell" initialConcentration="183.331905604514" boundaryCondition="false" constant="false"/>
@@ -964,17 +898,16 @@
       <species id="ppErk" name="ppErk" compartment="Cell" initialConcentration="43.0862638108839" boundaryCondition="false" constant="false"/>
     </listOfSpecies>
     <listOfParameters>
-      <parameter id="Smad2Tot" name="Smad2Tot" value="100.0000466" constant="false"/>
-      <parameter id="pSmad2Tot" name="pSmad2Tot" value="0.5453466" constant="false"/>
-      <parameter id="kTGFbOn" name="kTGFbOn" value="0.1" constant="true"/>
+      <parameter id="Smad2Tot" name="Smad2Tot" value="50.178463" constant="false"/>
+      <parameter id="_kTGFbOn" name="_kTGFbOn" value="7.74093146610406" constant="true"/>
       <parameter id="TGFb" name="TGFb" value="0.005" constant="false"/>
-      <parameter id="kTGFbOff" name="kTGFbOff" value="0.04" constant="true"/>
-      <parameter id="kTGFbRIntern" name="kTGFbRIntern" value="0.3333333333" constant="true"/>
-      <parameter id="kTGFbRRecyc" name="kTGFbRRecyc" value="0.03333333333" constant="true"/>
+      <parameter id="kTGFbOff" name="kTGFbOff" value="1" constant="true"/>
+      <parameter id="kTGFbRIntern" name="kTGFbRIntern" value="0.33" constant="true"/>
+      <parameter id="kTGFbRRecyc" name="kTGFbRRecyc" value="0.033" constant="true"/>
       <parameter id="kSmad2Phos_km" name="kSmad2Phos_km" value="50" constant="true"/>
-      <parameter id="kSmad2Phos_kcat" name="kSmad2Phos_kcat" value="0.00183203009996919" constant="true"/>
+      <parameter id="_kSmad2Phos_kcat" name="_kSmad2Phos_kcat" value="2.1183497945494" constant="true"/>
       <parameter id="kSmad2Dephos_km" name="kSmad2Dephos_km" value="60" constant="true"/>
-      <parameter id="kSmad2Dephos_Vmax" name="kSmad2Dephos_Vmax" value="0.00987092971652532" constant="true"/>
+      <parameter id="kSmad2Dephos_Vmax" name="kSmad2Dephos_Vmax" value="65" constant="true"/>
       <parameter id="GrowthFactors" name="GrowthFactors" value="1" constant="false"/>
       <parameter id="kRafPhos_km" name="kRafPhos_km" value="10" constant="true"/>
       <parameter id="kRafPhos_ki" name="kRafPhos_ki" value="3.5" constant="true"/>
@@ -983,44 +916,41 @@
       <parameter id="kRafDephos_km" name="kRafDephos_km" value="8" constant="true"/>
       <parameter id="kRafDephosVmax" name="kRafDephosVmax" value="3602.5" constant="true"/>
       <parameter id="kMekPhos_km1" name="kMekPhos_km1" value="15" constant="true"/>
-      <parameter id="kMekPhos_ki1" name="kMekPhos_ki1" value="0.25" constant="true"/>
-      <parameter id="kMekPhos_kcat1" name="kMekPhos_kcat1" value="0.00182215174221624" constant="true"/>
+      <parameter id="_kMekPhos_ki" name="_kMekPhos_ki" value="4.0101418901747" constant="true"/>
+      <parameter id="kMekPhos_kcat" name="kMekPhos_kcat" value="90" constant="true"/>
       <parameter id="AZD" name="AZD" value="0" constant="false"/>
-      <parameter id="kMekDephos_km1" name="kMekDephos_km1" value="15" constant="true"/>
-      <parameter id="kMekDephos_Vmax1" name="kMekDephos_Vmax1" value="2700" constant="true"/>
+      <parameter id="kMekDephos_km" name="kMekDephos_km" value="15" constant="true"/>
+      <parameter id="kMekDephos_Vmax" name="kMekDephos_Vmax" value="2700" constant="true"/>
       <parameter id="kErkPhos_km1" name="kErkPhos_km1" value="50" constant="true"/>
-      <parameter id="kErkPhos_kcat1" name="kErkPhos_kcat1" value="4.07362596011106" constant="true"/>
-      <parameter id="kErkDephos_km1" name="kErkDephos_km1" value="15" constant="true"/>
-      <parameter id="kErkDephos_Vmax1" name="kErkDephos_Vmax1" value="1800" constant="true"/>
-      <parameter id="kPI3KPhosByGF" name="kPI3KPhosByGF" value="0.0236645824440146" constant="true"/>
-      <parameter id="kPI3KDephosByS6K" name="kPI3KDephosByS6K" value="14.2862646598184" constant="true"/>
+      <parameter id="kErkPhos_kcat" name="kErkPhos_kcat" value="200" constant="true"/>
+      <parameter id="kErkDephos_km" name="kErkDephos_km" value="15" constant="true"/>
+      <parameter id="kErkDephos_Vmax" name="kErkDephos_Vmax" value="1800" constant="true"/>
+      <parameter id="_kPI3KPhosByGF" name="_kPI3KPhosByGF" value="672.299985643941" constant="true"/>
+      <parameter id="_kPI3KDephosByS6K" name="_kPI3KDephosByS6K" value="0.0382123386447906" constant="true"/>
       <parameter id="kAktPhos_km" name="kAktPhos_km" value="12.5" constant="true"/>
-      <parameter id="kAktPhos_ki" name="kAktPhos_ki" value="0.25387984777501" constant="true"/>
-      <parameter id="kAktPhos_kcat" name="kAktPhos_kcat" value="35.3455388284589" constant="true"/>
+      <parameter id="_kAktPhos_ki" name="_kAktPhos_ki" value="10.7875518743927" constant="true"/>
+      <parameter id="_kAktPhos_kcat" name="_kAktPhos_kcat" value="0.0176031859827202" constant="true"/>
       <parameter id="MK2206" name="MK2206" value="0" constant="true"/>
       <parameter id="kAktDephos_km" name="kAktDephos_km" value="15" constant="true"/>
       <parameter id="kAktDephos_Vmax" name="kAktDephos_Vmax" value="30" constant="true"/>
-      <parameter id="kmTORC1Phos_km" name="kmTORC1Phos_km" value="14.7957493443283" constant="true"/>
-      <parameter id="kmTORC1Phos_ki" name="kmTORC1Phos_ki" value="0.0816473300345048" constant="true"/>
-      <parameter id="kmTORC1Phos_kcat" name="kmTORC1Phos_kcat" value="0.35" constant="true"/>
+      <parameter id="kmTORC1Phos_km" name="kmTORC1Phos_km" value="3" constant="true"/>
+      <parameter id="_kmTORC1Phos_ki" name="_kmTORC1Phos_ki" value="2.79674837924445" constant="true"/>
+      <parameter id="_kmTORC1Phos_kcat" name="_kmTORC1Phos_kcat" value="4.832575623796" constant="true"/>
       <parameter id="Everolimus" name="Everolimus" value="1" constant="true"/>
       <parameter id="kmTORC1Dephos_km" name="kmTORC1Dephos_km" value="100" constant="true"/>
-      <parameter id="kmTORC1Dephos_Vmax" name="kmTORC1Dephos_Vmax" value="1" constant="true"/>
+      <parameter id="_kmTORC1Dephos_Vmax" name="_kmTORC1Dephos_Vmax" value="1.52477886626567" constant="true"/>
       <parameter id="kS6KPhosBymTORC1_km" name="kS6KPhosBymTORC1_km" value="100" constant="true"/>
-      <parameter id="kS6KPhosBymTORC1_kcat" name="kS6KPhosBymTORC1_kcat" value="0.564311306278601" constant="true"/>
+      <parameter id="_kS6KPhosBymTORC1_kcat" name="_kS6KPhosBymTORC1_kcat" value="0.426608545820289" constant="true"/>
       <parameter id="kS6KDephos_km" name="kS6KDephos_km" value="10" constant="true"/>
       <parameter id="kS6KDephos_Vmax" name="kS6KDephos_Vmax" value="50" constant="true"/>
       <parameter id="kRafPhosByTGFbR_km" name="kRafPhosByTGFbR_km" value="25" constant="true"/>
-      <parameter id="kRafPhosByTGFbR_kcat" name="kRafPhosByTGFbR_kcat" value="0.00615817757384104" constant="true"/>
+      <parameter id="_kRafPhosByTGFbR_kcat" name="_kRafPhosByTGFbR_kcat" value="5.43000916364" constant="true"/>
       <parameter id="kRafPhosByPI3K_km" name="kRafPhosByPI3K_km" value="50" constant="true"/>
-      <parameter id="kRafPhosByPI3K_kcat" name="kRafPhosByPI3K_kcat" value="0.00688252172627295" constant="true"/>
+      <parameter id="_kRafPhosByPI3K_kcat" name="_kRafPhosByPI3K_kcat" value="165.627571357089" constant="true"/>
       <parameter id="kPI3KPhosByTGFbR_km" name="kPI3KPhosByTGFbR_km" value="10" constant="true"/>
-      <parameter id="kPI3KPhosByTGFbR_kcat" name="kPI3KPhosByTGFbR_kcat" value="3.39066745271944" constant="true"/>
-      <parameter id="kPI3KDephosByErk" name="kPI3KDephosByErk" value="0.112816289516761" constant="true"/>
-      <parameter id="kSmad2PhosByAkt_km" name="kSmad2PhosByAkt_km" value="40" constant="true"/>
-      <parameter id="kSmad2PhosByAkt_kcat" name="kSmad2PhosByAkt_kcat" value="0.0139866934761631" constant="true"/>
-      <parameter id="kSmad2DephosByErk_km" name="kSmad2DephosByErk_km" value="30" constant="true"/>
-      <parameter id="kSmad2DephosByErk_kcat" name="kSmad2DephosByErk_kcat" value="58.4701016813085" constant="true"/>
+      <parameter id="_kPI3KPhosByTGFbR_kcat" name="_kPI3KPhosByTGFbR_kcat" value="6.42227804365203" constant="true"/>
+      <parameter id="_kPI3KDephosByErk" name="_kPI3KDephosByErk" value="1.78776660213775" constant="true"/>
+      <parameter id="_kmTORCPhosBasal_km" name="_kmTORCPhosBasal_km" value="262.350786397515" constant="true"/>
     </listOfParameters>
     <listOfRules>
       <assignmentRule variable="Smad2Tot">
@@ -1029,17 +959,6 @@
             <plus/>
             <ci> pSmad2 </ci>
             <ci> Smad2 </ci>
-            <ci> pSmad2n </ci>
-            <ci> Smad2n </ci>
-          </apply>
-        </math>
-      </assignmentRule>
-      <assignmentRule variable="pSmad2Tot">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <apply>
-            <plus/>
-            <ci> pSmad2 </ci>
-            <ci> pSmad2n </ci>
           </apply>
         </math>
       </assignmentRule>
@@ -1061,7 +980,7 @@
                 <ci> Function_for_TGF_R1 </ci>
                 <ci> TGFb </ci>
                 <ci> TGFbR </ci>
-                <ci> kTGFbOn </ci>
+                <ci> _kTGFbOn </ci>
               </apply>
             </apply>
           </math>
@@ -1176,7 +1095,7 @@
                 <ci> MMWithKcat_1 </ci>
                 <ci> Smad2 </ci>
                 <ci> TGFbR_EE </ci>
-                <ci> kSmad2Phos_kcat </ci>
+                <ci> _kSmad2Phos_kcat </ci>
                 <ci> kSmad2Phos_km </ci>
               </apply>
             </apply>
@@ -1272,11 +1191,11 @@
               <times/>
               <ci> Cell </ci>
               <apply>
-                <ci> CompetitiveInhibition_1 </ci>
+                <ci> CompetitiveInhibitionWithKcat_1 </ci>
                 <ci> AZD </ci>
                 <ci> Mek </ci>
-                <ci> kMekPhos_kcat1 </ci>
-                <ci> kMekPhos_ki1 </ci>
+                <ci> _kMekPhos_ki </ci>
+                <ci> kMekPhos_kcat </ci>
                 <ci> kMekPhos_km1 </ci>
                 <ci> pRaf </ci>
               </apply>
@@ -1300,10 +1219,10 @@
               <times/>
               <ci> Cell </ci>
               <apply>
-                <ci> CompetitiveInhibition_2 </ci>
+                <ci> CompetitiveInhibitionWithKcat_2 </ci>
                 <ci> AZD </ci>
-                <ci> kMekPhos_kcat1 </ci>
-                <ci> kMekPhos_ki1 </ci>
+                <ci> _kMekPhos_ki </ci>
+                <ci> kMekPhos_kcat </ci>
                 <ci> kMekPhos_km1 </ci>
                 <ci> pMek </ci>
                 <ci> pRaf </ci>
@@ -1326,8 +1245,8 @@
               <ci> Cell </ci>
               <apply>
                 <ci> MM_3 </ci>
-                <ci> kMekDephos_Vmax1 </ci>
-                <ci> kMekDephos_km1 </ci>
+                <ci> kMekDephos_Vmax </ci>
+                <ci> kMekDephos_km </ci>
                 <ci> ppMek </ci>
               </apply>
             </apply>
@@ -1348,8 +1267,8 @@
               <ci> Cell </ci>
               <apply>
                 <ci> MM_4 </ci>
-                <ci> kMekDephos_Vmax1 </ci>
-                <ci> kMekDephos_km1 </ci>
+                <ci> kMekDephos_Vmax </ci>
+                <ci> kMekDephos_km </ci>
                 <ci> pMek </ci>
               </apply>
             </apply>
@@ -1374,7 +1293,7 @@
               <apply>
                 <ci> MMWithKcat_2 </ci>
                 <ci> Erk </ci>
-                <ci> kErkPhos_kcat1 </ci>
+                <ci> kErkPhos_kcat </ci>
                 <ci> kErkPhos_km1 </ci>
                 <ci> ppMek </ci>
               </apply>
@@ -1399,7 +1318,7 @@
               <ci> Cell </ci>
               <apply>
                 <ci> MMWithKcat_3 </ci>
-                <ci> kErkPhos_kcat1 </ci>
+                <ci> kErkPhos_kcat </ci>
                 <ci> kErkPhos_km1 </ci>
                 <ci> pErk </ci>
                 <ci> ppMek </ci>
@@ -1422,8 +1341,8 @@
               <ci> Cell </ci>
               <apply>
                 <ci> MM_5 </ci>
-                <ci> kErkDephos_Vmax1 </ci>
-                <ci> kErkDephos_km1 </ci>
+                <ci> kErkDephos_Vmax </ci>
+                <ci> kErkDephos_km </ci>
                 <ci> ppErk </ci>
               </apply>
             </apply>
@@ -1444,8 +1363,8 @@
               <ci> Cell </ci>
               <apply>
                 <ci> MM_6 </ci>
-                <ci> kErkDephos_Vmax1 </ci>
-                <ci> kErkDephos_km1 </ci>
+                <ci> kErkDephos_Vmax </ci>
+                <ci> kErkDephos_km </ci>
                 <ci> pErk </ci>
               </apply>
             </apply>
@@ -1468,7 +1387,7 @@
                 <ci> Function_for_PI3K_R1 </ci>
                 <ci> GrowthFactors </ci>
                 <ci> PI3K </ci>
-                <ci> kPI3KPhosByGF </ci>
+                <ci> _kPI3KPhosByGF </ci>
               </apply>
             </apply>
           </math>
@@ -1491,7 +1410,7 @@
               <ci> Cell </ci>
               <apply>
                 <ci> Function_for_PI3K_R2 </ci>
-                <ci> kPI3KDephosByS6K </ci>
+                <ci> _kPI3KDephosByS6K </ci>
                 <ci> pPI3K </ci>
                 <ci> pS6K </ci>
               </apply>
@@ -1515,11 +1434,11 @@
               <times/>
               <ci> Cell </ci>
               <apply>
-                <ci> CompetitiveInhibition_3 </ci>
+                <ci> CompetitiveInhibitionWithKcat_3 </ci>
                 <ci> Akt </ci>
                 <ci> MK2206 </ci>
-                <ci> kAktPhos_kcat </ci>
-                <ci> kAktPhos_ki </ci>
+                <ci> _kAktPhos_kcat </ci>
+                <ci> _kAktPhos_ki </ci>
                 <ci> kAktPhos_km </ci>
                 <ci> pPI3K </ci>
               </apply>
@@ -1565,10 +1484,10 @@
               <times/>
               <ci> Cell </ci>
               <apply>
-                <ci> CompetitiveInhibition_4 </ci>
+                <ci> CompetitiveInhibitionWithKcat_4 </ci>
                 <ci> Everolimus </ci>
-                <ci> kmTORC1Phos_kcat </ci>
-                <ci> kmTORC1Phos_ki </ci>
+                <ci> _kmTORC1Phos_kcat </ci>
+                <ci> _kmTORC1Phos_ki </ci>
                 <ci> kmTORC1Phos_km </ci>
                 <ci> mTORC1 </ci>
                 <ci> pAkt </ci>
@@ -1591,7 +1510,7 @@
               <ci> Cell </ci>
               <apply>
                 <ci> MM_8 </ci>
-                <ci> kmTORC1Dephos_Vmax </ci>
+                <ci> _kmTORC1Dephos_Vmax </ci>
                 <ci> kmTORC1Dephos_km </ci>
                 <ci> pmTORC1 </ci>
               </apply>
@@ -1617,7 +1536,7 @@
               <apply>
                 <ci> MMWithKcat_4 </ci>
                 <ci> S6K </ci>
-                <ci> kS6KPhosBymTORC1_kcat </ci>
+                <ci> _kS6KPhosBymTORC1_kcat </ci>
                 <ci> kS6KPhosBymTORC1_km </ci>
                 <ci> pmTORC1 </ci>
               </apply>
@@ -1666,7 +1585,7 @@
                 <ci> MMWithKcat_5 </ci>
                 <ci> Raf </ci>
                 <ci> TGFbR_Cav </ci>
-                <ci> kRafPhosByTGFbR_kcat </ci>
+                <ci> _kRafPhosByTGFbR_kcat </ci>
                 <ci> kRafPhosByTGFbR_km </ci>
               </apply>
             </apply>
@@ -1691,7 +1610,7 @@
               <apply>
                 <ci> MMWithKcat_6 </ci>
                 <ci> Raf </ci>
-                <ci> kRafPhosByPI3K_kcat </ci>
+                <ci> _kRafPhosByPI3K_kcat </ci>
                 <ci> kRafPhosByPI3K_km </ci>
                 <ci> pPI3K </ci>
               </apply>
@@ -1718,7 +1637,7 @@
                 <ci> MMWithKcat_7 </ci>
                 <ci> PI3K </ci>
                 <ci> TGFbR_Cav </ci>
-                <ci> kPI3KPhosByTGFbR_kcat </ci>
+                <ci> _kPI3KPhosByTGFbR_kcat </ci>
                 <ci> kPI3KPhosByTGFbR_km </ci>
               </apply>
             </apply>
@@ -1742,60 +1661,8 @@
               <ci> Cell </ci>
               <apply>
                 <ci> Function_for_CrossTalkR4 </ci>
-                <ci> kPI3KDephosByErk </ci>
+                <ci> _kPI3KDephosByErk </ci>
                 <ci> pPI3K </ci>
-                <ci> ppErk </ci>
-              </apply>
-            </apply>
-          </math>
-        </kineticLaw>
-      </reaction>
-      <reaction id="CrossTalkR5" name="CrossTalkR5" reversible="false">
-        <listOfReactants>
-          <speciesReference species="Smad2" stoichiometry="1"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="pSmad2" stoichiometry="1"/>
-        </listOfProducts>
-        <listOfModifiers>
-          <modifierSpeciesReference species="pAkt"/>
-        </listOfModifiers>
-        <kineticLaw>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-              <times/>
-              <ci> Cell </ci>
-              <apply>
-                <ci> MMWithKcat_8 </ci>
-                <ci> Smad2 </ci>
-                <ci> kSmad2PhosByAkt_kcat </ci>
-                <ci> kSmad2PhosByAkt_km </ci>
-                <ci> pAkt </ci>
-              </apply>
-            </apply>
-          </math>
-        </kineticLaw>
-      </reaction>
-      <reaction id="CrossTalkR6" name="CrossTalkR6" reversible="false">
-        <listOfReactants>
-          <speciesReference species="pSmad2n" stoichiometry="1"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="Smad2n" stoichiometry="1"/>
-        </listOfProducts>
-        <listOfModifiers>
-          <modifierSpeciesReference species="ppErk"/>
-        </listOfModifiers>
-        <kineticLaw>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-              <times/>
-              <ci> Cell </ci>
-              <apply>
-                <ci> MMWithKcat_9 </ci>
-                <ci> kSmad2DephosByErk_kcat </ci>
-                <ci> kSmad2DephosByErk_km </ci>
-                <ci> pSmad2n </ci>
                 <ci> ppErk </ci>
               </apply>
             </apply>

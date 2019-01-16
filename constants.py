@@ -1,28 +1,21 @@
 import os, glob
 from collections import OrderedDict
+import subprocess
 
-MODEL_CODE                      = 'E_A_48'
+import logging
+mpl_logger = logging.getLogger('matplotlib')
+mpl_logger.setLevel(logging.WARNING)
 
-CURRENT_SPECIES = [
-    'pSmad2Tot', 'pSmad2', 'pSmad2n', 'Smad2n', 'Smad2Tot',
-    'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
-]
-
-CURRENT_SPECIES = [
-    'pSmad2',
-    'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
-]
-# CURRENT_SPECIES = ['pSmad2Tot']
-# CURRENT_SPECIES = [
-#     'pSmad2Tot', 'pSmad2', 'pSmad2n', 'Smad2n', 'Smad2Tot',
-#
-# ]
+CURRENT_MODEL_CODE              = 'E'
 
 SIMULATE_TIME_SERIES            = False
-SIMULATE_BAR_GRAPHS             = True
-OPEN_CONDITION_WITH_COPASI      = False
-CONFIGURE_PARAMETER_ESTIMATION  = False
-GET_PARAMETERS_FROM_COPASI      = False
+SIMULATE_BAR_GRAPHS             = False
+OPEN_CONDITION_WITH_COPASI      = True
+PARAMETER_ESTIMATION            = False
+RUN_PYCOTOOLS_VIZ               = False
+GET_PARAMETERS_FROM_COPASI      = True
+
+
 
 QUALITATIVE_FITTING             = False
 
@@ -34,29 +27,28 @@ GET_ODES_WITH_ANTIMONY          = False
 GET_MODEL_AS_SBML               = False
 SIMULATE_INPUTS                 = False
 
-FREE_PARAMETERS = OrderedDict({
-            'kmTORC1Phos_ki': 0.001,
-            'kPI3KPhosByTGFbR_kcat': 50.0,
-            'kAktDephos_Vmax': 31.1252344504785,
-            'kPI3KDephosByErk': 5.014,
-            'kS6KPhosBymTORC1_kcat': 2.77975221288272,
-            'kPI3KPhosByGF': 0.239474698704283,
-            'kPI3KDephosByS6K': 25.0,
-            'kErkPhos_kcat1': 85.0103161451182,
-            'kmTORC1Dephos_Vmax': 1.0,
-            'kS6KDephos_Vmax': 50.0,
-            'kAktPhos_kcat': 2.9215,
-            'kRafPhos_ki': 3.5,
-            'kRafPhosByTGFbR_kcat': 265.0,
-            'kRafPhosByPI3K_kcat': 50.0,
-            'kMekPhos_kcat1': 149.5209856,
-            'kMekPhos_ki1': 0.25,
-            'kTGFbOn': 0.100647860357268,
-            'kSmad2PhosByAkt_kcat': 1.0,
-            'kpSmad2Dephos_Vmax': 58.8712661228653,
-            'kAktPhos_ki': 0.01,
-            'kmTORC1Phos_kcat': 0.1,
-        })
+
+
+
+CURRENT_SPECIES = [
+    'pSmad2', 'pSmad2n', 'Smad2n',
+    'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
+]
+
+CURRENT_SPECIES = [
+    'pSmad2',
+    'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
+]
+
+# CURRENT_SPECIES = ['pS6K']
+
+# CURRENT_SPECIES = ['pSmad2Tot']
+# CURRENT_SPECIES = [
+#     'pSmad2Tot', 'pSmad2', 'pSmad2n', 'Smad2n', 'Smad2Tot',
+#
+# ]
+
+
 
 """
 These are arguments for the conditions simulation functions. 
@@ -101,7 +93,7 @@ MODEL_SPECIES = ['TGFbR',   'TGFbR_a',  'TGFbR_EE', 'TGFbR_Cav',
                  'Mek',     'pMek',     'ppMek',    'Erk',        'pErk',
                  'ppErk',   'PI3K',     'pPI3K',    'Akt',        'pAkt',
                  'mTORC1',  'pmTORC1',  'S6K',      'pS6K',
-                 'pSmad2Tot', 'pSmad2n', 'Smad2Tot', 'Smad2n'
+
                  ]
 
 MODEL_INPUTS = ['TGFb', 'Everolimus', 'MK2206', 'AZD', 'GrowthFactors']
@@ -114,13 +106,33 @@ ALL_CONDITIONS = ['D', 'T', 'E', 'E_A_72', 'E_A_48',
                   'E_M_48', 'E_M_24', 'E_M_1.25', 'M_72',
                   'M_48', 'M_24', 'M_1.25']
 
+## on windows
+# WORKING_DIRECTORY = r'D:\MesiSTRAT\CrossTalkModel'
+## logic for if running in slurm environment
+CLUSTER = False
 
-WORKING_DIRECTORY = r'D:\MesiSTRAT\CrossTalkModel'
-COPASI_FILENAME = os.path.join(WORKING_DIRECTORY, 'KatrinesTopology.cps')
+# try:
+#     subprocess.check_call(['sbatch'])
+# except subprocess.CalledProcessError:
+#     CLUSTER = False
+#
+# print(CLUSTER)
+
+if CLUSTER:
+    WORKING_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel'
+else:
+    WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel'
+print(WORKING_DIRECTORY)
+
+
+DATA_DIR = os.path.join(WORKING_DIRECTORY, 'data')
+# COPASI_FILENAME = os.path.join(WORKING_DIRECTORY, 'KatrinesTopology.cps')
 GRAPHS_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'SimulationGraphs')
-PICKLE_PATH = os.path.join(WORKING_DIRECTORY, 'models.pickle')
+# PICKLE_PATH = os.path.join(WORKING_DIRECTORY, 'models.pickle')
 
-COPASI_DATA_DIR = os.path.join(WORKING_DIRECTORY, 'CopasiDataFiles')
+COPASI_MODELS_DIR = os.path.join(WORKING_DIRECTORY, 'CopasiModelFiles')
+
+COPASI_DATA_DIR = os.path.join(DATA_DIR, 'CopasiDataFiles')
 
 DATA_FILES = glob.glob(os.path.join(COPASI_DATA_DIR, '*.csv'))
 
@@ -128,8 +140,23 @@ for i in DATA_FILES:
     assert os.path.isfile(i)
 
 
-OTHER_COPASI_MODEL = r'D:\MesiSTRAT\CrossTalkModel\copasi_models\E_A_48_2.cps'
+# OTHER_COPASI_MODEL = r'D:\MesiSTRAT\CrossTalkModel\copasi_models\E_A_48_2.cps'
+OTHER_COPASI_MODEL = os.path.join(COPASI_MODELS_DIR, 'E/E_other.cps')
 
+assert os.path.isfile(OTHER_COPASI_MODEL)
+
+# FIT_DIR = os.path.join(WORKING_DIRECTORY, 'fitting')
+# FIT1_DIR = os.path.join(FIT_DIR, 'fit1')
+# FIT_COPASI_FILE = os.path.join(FIT1_DIR, 'CrossTalkBaseModel.cps')
+
+# BASE_COPASI_MODEL = os.path.join(WORKING_DIRECTORY, 'CrossTalkModelBase.cps')
+
+## maximum values in data files:
+
+PAKT_MAX = 19.72869654
+PERK_MAX = 45.73685166
+PS6K_MAX = 18.05521872
+PSMAD2_MAX = 17.77155917
 
 
 
