@@ -121,7 +121,7 @@ def main(models, CXPB=0.3, MUTPB=0.01, NGEN=100):
 
     for g in range(NGEN):
         offspring = toolbox.select(pop, k=len(pop), tournsize=len(pop)//5)
-        offspring = list(map(toolbox.clone, offspring))
+        offspring = map(toolbox.clone, offspring)
 
         for child1, child2 in zip(offspring[::2], offspring[1::2]):
             if random.random() < CXPB:
@@ -147,12 +147,12 @@ def main(models, CXPB=0.3, MUTPB=0.01, NGEN=100):
 
         # print(fits_for_gen)
 
-        print(("Iteration={}, \tlength={}, \tmean={}, \tmin={}, \tmax={}".format(
+        print("Iteration={}, \tlength={}, \tmean={}, \tmin={}, \tmax={}".format(
             g, len(pop), sum(fits_for_gen) / len(pop), min(fits_for_gen), max(fits_for_gen)
-        )))
+        ))
     return pop
 
-print((main(model_list)))
+print(main(model_list))
 #
 # x = model.simulate(0, 1, 10)
 # '''

@@ -1,5 +1,5 @@
 import unittest
-from .cross_talk_model import *
+from cross_talk_model import *
 
 
 class TestTGFbQualitative(unittest.TestCase):
