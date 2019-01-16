@@ -960,7 +960,7 @@
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa193" species="s13">
 <celldesigner:activity>inactive</celldesigner:activity>
-<celldesigner:bounds x="2685.8333333333335" y="604.0" w="150.0" h="80.0"/>
+<celldesigner:bounds x="2745.8333333333335" y="584.0" w="150.0" h="80.0"/>
 <celldesigner:font size="30"/>
 <celldesigner:view state="usual"/>
 <celldesigner:usualView>
@@ -968,6 +968,25 @@
 <celldesigner:boxSize width="150.0" height="80.0"/>
 <celldesigner:singleLine width="1.0"/>
 <celldesigner:paint color="ffff3333" scheme="Gradation"/>
+</celldesigner:usualView>
+<celldesigner:briefView>
+<celldesigner:innerPosition x="0.0" y="0.0"/>
+<celldesigner:boxSize width="80.0" height="60.0"/>
+<celldesigner:singleLine width="1.0"/>
+<celldesigner:paint color="3fff0000" scheme="Color"/>
+</celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
+</celldesigner:speciesAlias>
+<celldesigner:speciesAlias id="sa194" species="s47">
+<celldesigner:activity>inactive</celldesigner:activity>
+<celldesigner:bounds x="2863.75" y="903.0" w="150.0" h="80.0"/>
+<celldesigner:font size="30"/>
+<celldesigner:view state="usual"/>
+<celldesigner:usualView>
+<celldesigner:innerPosition x="0.0" y="0.0"/>
+<celldesigner:boxSize width="150.0" height="80.0"/>
+<celldesigner:singleLine width="1.0"/>
+<celldesigner:paint color="ffffff33" scheme="Gradation"/>
 </celldesigner:usualView>
 <celldesigner:briefView>
 <celldesigner:innerPosition x="0.0" y="0.0"/>
@@ -1503,6 +1522,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:listOfCatalyzedReactions>
 <celldesigner:catalyzed reaction="re133"/>
 <celldesigner:catalyzed reaction="re140"/>
+<celldesigner:catalyzed reaction="re155"/>
 </celldesigner:listOfCatalyzedReactions>
 </celldesigner:extension>
 </annotation>
@@ -1738,7 +1758,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
-<celldesigner:modification type="CATALYSIS" modifiers="s4" aliases="sa36" targetLineIndex="-1,6" editPoints="0.3161536090139734,-0.33150599526006097 0.8398447030715519,0.16793242142647613">
+<celldesigner:modification type="CATALYSIS" modifiers="s4" aliases="sa36" targetLineIndex="-1,6" editPoints="0.31615360901397294,-0.33150599526006097 0.8398447030715519,0.16793242142647613">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="horizontal"/>
@@ -1751,7 +1771,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ffff0099"/>
 </celldesigner:modification>
-<celldesigner:modification type="CATALYSIS" modifiers="s15" aliases="sa31" targetLineIndex="-1,7" editPoints="0.47353381364029246,0.1165066063325837 0.5306125737383649,-0.11548644365758065">
+<celldesigner:modification type="CATALYSIS" modifiers="s15" aliases="sa31" targetLineIndex="-1,7" editPoints="0.4735338136402927,0.1165066063325837 0.5306125737383649,-0.11548644365758065">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="horizontal"/>
@@ -1882,7 +1902,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
-<celldesigner:modification type="CATALYSIS" modifiers="s13" aliases="sa28" targetLineIndex="-1,6" editPoints="0.9536943359731538,0.46733847661451433 1.1473266322217135,0.0721944141536568">
+<celldesigner:modification type="CATALYSIS" modifiers="s13" aliases="sa28" targetLineIndex="-1,6" editPoints="0.9536943359731533,0.46733847661451433 1.1473266322217135,0.0721944141536568">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="horizontal"/>
@@ -2110,7 +2130,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
-<celldesigner:modification type="CATALYSIS" modifiers="s10" aliases="sa21" targetLineIndex="-1,5" editPoints="-0.09593163966529561,-0.25335250403069626 0.9552268530526155,-0.6513724807439012 1.176554772776494,-0.06685226541566208">
+<celldesigner:modification type="CATALYSIS" modifiers="s10" aliases="sa21" targetLineIndex="-1,5" editPoints="-0.09593163966529561,-0.25335250403069626 0.9552268530526152,-0.6513724807439012 1.176554772776494,-0.06685226541566208">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="vertical"/>
@@ -2481,7 +2501,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ff000000"/>
 </celldesigner:modification>
-<celldesigner:modification type="CATALYSIS" modifiers="s10" aliases="sa21" targetLineIndex="-1,5" editPoints="0.07173194999205545,-0.19253029492426554 0.9498399862921527,0.13463069432305508">
+<celldesigner:modification type="CATALYSIS" modifiers="s10" aliases="sa21" targetLineIndex="-1,5" editPoints="0.07173194999205545,-0.19253029492426466 0.9498399862921527,0.13463069432305508">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="vertical"/>
@@ -2879,7 +2899,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ffff0066"/>
 </celldesigner:modification>
-<celldesigner:modification type="CATALYSIS" modifiers="s47" aliases="sa191" targetLineIndex="-1,5" editPoints="-0.007217635354193064,-0.0232376673825814 1.001900559891617,-0.3366704677860245 1.0971028543389716,-0.03016021285318063">
+<celldesigner:modification type="CATALYSIS" modifiers="s47" aliases="sa191" targetLineIndex="-1,5" editPoints="-0.007217635354193064,-0.02323766738258129 1.0019005598916175,-0.3366704677860246 1.097102854338972,-0.030160212853180796">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="vertical"/>
@@ -2952,7 +2972,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
-<celldesigner:modification type="CATALYSIS" modifiers="s15" aliases="sa174" targetLineIndex="-1,2" editPoints="0.046383848536345695,0.14179285848745748 0.9497179585739648,-0.15370941845835806">
+<celldesigner:modification type="CATALYSIS" modifiers="s15" aliases="sa174" targetLineIndex="-1,2" editPoints="0.046383848536345695,0.1417928584874566 0.9497179585739648,-0.15370941845835895">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="vertical"/>
@@ -3302,7 +3322,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
-<celldesigner:modification type="CATALYSIS" modifiers="s29" aliases="sa180" targetLineIndex="-1,4" editPoints="0.1967636270237758,-0.4330354906934817 1.0256326712410457,-0.05641213539588552">
+<celldesigner:modification type="CATALYSIS" modifiers="s29" aliases="sa180" targetLineIndex="-1,4" editPoints="0.1967636270237758,-0.4330354906934817 1.0256326712410448,-0.05641213539588552">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="vertical"/>
@@ -3446,7 +3466,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
-<celldesigner:modification type="CATALYSIS" modifiers="s45" aliases="sa185" targetLineIndex="-1,2" editPoints="0.26742934467572077,-0.2534061999475661 0.7405245249300183,0.24586940598011253">
+<celldesigner:modification type="CATALYSIS" modifiers="s45" aliases="sa185" targetLineIndex="-1,2" editPoints="0.2674293446757243,-0.2534061999475661 0.7405245249300201,0.24586940598011253">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="vertical"/>
@@ -3694,7 +3714,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
-<celldesigner:modification type="CATALYSIS" modifiers="s46" aliases="sa188" targetLineIndex="-1,2" editPoints="0.7689696987627668,-0.20921237169701 0.8378894034259565,0.04410517402836511">
+<celldesigner:modification type="CATALYSIS" modifiers="s46" aliases="sa188" targetLineIndex="-1,2" editPoints="0.7689696987627677,-0.20921237169701 0.837889403425957,0.04410517402836511">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="vertical"/>
@@ -3759,7 +3779,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
-<celldesigner:modification type="CATALYSIS" modifiers="s46" aliases="sa188" targetLineIndex="-1,2" editPoints="0.7631028029273796,0.22227693144067473 0.8413115403911711,-0.04622284667489929">
+<celldesigner:modification type="CATALYSIS" modifiers="s46" aliases="sa188" targetLineIndex="-1,2" editPoints="0.7631028029273779,0.22227693144067473 0.8413115403911711,-0.04622284667489929">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="vertical"/>
@@ -4151,6 +4171,19 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
+<celldesigner:listOfModification>
+<celldesigner:modification type="CATALYSIS" modifiers="s47" aliases="sa194" targetLineIndex="-1,2">
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s47" alias="sa194">
+<celldesigner:linkAnchor position="N"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+</celldesigner:listOfModification>
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
@@ -4171,6 +4204,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </annotation>
 </speciesReference>
 </listOfProducts>
+<listOfModifiers>
+<modifierSpeciesReference metaid="CDMT00025" species="s47">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa194</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+</listOfModifiers>
 </reaction>
 </listOfReactions>
 </model>
