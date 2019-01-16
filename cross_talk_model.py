@@ -532,6 +532,9 @@ def open_condition_with_copasi(model_string, condition):
     :return:
     """
     copasi_mod = create_condition_with_copasi(model_string, condition)
+    params = get_parameters_from_copasi(copasi_mod)
+    print(params)
+
     copasi_mod.open()
 
 
@@ -552,7 +555,39 @@ def create_condition_with_copasi(model_string, condition):
 
     mod_string = make_condition(model_string, condition)
     copasi_mod = load_model_with_pyco(mod_string, copasi_file)
+
+    global_params = copasi_mod.global_quantities
+    free_params = [i.name for i in global_params if i.name[0] == '_']
     tasks.TimeCourse(copasi_mod, start=0, end=72, step_size=0.1, intervals=720, run=False)
+
+    PE = tasks.MultiParameterEstimation(copasi_mod,
+                                        DATA_FILES,
+                                        copy_number=1,
+                                        pe_number=1,
+                                        metabolites=['pAkt', 'Erk', 'Akt','Smad2','S6K', 'mTORC1',
+                                                     'Raf', 'PI3K', 'Mek', 'pErk', 'ppErk',
+                                                     'pSmad2', 'pS6K', 'pPI3K', 'pmTORC1',
+                                                     'pMek', 'ppMek', 'pRaf'],
+                                        global_quantities=free_params,
+                                        run_mode=False,
+                                        randomize_start_values=False,
+                                        method='genetic_algorithm',
+                                        # method='genetic_algorithm',
+                                        number_of_generations=500,
+                                        population_size=50,
+                                        iteration_limit=500,
+                                        swarm_size=75,
+                                        overwrite_config_file=True,
+                                        lower_bound=0.01,
+                                        upper_bound=100
+                                        )
+    PE.write_config_file()
+    PE.setup()
+    # PE.run()
+
+    # PE.model.open()
+    copasi_mod = PE.model
+
     return copasi_mod
 
 
@@ -601,7 +636,7 @@ def configure_parameter_estimation(copasi_mod,
                                         pe_number=pe_number,
                                         metabolites=[],
                                         global_quantities=free_params,
-                                        run_mode='slurm',
+                                        run_mode=False,
                                         method=method,
                                         number_of_generations=number_of_generations,
                                         population_size=population_size,
@@ -1223,6 +1258,7 @@ if __name__ == '__main__':
 
     if GET_PARAMETERS_FROM_COPASI:
         # get_parameters_from_copasi_in_antimony_format(MODEL_CODE)
+        print('These parameters are from "{}"'.format(OTHER_COPASI_MODEL))
         mod = model.Model(OTHER_COPASI_MODEL)
         get_parameters_from_copasi(mod)
 
@@ -1237,19 +1273,13 @@ if __name__ == '__main__':
             mod,
             copy_number=250
         )
-        # PE.model.open()
+        PE.model.open()
 
 
     if RUN_PYCOTOOLS_VIZ:
         run_pycotools_viz(FIT_COPASI_FILE)
         mod = create_condition_with_copasi(CROSS_TALK_MODEL,CURRENT_MODEL_CODE)
 
-
-    phos = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
-            'pPI3K', 'pPI3K', 'pmTORC1', 'pS6K']
-    erk = ['Erk', 'pErk', 'ppErk']
-
-    # pSmad2  =   ['pSmad2Tot']
 
     if SIMULATE_TIME_SERIES:
         for i in CURRENT_SPECIES:

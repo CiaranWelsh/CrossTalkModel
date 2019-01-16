@@ -6,12 +6,14 @@ import logging
 mpl_logger = logging.getLogger('matplotlib')
 mpl_logger.setLevel(logging.WARNING)
 
+CURRENT_MODEL_CODE              = 'E'
+
 SIMULATE_TIME_SERIES            = False
-SIMULATE_BAR_GRAPHS             = True
-OPEN_CONDITION_WITH_COPASI      = False
+SIMULATE_BAR_GRAPHS             = False
+OPEN_CONDITION_WITH_COPASI      = True
 PARAMETER_ESTIMATION            = False
 RUN_PYCOTOOLS_VIZ               = False
-GET_PARAMETERS_FROM_COPASI      = False
+GET_PARAMETERS_FROM_COPASI      = True
 
 
 
@@ -27,10 +29,9 @@ SIMULATE_INPUTS                 = False
 
 
 
-CURRENT_MODEL_CODE                      = 'E'
 
 CURRENT_SPECIES = [
-    'pSmad2Tot', 'pSmad2', 'pSmad2n', 'Smad2n', 'Smad2Tot',
+    'pSmad2', 'pSmad2n', 'Smad2n',
     'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
 ]
 
@@ -92,7 +93,7 @@ MODEL_SPECIES = ['TGFbR',   'TGFbR_a',  'TGFbR_EE', 'TGFbR_Cav',
                  'Mek',     'pMek',     'ppMek',    'Erk',        'pErk',
                  'ppErk',   'PI3K',     'pPI3K',    'Akt',        'pAkt',
                  'mTORC1',  'pmTORC1',  'S6K',      'pS6K',
-                 'Smad2Tot'
+
                  ]
 
 MODEL_INPUTS = ['TGFb', 'Everolimus', 'MK2206', 'AZD', 'GrowthFactors']
@@ -140,7 +141,9 @@ for i in DATA_FILES:
 
 
 # OTHER_COPASI_MODEL = r'D:\MesiSTRAT\CrossTalkModel\copasi_models\E_A_48_2.cps'
-OTHER_COPASI_MODEL = os.path.join(COPASI_MODELS_DIR, 'E_A_48/E_A_48_other.cps')
+OTHER_COPASI_MODEL = os.path.join(COPASI_MODELS_DIR, 'E/E_other.cps')
+
+assert os.path.isfile(OTHER_COPASI_MODEL)
 
 # FIT_DIR = os.path.join(WORKING_DIRECTORY, 'fitting')
 # FIT1_DIR = os.path.join(FIT_DIR, 'fit1')
