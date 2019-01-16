@@ -561,7 +561,7 @@
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa171" species="s6">
 <celldesigner:activity>inactive</celldesigner:activity>
-<celldesigner:bounds x="3064.0" y="753.0" w="150.0" h="80.0"/>
+<celldesigner:bounds x="2975.0" y="750.0" w="150.0" h="80.0"/>
 <celldesigner:font size="30"/>
 <celldesigner:view state="usual"/>
 <celldesigner:usualView>
@@ -637,7 +637,7 @@
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa175" species="s12">
 <celldesigner:activity>inactive</celldesigner:activity>
-<celldesigner:bounds x="2724.326923076923" y="1284.3793225865252" w="150.0" h="80.0"/>
+<celldesigner:bounds x="2696.326923076923" y="1284.3793225865252" w="150.0" h="80.0"/>
 <celldesigner:font size="30"/>
 <celldesigner:view state="usual"/>
 <celldesigner:usualView>
@@ -770,7 +770,7 @@
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa183" species="s20">
 <celldesigner:activity>inactive</celldesigner:activity>
-<celldesigner:bounds x="3267.2884615384614" y="1293.3461538461538" w="204.0" h="73.0"/>
+<celldesigner:bounds x="3211.2884615384614" y="1275.3461538461538" w="204.0" h="73.0"/>
 <celldesigner:font size="30"/>
 <celldesigner:view state="usual"/>
 <celldesigner:usualView>
@@ -998,7 +998,7 @@
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa195" species="s47">
 <celldesigner:activity>inactive</celldesigner:activity>
-<celldesigner:bounds x="2867.0" y="888.0" w="150.0" h="80.0"/>
+<celldesigner:bounds x="2822.0" y="868.0" w="150.0" h="80.0"/>
 <celldesigner:font size="30"/>
 <celldesigner:view state="usual"/>
 <celldesigner:usualView>
@@ -2359,27 +2359,27 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <listOfUnitDefinitions>
 <unitDefinition metaid="substance" id="substance" name="substance">
 <listOfUnits>
-<unit metaid="CDMT00207" kind="mole"/>
+<unit metaid="CDMT00211" kind="mole"/>
 </listOfUnits>
 </unitDefinition>
 <unitDefinition metaid="volume" id="volume" name="volume">
 <listOfUnits>
-<unit metaid="CDMT00208" kind="litre"/>
+<unit metaid="CDMT00220" kind="litre"/>
 </listOfUnits>
 </unitDefinition>
 <unitDefinition metaid="area" id="area" name="area">
 <listOfUnits>
-<unit metaid="CDMT00209" kind="metre" exponent="2"/>
+<unit metaid="CDMT00221" kind="metre" exponent="2"/>
 </listOfUnits>
 </unitDefinition>
 <unitDefinition metaid="length" id="length" name="length">
 <listOfUnits>
-<unit metaid="CDMT00210" kind="metre"/>
+<unit metaid="CDMT00303" kind="metre"/>
 </listOfUnits>
 </unitDefinition>
 <unitDefinition metaid="time" id="time" name="time">
 <listOfUnits>
-<unit metaid="CDMT00211" kind="second"/>
+<unit metaid="CDMT00304" kind="second"/>
 </listOfUnits>
 </unitDefinition>
 </listOfUnitDefinitions>
@@ -2653,6 +2653,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:catalyzed reaction="re136"/>
 <celldesigner:catalyzed reaction="re162"/>
 <celldesigner:catalyzed reaction="re194"/>
+<celldesigner:catalyzed reaction="re226"/>
 </celldesigner:listOfCatalyzedReactions>
 </celldesigner:extension>
 </annotation>
@@ -4341,7 +4342,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
-<celldesigner:modification type="CATALYSIS" modifiers="s15" aliases="sa174" targetLineIndex="-1,2" editPoints="0.04638384853634392,0.14179285848745304 0.949717958573963,-0.1537094184583625">
+<celldesigner:modification type="CATALYSIS" modifiers="s15" aliases="sa174" targetLineIndex="-1,2" editPoints="0.05322567507902676,0.150687304022735 0.9423011310250438,-0.16335137127124932">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="vertical"/>
@@ -5477,7 +5478,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
-<celldesigner:modification type="CATALYSIS" modifiers="s42" aliases="sa168" targetLineIndex="-1,5" editPoints="0.8841940716948118,0.31999205501787475">
+<celldesigner:modification type="CATALYSIS" modifiers="s42" aliases="sa168" targetLineIndex="-1,5" editPoints="0.9114879817835639,0.28403809752864184">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="horizontal"/>
@@ -9124,6 +9125,110 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </annotation>
 </speciesReference>
 </listOfProducts>
+</reaction>
+<reaction metaid="re225" id="re225" reversible="false">
+<annotation>
+<celldesigner:extension>
+<celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
+<celldesigner:baseReactants>
+<celldesigner:baseReactant species="s6" alias="sa171">
+<celldesigner:linkAnchor position="W"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s5" alias="sa170">
+<celldesigner:linkAnchor position="E"/>
+</celldesigner:baseProduct>
+</celldesigner:baseProducts>
+<celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00209" species="s6">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa171</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfReactants>
+<listOfProducts>
+<speciesReference metaid="CDMT00210" species="s5">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa170</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfProducts>
+</reaction>
+<reaction metaid="re226" id="re226" reversible="false">
+<annotation>
+<celldesigner:extension>
+<celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
+<celldesigner:baseReactants>
+<celldesigner:baseReactant species="s16" alias="sa176">
+<celldesigner:linkAnchor position="E"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s17" alias="sa181">
+<celldesigner:linkAnchor position="W"/>
+</celldesigner:baseProduct>
+</celldesigner:baseProducts>
+<celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:line width="4.0" color="ff000000"/>
+<celldesigner:listOfModification>
+<celldesigner:modification type="INHIBITION" modifiers="s20" aliases="sa183" targetLineIndex="-1,5">
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s20" alias="sa183">
+<celldesigner:linkAnchor position="WSW"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="3.0" color="ffff0066"/>
+</celldesigner:modification>
+</celldesigner:listOfModification>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00305" species="s16">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa176</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfReactants>
+<listOfProducts>
+<speciesReference metaid="CDMT00306" species="s17">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa181</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfProducts>
+<listOfModifiers>
+<modifierSpeciesReference metaid="CDMT00307" species="s20">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa183</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+</listOfModifiers>
 </reaction>
 </listOfReactions>
 </model>
