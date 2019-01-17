@@ -6,11 +6,11 @@ import logging
 mpl_logger = logging.getLogger('matplotlib')
 mpl_logger.setLevel(logging.WARNING)
 
-CURRENT_MODEL_CODE              = 'E'
+CURRENT_MODEL_CODE              = 'A_48'
 
 SIMULATE_TIME_SERIES            = False
-SIMULATE_BAR_GRAPHS             = True
-OPEN_CONDITION_WITH_COPASI      = False
+SIMULATE_BAR_GRAPHS             = False
+OPEN_CONDITION_WITH_COPASI      = True
 PARAMETER_ESTIMATION            = False
 RUN_PYCOTOOLS_VIZ               = False
 GET_PARAMETERS_FROM_COPASI      = False
@@ -30,24 +30,13 @@ SIMULATE_INPUTS                 = False
 
 
 
-CURRENT_SPECIES = [
-    'pSmad2', 'pSmad2n', 'Smad2n',
-    'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
-]
 
 CURRENT_SPECIES = [
-    'pSmad2',
-    'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
+    'pSmad2', 'pErk', 'ppErk',
+    'pAkt', 'pS6K', 'pmTORC1',
 ]
 
-# CURRENT_SPECIES = ['pS6K']
-
-# CURRENT_SPECIES = ['pSmad2Tot']
-# CURRENT_SPECIES = [
-#     'pSmad2Tot', 'pSmad2', 'pSmad2n', 'Smad2n', 'Smad2Tot',
-#
-# ]
-
+# CURRENT_SPECIES = ['pSmad2']
 
 
 """

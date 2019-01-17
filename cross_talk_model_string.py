@@ -1,5 +1,8 @@
-
-
+from constants import *
+import site, os, glob
+site.addsitedir(r'/home/ncw135/Documents/pycotools3')
+site.addsitedir(r'D:\pycotools3')
+from pycotools3 import model, tasks, viz
 
 CROSS_TALK_MODEL = """
     function MM(km, Vmax, S)
@@ -153,11 +156,11 @@ CROSS_TALK_MODEL = """
         kTGFbRRecyc            = 0.033;
         kSmad2Phos_km           = 50;                  
         kSmad2PhosByAkt_km      = 40;                  
-        kSmad2PhosByAkt_kcat    = 0.1;                   
-        kSmad2Dephos_km         = 60;                 
-        kSmad2Dephos_Vmax       = 65;
+        kSmad2PhosByAkt_kcat    = 10;                   
+        kSmad2Dephos_km         = 30;                 
+        kSmad2Dephos_Vmax       = 1.5;
         kSmad2DephosByErk_km    = 30;                   
-        kSmad2DephosByErk_kcat  = 7.5;   
+        kSmad2DephosByErk_kcat  = 1.5;   
         kRafPhos_km             = 10;                   
         kRafPhos_ki             = 3.5;                  
         kRafPhos_Vmax           = 9000;                 
@@ -177,7 +180,7 @@ CROSS_TALK_MODEL = """
         MK2206                  = 0;                    
         kAktDephos_km           = 15;                   
         kAktDephos_Vmax         = 30;                   
-        kmTORC1Phos_km          = 3;                    
+        kmTORC1Phos_km          = 50;                    
         Everolimus              = 0;                    
         kmTORC1Dephos_km        = 100;                  
         kS6KPhosBymTORC1_km     = 100;                  
@@ -186,35 +189,53 @@ CROSS_TALK_MODEL = """
         kRafPhosByTGFbR_km      = 25;                   
         kRafPhosByPI3K_km       = 50;                   
         kPI3KPhosByTGFbR_km     = 10;                   
-        kmTORC1Dephos_Vmax      = 1;                    
+        kmTORC1Dephos_Vmax      = 4;                    
         kmTORCPhosBasal_km      = 25;    
         _kTGFbOn                 = 0.1;                  
-        _kSmad2Phos_kcat         = 0.1;                    
-        _kMekPhos_ki            = 0.25;  //original 0.25                 
+        _kSmad2Phos_kcat         = 20;                    
+        _kMekPhos_ki            = 0.02;  //original 0.25                 
         _kPI3KPhosByGF           = 0.239474698704283;                    
         _kPI3KDephosByS6K        = 25;                   
         _kAktPhos_ki             = 0.01;                 
         _kAktPhos_kcat           = 1.5; // original: 2.9215;                 
         _kmTORC1Phos_ki          = 0.005;                    
-        _kmTORC1Phos_kcat        = 2.5;   
-        _kmTORCPhosBasal_Vmax    = 1.5; 
+        _kmTORC1Phos_kcat        = 100;   
+        _kmTORCPhosBasal_Vmax    = 10; 
         _kS6KPhosBymTORC1_kcat   = 0.5;                  
         _kRafPhosByTGFbR_kcat    = 265;                  
         _kRafPhosByPI3K_kcat     = 5;                    
         _kPI3KPhosByTGFbR_kcat   = 50;                   
-        _kPI3KDephosByErk        = 0.5;  
+        _kPI3KDephosByErk        = 0.5; 
         
-        // SerumStarveRemoveTGFb: at (time>70.25): TGFb=0;
-        // SerumStarveRemoveGrowthFactors: at (time>70.25): GrowthFactors=0;
-        // AddTGFb:        at (time>71.25):   TGFb=1;
-        // AddMK_1.25:     at (time>70.75):    MK2206=1
-        // AddMK_24:       at (time>48):       MK2206=1
-        // AddMK_48:       at (time>24):       MK2206=1
-        // AddMK_72:       at (time>0):        MK2206=1
-        // AddAZD_1.25:    at (time>70.75):    AZD=1
-        // AddAZD_24:      at  (time>48):      AZD=1
-        // AddAZD_48:      at  (time>24):      AZD=1
-        // AddAZD_72:      at  (time>0):       AZD=1
+        ExperimentIndicator = 0; 
+        
+        // events in all simulations
+        SerumStarveRemoveTGFb: at (time>70.25): TGFb=0;
+        SerumStarveRemoveGrowthFactors: at (time>70.25): GrowthFactors=0;
+        
+        // these events are dependent on the experiment indicated by the ExperimentIndicator Variable
+        AddTGFb:        at (time>71.25  and ExperimentIndicator >  0):   TGFb=1;
+        AddAZD_1_25:    at (time>70.75  and ExperimentIndicator == 2):   AZD=1;
+        AddAZD_24:      at  (time>48    and ExperimentIndicator == 3):   AZD=1;
+        AddAZD_48:      at  (time>24    and ExperimentIndicator == 4):   AZD=1;
+        AddAZD_72:      at  (time>0     and ExperimentIndicator == 5):   AZD=1;
+        AddMK_1_25:     at (time>70.75  and ExperimentIndicator == 6):   MK2206=1;
+        AddMK_24:       at (time>48     and ExperimentIndicator == 7):   MK2206=1;
+        AddMK_48:       at (time>24     and ExperimentIndicator == 8):   MK2206=1;
+        AddMK_72:       at (time>0      and ExperimentIndicator == 9):   MK2206=1;
+        
+        //// ExperimentIndicator Codes
+        // D = 0
+        // T = 1
+        // AZD at t=1.25 = 2
+        // AZD at t=24 = 3
+        // AZD at t48= = 4
+        // AZD at t72= = 5
+        // MK2206 at t=1.25 = 6
+        // MK2206 at t=24 = 7
+        // MK2206 at t48= = 8
+        // MK2206 at t72= = 9
+        
         
         
         unit volume = 1 litre;
@@ -223,3 +244,45 @@ CROSS_TALK_MODEL = """
 
 end
 """
+
+cps = os.path.join(WORKING_DIRECTORY, 'CrossTalkModel.cps')
+
+
+
+with model.BuildAntimony(cps) as loader:
+    copasi_mod = loader.load(CROSS_TALK_MODEL)
+
+
+global_params = copasi_mod.global_quantities
+free_params = [i.name for i in global_params if i.name[0] == '_']
+tasks.TimeCourse(copasi_mod, start=0, end=72, step_size=0.1, intervals=720, run=False)
+for i in DATA_FILES:
+    print(i)
+
+PE = tasks.MultiParameterEstimation(copasi_mod,
+                                    DATA_FILES,
+                                    separator=[',']*len(DATA_FILES),
+                                    copy_number=1,
+                                    pe_number=1,
+                                    metabolites=['pAkt', 'Erk', 'Akt','Smad2','S6K', 'mTORC1',
+                                                 'Raf', 'PI3K', 'Mek', 'pErk', 'ppErk',
+                                                 'pSmad2', 'pS6K', 'pPI3K', 'pmTORC1',
+                                                 'pMek', 'ppMek', 'pRaf'],
+                                    global_quantities=free_params,
+                                    run_mode=False,
+                                    randomize_start_values=False,
+                                    method='genetic_algorithm',
+                                    # method='genetic_algorithm',
+                                    number_of_generations=500,
+                                    population_size=50,
+                                    iteration_limit=500,
+                                    swarm_size=75,
+                                    overwrite_config_file=True,
+                                    lower_bound=0.01,
+                                    upper_bound=100
+                                    )
+PE.write_config_file()
+PE.setup()
+# PE.run()
+
+PE.model.open()

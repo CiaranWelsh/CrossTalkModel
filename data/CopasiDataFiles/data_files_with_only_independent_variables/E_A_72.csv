@@ -1,8 +1,8 @@
-Time	pAkt	pSmad2	ppErk	pS6K	GrowthFactors_indep	TGFb_indep	Everolimus_indep	AZD_indep	MK2206_indep
-0.0					1	0	1	1	0
-24.0					1	0	1	1	0
-48.0					1	0	1	1	0
-70.25					0	0	1	1	0
-70.75					0	0	1	1	0
-71.25					0	1	1	1	0
-72.0	14.13744447	13.95661533	2.657579909	4.414462252	0	1	1	1	0
+Time,pAkt,pSmad2,ppErk,pS6K,GrowthFactors_indep,TGFb_indep,Everolimus_indep,AZD_indep,MK2206_indep,ExperimentIndicator_indep
+0,,,,,1,0,1,1,0,5
+24,,,,,1,0,1,1,0,5
+48,,,,,1,0,1,1,0,5
+70.25,,,,,0,0,1,1,0,5
+70.75,,,,,0,0,1,1,0,5
+71.25,,,,,0,1,1,1,0,5
+72,14.13744447,13.95661533,2.657579909,4.414462252,0,1,1,1,0,5

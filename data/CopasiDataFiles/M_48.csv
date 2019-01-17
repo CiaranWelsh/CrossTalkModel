@@ -1,0 +1,8 @@
+Time,pAkt,pSmad2,ppErk,pS6K,GrowthFactors_indep,TGFb_indep,Everolimus_indep,AZD_indep,MK2206_indep,ExperimentIndicator_indep
+0,,,,,1,0,0,0,0,8
+24,,,,,1,0,0,0,1,8
+48,,,,,1,0,0,0,1,8
+70.25,,,,,0,0,0,0,1,8
+70.75,,,,,0,0,0,0,1,8
+71.25,,,,,0,1,0,0,1,8
+72,4.561980165,7.275683901,9.323115017,14.49166839,0,1,0,0,1,8
