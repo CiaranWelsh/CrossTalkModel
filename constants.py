@@ -9,8 +9,8 @@ mpl_logger.setLevel(logging.WARNING)
 CURRENT_MODEL_CODE              = 'E'
 
 SIMULATE_TIME_SERIES            = False
-SIMULATE_BAR_GRAPHS             = False
-OPEN_CONDITION_WITH_COPASI      = True
+SIMULATE_BAR_GRAPHS             = True
+OPEN_CONDITION_WITH_COPASI      = False
 PARAMETER_ESTIMATION            = False
 RUN_PYCOTOOLS_VIZ               = False
 GET_PARAMETERS_FROM_COPASI      = False
@@ -125,7 +125,7 @@ COPASI_MODELS_DIR = os.path.join(WORKING_DIRECTORY, 'CopasiModelFiles')
 
 COPASI_DATA_DIR = os.path.join(DATA_DIR, 'CopasiDataFiles')
 
-DATA_FILES = glob.glob(os.path.join(COPASI_DATA_DIR, '*.csv'))
+DATA_FILES = sorted(glob.glob(os.path.join(COPASI_DATA_DIR, '*.csv')))
 
 for i in DATA_FILES:
     assert os.path.isfile(i)

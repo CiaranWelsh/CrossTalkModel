@@ -561,6 +561,8 @@ def create_condition_with_copasi(model_string, condition):
     global_params = copasi_mod.global_quantities
     free_params = [i.name for i in global_params if i.name[0] == '_']
     tasks.TimeCourse(copasi_mod, start=0, end=72, step_size=0.1, intervals=720, run=False)
+    for i in DATA_FILES:
+        print(i)
 
     PE = tasks.MultiParameterEstimation(copasi_mod,
                                         DATA_FILES,
@@ -608,7 +610,8 @@ def configure_parameter_estimation_fake_steady_state(model_string, condition):
     # copasi_mod.open()
     PE = tasks.ParameterEstimation(copasi_mod, [f1, f2], metabolites=[], run_mode=False,
                                    experiment_type=['steadystate', 'steadystate'],
-                                   overwrite_config_file=False)
+                                   overwrite_config_file=False,
+                                   )
     PE.write_config_file()
     PE.setup()
     return PE.model
