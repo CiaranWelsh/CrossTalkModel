@@ -1,10 +1,10 @@
 import os, glob
 import site
 site.addsitedir(r'/home/ncw135/Documents/pycotools3')
+site.addsitedir(r'D:\pycotools3')
 from pycotools3 import model, viz, tasks
 
 from cross_talk_model_string import CROSS_TALK_MODEL
-
 
 
 FIT = 3
@@ -12,10 +12,12 @@ FIT = 3
 
 CLUSTER = False
 
-if CLUSTER:
-    WORKING_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel'
-else:
-    WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel'
+from constants import *
+
+# if CLUSTER:
+#     WORKING_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel'
+# else:
+#     WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel'
 # print(WORKING_DIRECTORY)
 
 
@@ -80,12 +82,13 @@ PE.setup()
 #              theta=range(150))
 
 
-data = viz.Parse(PE).data
-print (data)
-copasi_mod.insert_parameters(
-    df=data, index=0, inplace=True)
-ant = PE.model.to_antimony()
-print(ant)
+# data = viz.Parse(PE).data
+# print (data)
+# copasi_mod.insert_parameters(
+#     df=data, index=0, inplace=True)
+# ant = PE.model.to_antimony()
+# print(ant)
+
 # copasi_mod.open()
 
 
