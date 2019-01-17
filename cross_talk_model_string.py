@@ -120,8 +120,6 @@ CROSS_TALK_MODEL = """
         CrossTalkR5  :    Smad2     => pSmad2    ;   Cell *  MMWithKcat(kSmad2PhosByAkt_km, kSmad2PhosByAkt_kcat, Smad2, pAkt)       ;
         CrossTalkR6  :    pSmad2     => Smad2    ;   Cell *  MMWithKcat(kSmad2DephosByErk_km, kSmad2DephosByErk_kcat, pSmad2, Erk)       ;
 
-        
-<<<<<<< HEAD
         // Species initializations:
         TGFbR       = 76.8396790634687;
         TGFbR_a     = 0.966718661034664;
@@ -205,104 +203,7 @@ CROSS_TALK_MODEL = """
         _kRafPhosByPI3K_kcat     = 5;                    
         _kPI3KPhosByTGFbR_kcat   = 50;                   
         _kPI3KDephosByErk        = 0.5;  
-=======
-        //// Species initializations:
-        //TGFbR       = 76.8396790634687;
-        //TGFbR_a     = 0.966718661034664;
-        //TGFbR_EE    = 12.55032566215;
-        //TGFbR_Cav   = 9.66718661034664;
-        //Smad2       = 49.6779
-        //pSmad2      = 0.500563;
-        //Smad2Tot    := pSmad2 + Smad2 
-        //Mek         = 252.876273823102;
-        //pMek        = 56.0642557607438;
-        //Erk         = 183.331905604514;
-        //pErk        = 117.882228538386;
-        //PI3K        = 99.9603027531632;
-        //pPI3K       = 0.039697246836694;
-        //Akt         = 99.413240815732;
-        //pAkt        = 0.586759181268058;
-        //mTORC1      = 90.2724562462086;
-        //pmTORC1     = 9.72754375379144;
-        //S6K         = 90.5069860202662;
-        //pS6K        = 9.49301398073377;
-        //Raf         = 87.932595095561;
-        //pRaf        = 12.0674049063339;
-        //ppMek       = 29.0295122061532;
-        //ppErk       = 43.0862638108839;
 
-        ////// Variable initializations:                    
-        //TGFb                    = 0.005;                    
-        //GrowthFactors           = 1;                    
-        //kTGFbOff                = 1;                 
-        //kTGFbRIntern            = 0.33;
-        //kTGFbRRecyc            = 0.033;
-        //kSmad2Phos_km           = 50;                  
-        //kSmad2PhosByAkt_km      = 40;                  
-        //kSmad2PhosByAkt_kcat    = 0.1;                   
-        //kSmad2Dephos_km         = 60;                 
-        //kSmad2Dephos_Vmax       = 65;
-        //kSmad2DephosByErk_km    = 30;                   
-        //kSmad2DephosByErk_kcat  = 7.5;   
-        //kRafPhos_km             = 10;                   
-        //kRafPhos_ki             = 3.5;                  
-        //kRafPhos_Vmax           = 9000;                 
-        //kRafPhos_n              = 1;                    
-        //kRafDephos_km           = 8;                    
-        //kRafDephosVmax          = 3602.5;                   
-        //kMekPhos_km1            = 15;                   
-        //kMekPhos_kcat          = 90;                  
-        //AZD                     = 0;                    
-        //kMekDephos_km          = 15;                   
-        //kMekDephos_Vmax        = 2700;                 
-        //kErkPhos_km1            = 50;                  
-        //kErkPhos_kcat          = 200;                 
-        //kErkDephos_km          = 15;                   
-        //kErkDephos_Vmax        = 1800;                 
-        //kAktPhos_km             = 12.5;                 
-        //MK2206                  = 0;                    
-        //kAktDephos_km           = 15;                   
-        //kAktDephos_Vmax         = 30;                   
-        //kmTORC1Phos_km          = 3;                    
-        //Everolimus              = 0;                    
-        //kmTORC1Dephos_km        = 100;                  
-        //kS6KPhosBymTORC1_km     = 100;                  
-        //kS6KDephos_km           = 10;                   
-        //kS6KDephos_Vmax         = 50;                   
-        //kRafPhosByTGFbR_km      = 25;                   
-        //kRafPhosByPI3K_km       = 50;                   
-        //kPI3KPhosByTGFbR_km     = 10;                   
-        //kmTORC1Dephos_Vmax      = 1;                    
-        //kmTORCPhosBasal_km      = 25;    
-        //_kTGFbOn                 = 0.1;                  
-        //_kSmad2Phos_kcat         = 0.1;                    
-        //_kMekPhos_ki            = 0.25;  //original 0.25                 
-        //_kPI3KPhosByGF           = 0.239474698704283;                    
-        //_kPI3KDephosByS6K        = 25;                   
-        //_kAktPhos_ki             = 0.01;                 
-        //_kAktPhos_kcat           = 1.5; // original: 2.9215;                 
-        //_kmTORC1Phos_ki          = 0.005;                    
-        //_kmTORC1Phos_kcat        = 2.5;   
-        //_kmTORCPhosBasal_Vmax    = 1.5; 
-        //_kS6KPhosBymTORC1_kcat   = 0.5;                  
-        //_kRafPhosByTGFbR_kcat    = 265;                  
-        //_kRafPhosByPI3K_kcat     = 5;                    
-        //_kPI3KPhosByTGFbR_kcat   = 50;                   
-        //_kPI3KDephosByErk        = 0.5;  
-        Experiment = 1
-        
-        SerumStarveRemoveTGFb: at (time>70.25): TGFb=0;
-        SerumStarveRemoveGrowthFactors: at (time>70.25): GrowthFactors=0;
-        AddTGFb:        at (time>71.25):   TGFb=1;
-        AddMK_1.25:     at (time>70.75):    MK2206=1
-        AddMK_24:       at (time>48):       MK2206=1
-        AddMK_48:       at (time>24):       MK2206=1
-        AddMK_72:       at (time>0):        MK2206=1
-        AddAZD_1.25:    at (time>70.75):    AZD=1
-        AddAZD_24:      at  (time>48):      AZD=1
-        AddAZD_48:      at  (time>24):      AZD=1
-        AddAZD_72:      at  (time>0):       AZD=1
->>>>>>> fd1e7ee03d5a7f386a6b16a2eff5b4b2fab7150a
         
         
         unit volume = 1 litre;
