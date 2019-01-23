@@ -9,8 +9,8 @@ mpl_logger.setLevel(logging.WARNING)
 CURRENT_MODEL_CODE              = 'A_48'
 
 SIMULATE_TIME_SERIES            = False
-SIMULATE_BAR_GRAPHS             = False
-OPEN_CONDITION_WITH_COPASI      = True
+SIMULATE_BAR_GRAPHS             = True
+OPEN_CONDITION_WITH_COPASI      = False
 PARAMETER_ESTIMATION            = False
 RUN_PYCOTOOLS_VIZ               = False
 GET_PARAMETERS_FROM_COPASI      = False
@@ -103,7 +103,7 @@ else:
     WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel'
 
 ## on windows
-WORKING_DIRECTORY = r'D:\MesiSTRAT\CrossTalkModel'
+# WORKING_DIRECTORY = r'D:\MesiSTRAT\CrossTalkModel'
 
 DATA_DIR = os.path.join(WORKING_DIRECTORY, 'data')
 # COPASI_FILENAME = os.path.join(WORKING_DIRECTORY, 'KatrinesTopology.cps')
