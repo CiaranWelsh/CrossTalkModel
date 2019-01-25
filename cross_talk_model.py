@@ -1,10 +1,19 @@
 import matplotlib
 from functools import reduce
+<<<<<<< HEAD
+=======
+
+>>>>>>> AktActivateErkInhibitTopology2
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 import os, glob, pandas, numpy
 import pickle
+import site
+
+site.addsitedir(r'/home/ncw135/Documents/pycotools3')
+site.addsitedir(r'D:\pycotools3')
+
 try:
     from pycotools import model, viz, tasks
 except ImportError:
@@ -21,7 +30,6 @@ from collections import Counter
 from cross_talk_model_string import CROSS_TALK_MODEL
 from constants import *
 
-
 """
 Idea: Simulate 100 models with random parameters. Record whether each model satisifies each condition. Or better 
 yet, compute a semi RSS. Then use the values of the parameters to classify neural network for prediction of 
@@ -33,7 +41,6 @@ Classifications = range(1, len(conditions)
 
 seaborn.set_style('white')
 seaborn.set_context('talk', font_scale=1)
-
 
 
 def load_model_with_pyco(ant, COPASI_FILENAME):
@@ -139,6 +146,7 @@ def add_serum_starve_event_remove_growth_factors(model_string):
     model_string = add_event(model_string, event_str)
     return model_string
 
+
 def add_serum_starve_event_remove_basal_TGFb(model_string):
     """
     Set growth factors to 0 at t=70.25 minutes
@@ -207,7 +215,11 @@ def make_condition(model_string, condition, from_pickle=False):
         return models_dct[condition]
 
     if condition not in list(AZD_CONDITIONS.keys()) + list(MK_CONDITIONS.keys()):
+<<<<<<< HEAD
         raise ValueError('No key. These keys "{}"'.format(list(AZD_CONDITIONS.keys())+list(MK_CONDITIONS.keys())))
+=======
+        raise ValueError('No key. These keys "{}"'.format(list(AZD_CONDITIONS.keys()) + list(MK_CONDITIONS.keys())))
+>>>>>>> AktActivateErkInhibitTopology2
     try:
         GF, pretreatment, pretreatment_time, EV, serum_starve_event, TGFb_event = AZD_CONDITIONS[condition]
     except KeyError:
@@ -318,7 +330,6 @@ def simulate_conditions(model_str=None, type='azd'):
     df.index = df.index.droplevel(1)
     df = df.drop('time', axis=1)
 
-
     return df
 
 
@@ -354,7 +365,10 @@ def simulate_conditions_and_plot_as_bargraph(y, type='AZD'):
     fname = os.path.join(dire, "{}.png".format(y))
     fig.savefig(fname, dpi=300, bbox_inches='tight')
     print(('line 485: Figure saved to "{}"'.format(fname)))
+<<<<<<< HEAD
 
+=======
+>>>>>>> AktActivateErkInhibitTopology2
 
 
 def simulate_all_conditions_and_plot_as_bargraphs():
@@ -432,8 +446,6 @@ def plot_timecourse_single(vars, condition=None):
 
 
 def plot_timecourse_multiplot(vars, condition=None, multifig_shape=None, AZD_or_MK='AZD'):
-
-
     # if condition not in AZD_CONDITIONS.keys() + MK_CONDITIONS.keys():
     #     raise ValueError
 
@@ -457,7 +469,6 @@ def plot_timecourse_multiplot(vars, condition=None, multifig_shape=None, AZD_or_
 
     df = simulate_timecourse(AZD_or_MK)
 
-
     for i in vars:
         if i not in df.columns:
             raise ValueError("Variable '{}' is not in '{}'".format(i, df.columns))
@@ -474,13 +485,12 @@ def plot_timecourse_multiplot(vars, condition=None, multifig_shape=None, AZD_or_
     fig = plt.figure()
     ax = plt.subplot2grid(multifig_shape, [0, 0])
 
-
     cols = seaborn.color_palette("hls", len(vars))
     cols = iter(cols)
 
     for v in range(len(vars)):
         seaborn.set_context('talk')
-        sub_ax = plt.subplot(*multifig_shape + [v+1])
+        sub_ax = plt.subplot(*multifig_shape + [v + 1])
         plt.setp(sub_ax.get_xticklabels(), visible=False)
         # box = sub_ax.get_position()
         # sub_ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
@@ -493,7 +503,7 @@ def plot_timecourse_multiplot(vars, condition=None, multifig_shape=None, AZD_or_
         plt.xticks(numpy.arange(0, 72, 5.0), fontsize=12, rotation=90)
 
         plt.subplots_adjust(bottom=0.2, left=0.2, right=0.7)
-        if v == len(vars)-1:
+        if v == len(vars) - 1:
             plt.xlabel('Time(h)')
 
     plt.setp(sub_ax.get_xticklabels(), visible=True)
@@ -528,27 +538,75 @@ def simulate_inputs_only(AZD_or_MK='AZD'):
         print(("Saved to '{}'".format(fname)))
 
 
-
-
 def open_condition_with_copasi(model_string, condition):
     """
-    Create condition with model string and open with copasi,
-    saving to folder while your at it
+    create condition in copasi and open with CopasiUI
     :param condition:
     :return:
     """
-    mod_string = make_condition(model_string, condition)
-    copasi_dir = os.path.join(WORKING_DIRECTORY, 'copasi_models')
+    copasi_mod = create_condition_with_copasi(model_string, condition)
+    params = get_parameters_from_copasi(copasi_mod)
+    print(params)
+
+    copasi_mod.open()
+
+
+def create_condition_with_copasi(model_string, condition):
+    """
+    create copasi model from antimony string. Additionally
+    setup a time course simulation
+    :param model_string:
+    :param condition:
+    :return:
+    """
+    copasi_dir = os.path.join(COPASI_MODELS_DIR, condition)
     if not os.path.isdir(copasi_dir):
         os.makedirs(copasi_dir)
-    fname = os.path.join(copasi_dir, "{}.cps".format(condition))
-    copasi_mod = load_model_with_pyco(mod_string, fname)
+
+    copasi_file = os.path.join(copasi_dir, condition + '.cps')
+
+
+    mod_string = make_condition(model_string, condition)
+    copasi_mod = load_model_with_pyco(mod_string, copasi_file)
+
+    global_params = copasi_mod.global_quantities
+    free_params = [i.name for i in global_params if i.name[0] == '_']
     tasks.TimeCourse(copasi_mod, start=0, end=72, step_size=0.1, intervals=720, run=False)
-    copasi_mod.open()
+    for i in DATA_FILES:
+        print(i)
+
+    PE = tasks.MultiParameterEstimation(copasi_mod,
+                                        DATA_FILES,
+                                        copy_number=1,
+                                        pe_number=1,
+                                        metabolites=['pAkt', 'Erk', 'Akt','Smad2','S6K', 'mTORC1',
+                                                     'Raf', 'PI3K', 'Mek', 'pErk', 'ppErk',
+                                                     'pSmad2', 'pS6K', 'pPI3K', 'pmTORC1',
+                                                     'pMek', 'ppMek', 'pRaf'],
+                                        global_quantities=free_params,
+                                        run_mode=False,
+                                        randomize_start_values=False,
+                                        method='genetic_algorithm',
+                                        # method='genetic_algorithm',
+                                        number_of_generations=500,
+                                        population_size=50,
+                                        iteration_limit=500,
+                                        swarm_size=75,
+                                        overwrite_config_file=True,
+                                        lower_bound=0.01,
+                                        upper_bound=100
+                                        )
+    PE.write_config_file()
+    PE.setup()
+    # PE.run()
+
+    # PE.model.open()
+    copasi_mod = PE.model
+
     return copasi_mod
 
 
-def configure_parameter_estimation(model_string, condition):
+def configure_parameter_estimation_fake_steady_state(model_string, condition):
     mod_string = make_condition(model_string, condition)
     copasi_dir = os.path.join(WORKING_DIRECTORY, 'copasi_models')
     if not os.path.isdir(copasi_dir):
@@ -563,12 +621,56 @@ def configure_parameter_estimation(model_string, condition):
     # copasi_mod.open()
     PE = tasks.ParameterEstimation(copasi_mod, [f1, f2], metabolites=[], run_mode=False,
                                    experiment_type=['steadystate', 'steadystate'],
-                                   overwrite_config_file=False)
+                                   overwrite_config_file=False,
+                                   )
     PE.write_config_file()
     PE.setup()
     return PE.model
 
 
+def configure_parameter_estimation(copasi_mod,
+                                   copy_number=1,
+                                   pe_number=1,
+                                   method='genetic_algorithm',
+                                   population_size=200,
+                                   overwrite_config_file=True,
+                                   number_of_generations=500):
+    if isinstance(copasi_mod, str):
+        copasi_mod = model.Model(copasi_mod)
+    elif isinstance(copasi_mod, model.Model):
+        pass
+    else:
+        raise ValueError
+
+    global_params = copasi_mod.global_quantities
+    free_params = [i.name for i in global_params if i.name[0] == '_']
+
+    # copasi_mod.open()
+    PE = tasks.MultiParameterEstimation(copasi_mod,
+                                        DATA_FILES,
+                                        copy_number=copy_number,
+                                        pe_number=pe_number,
+                                        metabolites=[],
+                                        global_quantities=free_params,
+                                        run_mode=False,
+                                        method=method,
+                                        number_of_generations=number_of_generations,
+                                        population_size=population_size,
+                                        overwrite_config_file=overwrite_config_file,
+                                        lower_bound=0.001,
+                                        upper_bound=1000
+                                        )
+    PE.write_config_file()
+    PE.setup()
+    PE.run()
+    return PE
+
+def run_pycotools_viz(copasi_file):
+    PE = configure_parameter_estimation(copasi_file, run_mode=False)
+    # viz.Boxplots(PE, savefig=True, log10=True, num_per_plot=30)
+    # viz.LikelihoodRanks(PE, savefig=True)
+    PE.model.insert_parameters(parameter_path=PE.results_directory, index=0, inplace=True)
+    PE.model.open()
 
 
 def simulate_model_component_timecourse(vars, cond, filename=None, **kwargs):
@@ -593,15 +695,20 @@ def simulate_model_component_timecourse(vars, cond, filename=None, **kwargs):
         figsize = kwargs['figsize']
         del kwargs['figsize']
     else:
-        figsize = (2*len(cond), 3*len(cond))
+        figsize = (2 * len(cond), 3 * len(cond))
 
-    cols = seaborn.color_palette("hls", len(vars))*len(cond)
+    cols = seaborn.color_palette("hls", len(vars)) * len(cond)
     cols = iter(cols)
 
     fig = plt.figure(figsize=figsize)
     for i, c in enumerate(cond):
         if c not in list(MK_CONDITIONS.keys()) + list(AZD_CONDITIONS.keys()):
+<<<<<<< HEAD
             raise ValueError('condition "{}" not in "{}"'.format(c, list(MK_CONDITIONS.keys()) + list(AZD_CONDITIONS.keys())))
+=======
+            raise ValueError(
+                'condition "{}" not in "{}"'.format(c, list(MK_CONDITIONS.keys()) + list(AZD_CONDITIONS.keys())))
+>>>>>>> AktActivateErkInhibitTopology2
 
         model_str = make_condition(CROSS_TALK_MODEL, c)
         mod = te.loada(model_str)
@@ -612,12 +719,12 @@ def simulate_model_component_timecourse(vars, cond, filename=None, **kwargs):
             ax.append(fig.add_subplot(gs[i, 0]))
             ax[-1].plot(res['time'], res[v], label=v, color=next(cols), linewidth=6, **kwargs)
 
-        plt.axvline(0.0  ,   linestyle='--', linewidth=2, color='black',  alpha=0.4)
-        plt.axvline(24.0 ,   linestyle='--', linewidth=2, color='black',  alpha=0.4)
-        plt.axvline(48.0 ,   linestyle='--', linewidth=2, color='black',  alpha=0.4)
-        plt.axvline(70.25,   linestyle='--', linewidth=2, color='green',  alpha=0.4)
-        plt.axvline(71.25,   linestyle='--', linewidth=2, color='purple', alpha=0.4)
-        plt.axvline(72.0 ,   linestyle='--', linewidth=2, color='black',  alpha=0.4)
+        plt.axvline(0.0, linestyle='--', linewidth=2, color='black', alpha=0.4)
+        plt.axvline(24.0, linestyle='--', linewidth=2, color='black', alpha=0.4)
+        plt.axvline(48.0, linestyle='--', linewidth=2, color='black', alpha=0.4)
+        plt.axvline(70.25, linestyle='--', linewidth=2, color='green', alpha=0.4)
+        plt.axvline(71.25, linestyle='--', linewidth=2, color='purple', alpha=0.4)
+        plt.axvline(72.0, linestyle='--', linewidth=2, color='black', alpha=0.4)
 
         plt.setp(ax[-1].get_xticklabels(), visible=False)
         seaborn.despine(ax=ax[-1], top=True, right=True)
@@ -647,9 +754,29 @@ def get_parameters_from_copasi_in_antimony_format(condition):
     pm.to_sbml(sbml)
     mod = te.loadSBMLModel(sbml)
     print((te.getCurrentAntimony(mod)))
+<<<<<<< HEAD
 
 def get_model_parameters(mod):
     return dict(list(zip(mod.getGlobalParameterIds(), mod.getGlobalParameterValues())))
+=======
+
+
+def get_parameters_from_copasi(mod):
+    # make_condition(CROSS_TALK_MODEL, CURRENT_MODEL_CODE )
+    # pm = model.Model(copasi_file)
+    assert isinstance(mod, model.Model)
+    sbml = mod.copasi_file[:-4] + '.sbml'
+    mod.to_sbml(sbml)
+    mod = te.loadSBMLModel(sbml)
+    print((mod, type(mod)))
+    print((mod.getCurrentAntimony()))
+    # print(te.getCurrentAntimony(mod))
+
+
+def get_model_parameters(mod):
+    return dict(list(zip(mod.getGlobalParameterIds(), mod.getGlobalParameterValues())))
+
+>>>>>>> AktActivateErkInhibitTopology2
 
 class Inequality(object):
     def __init__(self, left, operator, right, name):
@@ -873,7 +1000,12 @@ class OptimizeQualitative(object):
 
             for k in list(ineq_memory['old'].keys()):
                 if ineq_memory['old'][k] != ineq_memory['new'][k]:
+<<<<<<< HEAD
                     print(('ineq "{}" changed from "{}" to "{}"'.format(k, ineq_memory['old'][k], ineq_memory['new'][k])))
+=======
+                    print(
+                        ('ineq "{}" changed from "{}" to "{}"'.format(k, ineq_memory['old'][k], ineq_memory['new'][k])))
+>>>>>>> AktActivateErkInhibitTopology2
 
             print(('old count: {}'.format(Counter(list(ineq_memory['old'].values())))))
             print(('new count: {}'.format(Counter(list(ineq_memory['new'].values())))))
@@ -890,7 +1022,11 @@ class OptimizeQualitative(object):
                 # ))
                 if (ineq_memory['old'][cond] == False) and (ineq_memory['new'][cond] == True):
                     print(("Positively reinforcing '{}' parameter as changing it from '{}' to '{}' "
+<<<<<<< HEAD
                           "changed the '{}' condition from False to True".format(
+=======
+                           "changed the '{}' condition from False to True".format(
+>>>>>>> AktActivateErkInhibitTopology2
                         choice, old_parameter_value, new_parameter_value, cond
                     )))
                     self._update_probabilities(cond, choice, 'positive_reinforcement')
@@ -898,7 +1034,11 @@ class OptimizeQualitative(object):
 
                 elif (ineq_memory['old'][cond] == True) and (ineq_memory['new'][cond] == False):
                     print(("Negatively reinforcing '{}' parameter as changing it from '{}' to '{}' "
+<<<<<<< HEAD
                           "changed the '{}' condition from True to False".format(
+=======
+                           "changed the '{}' condition from True to False".format(
+>>>>>>> AktActivateErkInhibitTopology2
                         choice, old_parameter_value, new_parameter_value, cond
                     )))
                     self._update_probabilities(cond, choice, 'negative_reinforcement')
@@ -946,7 +1086,7 @@ class RSS(object):
             # print(experimental)
             simulated = self.simulated_data[sim]
             # print(simulated)
-            dct[sim] = (experimental - simulated)**2
+            dct[sim] = (experimental - simulated) ** 2
         return pandas.concat(dct, axis=1)
 
 
@@ -954,6 +1094,7 @@ class QualitativeObj(object):
     """
 
     """
+
     def __init__(self, simulated_data, inequalities):
         self.simulated_data = simulated_data
         self.inequalities = inequalities
@@ -998,7 +1139,6 @@ class QualitativeObj(object):
         return obj
 
 
-
 class RandomSimulation(object):
     """
 
@@ -1013,6 +1153,7 @@ class RandomSimulation(object):
 
 
     """
+
     def __init__(self, model_string, exp_data, inequalities, mappings, free_parameters, iterations):
         self.model_string = model_string
         self.exp_data = exp_data
@@ -1107,7 +1248,7 @@ class RandomSimulation(object):
         obj = self._compute_obj_fun(sim_data)
         # params[i] = new_params
         # resid[i] = obj.residuals
-        return new_params, obj.residuals#params, resid
+        return new_params, obj.residuals  # params, resid
 
     def to_file(self, params, resid):
         if os.path.isfile(self.fname_params):
@@ -1124,7 +1265,10 @@ class RandomSimulation(object):
 
         print(('parameters saved to "{}"'.format(self.fname_params)))
         print(('residuals saved to "{}"'.format(self.fname_resid)))
+<<<<<<< HEAD
 
+=======
+>>>>>>> AktActivateErkInhibitTopology2
 
     def fit(self):
         import time
@@ -1149,42 +1293,51 @@ class RandomSimulation(object):
         return params, resid
 
 
-
-
-
 if __name__ == '__main__':
     """
     Set flags to determine which part of the script will run
     """
 
     if GET_PARAMETERS_FROM_COPASI:
-        get_parameters_from_copasi_in_antimony_format(MODEL_CODE)
+        # get_parameters_from_copasi_in_antimony_format(MODEL_CODE)
+        print('These parameters are from "{}"'.format(OTHER_COPASI_MODEL))
+        mod = model.Model(OTHER_COPASI_MODEL)
+        get_parameters_from_copasi(mod)
 
     if OPEN_CONDITION_WITH_COPASI:
-        open_condition_with_copasi(CROSS_TALK_MODEL, MODEL_CODE)
+        open_condition_with_copasi(CROSS_TALK_MODEL, CURRENT_MODEL_CODE)
 
-    if CONFIGURE_PARAMETER_ESTIMATION:
-        m = configure_parameter_estimation(CROSS_TALK_MODEL, MODEL_CODE)
-        m.open()
+    if PARAMETER_ESTIMATION:
 
-    phos = ['pErk', 'pAkt', 'pSmad2', 'pRaf', 'ppMek', 'ppErk',
-            'pPI3K', 'pPI3K', 'pmTORC1', 'pS6K']
-    erk = ['Erk', 'pErk', 'ppErk']
+        mod = create_condition_with_copasi(CROSS_TALK_MODEL, CURRENT_MODEL_CODE)
+        assert isinstance(mod, model.Model)
+        PE = configure_parameter_estimation(
+            mod,
+            copy_number=250
+        )
+        PE.model.open()
 
-    # pSmad2  =   ['pSmad2Tot']
+
+    if RUN_PYCOTOOLS_VIZ:
+        run_pycotools_viz(FIT_COPASI_FILE)
+        mod = create_condition_with_copasi(CROSS_TALK_MODEL,CURRENT_MODEL_CODE)
+
 
     if SIMULATE_TIME_SERIES:
         for i in CURRENT_SPECIES:
+<<<<<<< HEAD
             simulate_model_component_timecourse([i], list(AZD_CONDITIONS.keys()), filename='AZD_'+i)
             simulate_model_component_timecourse([i], list(MK_CONDITIONS.keys()), filename='MK_'+i)
+=======
+            simulate_model_component_timecourse([i], list(AZD_CONDITIONS.keys()), filename='AZD_' + i)
+            simulate_model_component_timecourse([i], list(MK_CONDITIONS.keys()), filename='MK_' + i)
+>>>>>>> AktActivateErkInhibitTopology2
 
     if SIMULATE_BAR_GRAPHS:
         # for i in ['AZD', 'MK2206']:
         for i in ['MK2206', 'AZD']:
             for j in CURRENT_SPECIES:
                 simulate_conditions_and_plot_as_bargraph(j, i)
-
-
 
     if SIMULATE_INPUTS:
         simulate_inputs_only('AZD')
@@ -1206,7 +1359,6 @@ if __name__ == '__main__':
         fig = dose_response(CROSS_TALK_MODEL, 'TGFb', 0.01, 1000, 100, ['TGFbR'])
         plt.show()
 
-
     if QUALITATIVE_FITTING:
         model_string = CROSS_TALK_MODEL
 
@@ -1223,43 +1375,20 @@ if __name__ == '__main__':
 
         exp_data = pandas.concat([azd_data, mk_data])
 
-        free_parameters = OrderedDict({
-            'kmTORC1Phos_ki': 0.001,
-            'kPI3KPhosByTGFbR_kcat': 50.0,
-            'kAktDephos_Vmax': 31.1252344504785,
-            'kPI3KDephosByErk': 5.014,
-            'kS6KPhosBymTORC1_kcat': 2.77975221288272,
-            'kPI3KPhosByGF': 0.239474698704283,
-            'kPI3KDephosByS6K': 25.0,
-            'kErkPhos_kcat1': 85.0103161451182,
-            'kmTORC1Dephos_Vmax': 1.0,
-            'kS6KDephos_Vmax': 50.0,
-            'kAktPhos_kcat': 2.9215,
-            'kRafPhos_ki': 3.5,
-            'kRafPhosByTGFbR_kcat': 265.0,
-            'kRafPhosByPI3K_kcat': 50.0,
-            'kMekPhos_kcat1': 149.5209856,
-            'kMekPhos_ki1': 0.25,
-            'kTGFbOn': 0.100647860357268,
-            'kSmad2PhosByAkt_kcat': 1.0,
-            'kpSmad2Dephos_Vmax': 58.8712661228653,
-            'kAktPhos_ki': 0.01,
-            'kmTORC1Phos_kcat': 0.1,
-        })
         # for i in free_parameters:
         #     free_parameters[i] = numpy.random.uniform(0, 100, 1)[0]
 
         delta = 0.01
-        akt_ineq1  = Inequality(['E',        'pAkt'],  '>', ['D',        'pAkt'], 'pAkt_1')
-        akt_ineq2  = Inequality(['E_A_72',   'pAkt'],  '>', ['E',        'pAkt'], 'pAkt_2')
-        akt_ineq3  = Inequality(['A_72',     'pAkt'],  '<', ['E',        'pAkt'], 'pAkt_3')
-        akt_ineq4  = Inequality(['A_72',     'pAkt'],  '<', ['E_A_72',   'pAkt'], 'pAkt_4')
-        akt_ineq5  = Inequality(['E_M_72',   'pAkt'],  '<', ['D',        'pAkt'], 'pAkt_5')
-        akt_ineq6  = Inequality(['E_M_72',   'pAkt'],  '<', ['T',        'pAkt'], 'pAkt_6')
-        akt_ineq7  = Inequality(['E_M_72',   'pAkt'],  '<', ['E',        'pAkt'], 'pAkt_7')
-        akt_ineq8  = Inequality(['M_72',     'pAkt'],  '<', ['D',        'pAkt'], 'pAkt_8')
-        akt_ineq9  = Inequality(['M_72',     'pAkt'],  '<', ['T',        'pAkt'], 'pAkt_9')
-        akt_ineq10 = Inequality(['M_72',     'pAkt'],  '<', ['E',        'pAkt'], 'pAkt_10')
+        akt_ineq1 = Inequality(['E', 'pAkt'], '>', ['D', 'pAkt'], 'pAkt_1')
+        akt_ineq2 = Inequality(['E_A_72', 'pAkt'], '>', ['E', 'pAkt'], 'pAkt_2')
+        akt_ineq3 = Inequality(['A_72', 'pAkt'], '<', ['E', 'pAkt'], 'pAkt_3')
+        akt_ineq4 = Inequality(['A_72', 'pAkt'], '<', ['E_A_72', 'pAkt'], 'pAkt_4')
+        akt_ineq5 = Inequality(['E_M_72', 'pAkt'], '<', ['D', 'pAkt'], 'pAkt_5')
+        akt_ineq6 = Inequality(['E_M_72', 'pAkt'], '<', ['T', 'pAkt'], 'pAkt_6')
+        akt_ineq7 = Inequality(['E_M_72', 'pAkt'], '<', ['E', 'pAkt'], 'pAkt_7')
+        akt_ineq8 = Inequality(['M_72', 'pAkt'], '<', ['D', 'pAkt'], 'pAkt_8')
+        akt_ineq9 = Inequality(['M_72', 'pAkt'], '<', ['T', 'pAkt'], 'pAkt_9')
+        akt_ineq10 = Inequality(['M_72', 'pAkt'], '<', ['E', 'pAkt'], 'pAkt_10')
 
         akt = [
             akt_ineq1,
@@ -1274,16 +1403,16 @@ if __name__ == '__main__':
             akt_ineq10,
         ]
 
-        erk_ineq1 = Inequality(['E',        'ppErk'],  '>', ['D',        'ppErk'], 'ppErk_1')
-        erk_ineq2 = Inequality(['E',        'ppErk'],  '>', ['T',        'ppErk'], 'ppErk_2')
-        erk_ineq3 = Inequality(['E_A_72',   'ppErk'],  '<', ['E',        'ppErk'], 'ppErk_3')
-        erk_ineq4 = Inequality(['E_A_72',   'ppErk'],  '<', ['D',        'ppErk'], 'ppErk_4')
-        erk_ineq5 = Inequality(['E_A_72',   'ppErk'],  '<', ['T',        'ppErk'], 'ppErk_5')
-        erk_ineq6 = Inequality(['A_72',     'ppErk'],  '<', ['E',        'ppErk'], 'ppErk_6')
-        erk_ineq7 = Inequality(['A_72',     'ppErk'],  '<', ['D',        'ppErk'], 'ppErk_7')
-        erk_ineq8 = Inequality(['A_72',     'ppErk'],  '<', ['T',        'ppErk'], 'ppErk_8')
-        erk_ineq9 = Inequality(['E_M_72',   'ppErk'],  '>', ['E',        'ppErk'], 'ppErk_9')
-        erk_ineq10 = Inequality(['M_72',     'ppErk'],  '<', ['E_M_72',   'ppErk'],'ppErk_10')
+        erk_ineq1 = Inequality(['E', 'ppErk'], '>', ['D', 'ppErk'], 'ppErk_1')
+        erk_ineq2 = Inequality(['E', 'ppErk'], '>', ['T', 'ppErk'], 'ppErk_2')
+        erk_ineq3 = Inequality(['E_A_72', 'ppErk'], '<', ['E', 'ppErk'], 'ppErk_3')
+        erk_ineq4 = Inequality(['E_A_72', 'ppErk'], '<', ['D', 'ppErk'], 'ppErk_4')
+        erk_ineq5 = Inequality(['E_A_72', 'ppErk'], '<', ['T', 'ppErk'], 'ppErk_5')
+        erk_ineq6 = Inequality(['A_72', 'ppErk'], '<', ['E', 'ppErk'], 'ppErk_6')
+        erk_ineq7 = Inequality(['A_72', 'ppErk'], '<', ['D', 'ppErk'], 'ppErk_7')
+        erk_ineq8 = Inequality(['A_72', 'ppErk'], '<', ['T', 'ppErk'], 'ppErk_8')
+        erk_ineq9 = Inequality(['E_M_72', 'ppErk'], '>', ['E', 'ppErk'], 'ppErk_9')
+        erk_ineq10 = Inequality(['M_72', 'ppErk'], '<', ['E_M_72', 'ppErk'], 'ppErk_10')
 
         erk = [
             erk_ineq1,
@@ -1297,14 +1426,14 @@ if __name__ == '__main__':
             erk_ineq9,
             erk_ineq10,
         ]
-        s6k_ineq1 = Inequality(['E',        'pS6K'],  '<', ['T',        'pS6K'], 'pS6K_1')
-        s6k_ineq2 = Inequality(['E',        'pS6K'],  '<', ['D',        'pS6K'], 'pS6K_2')
-        s6k_ineq3 = Inequality(['E_A_72',   'pS6K'],  '<', ['T',        'pS6K'], 'pS6K_3')
-        s6k_ineq4 = Inequality(['E_A_72',   'pS6K'],  '<', ['D',        'pS6K'], 'pS6K_4')
-        s6k_ineq5 = Inequality(['E_A_72',   'pS6K'],  '<', ['A_72',     'pS6K'], 'pS6K_5')
-        s6k_ineq6 = Inequality(['E_M_72',   'pS6K'],  '<', ['D',        'pS6K'], 'pS6K_6')
-        s6k_ineq7 = Inequality(['E_M_72',   'pS6K'],  '<', ['T',        'pS6K'], 'pS6K_7')
-        s6k_ineq8 = Inequality(['M_72',     'pS6K'],  '>', ['E_M_72',   'pS6K'], 'pS6K_8')
+        s6k_ineq1 = Inequality(['E', 'pS6K'], '<', ['T', 'pS6K'], 'pS6K_1')
+        s6k_ineq2 = Inequality(['E', 'pS6K'], '<', ['D', 'pS6K'], 'pS6K_2')
+        s6k_ineq3 = Inequality(['E_A_72', 'pS6K'], '<', ['T', 'pS6K'], 'pS6K_3')
+        s6k_ineq4 = Inequality(['E_A_72', 'pS6K'], '<', ['D', 'pS6K'], 'pS6K_4')
+        s6k_ineq5 = Inequality(['E_A_72', 'pS6K'], '<', ['A_72', 'pS6K'], 'pS6K_5')
+        s6k_ineq6 = Inequality(['E_M_72', 'pS6K'], '<', ['D', 'pS6K'], 'pS6K_6')
+        s6k_ineq7 = Inequality(['E_M_72', 'pS6K'], '<', ['T', 'pS6K'], 'pS6K_7')
+        s6k_ineq8 = Inequality(['M_72', 'pS6K'], '>', ['E_M_72', 'pS6K'], 'pS6K_8')
 
         s6k = [
             s6k_ineq1,
@@ -1316,12 +1445,12 @@ if __name__ == '__main__':
             s6k_ineq7,
             s6k_ineq8,
         ]
-        smad2_ineq1 = Inequality(['T',      'pSmad2'],  '>', ['D',           'pSmad2'], 'pSmad1_1')
-        smad2_ineq2 = Inequality(['E',      'pSmad2'],  '>', ['T',           'pSmad2'], 'pSmad1_2')
-        smad2_ineq3 = Inequality(['A_72',   'pSmad2'],  '>', ['A_1.25',      'pSmad2'], 'pSmad1_3')
-        smad2_ineq4 = Inequality(['E_M_72', 'pSmad2'],  '<', ['E',           'pSmad2'], 'pSmad1_4')
-        smad2_ineq5 = Inequality(['E_M_72', 'pSmad2'],  '<', ['E_M_1.25',    'pSmad2'], 'pSmad1_5')
-        smad2_ineq6 = Inequality(['M_72',   'pSmad2'],  '<', ['E',           'pSmad2'], 'pSmad1_6')
+        smad2_ineq1 = Inequality(['T', 'pSmad2'], '>', ['D', 'pSmad2'], 'pSmad1_1')
+        smad2_ineq2 = Inequality(['E', 'pSmad2'], '>', ['T', 'pSmad2'], 'pSmad1_2')
+        smad2_ineq3 = Inequality(['A_72', 'pSmad2'], '>', ['A_1.25', 'pSmad2'], 'pSmad1_3')
+        smad2_ineq4 = Inequality(['E_M_72', 'pSmad2'], '<', ['E', 'pSmad2'], 'pSmad1_4')
+        smad2_ineq5 = Inequality(['E_M_72', 'pSmad2'], '<', ['E_M_1.25', 'pSmad2'], 'pSmad1_5')
+        smad2_ineq6 = Inequality(['M_72', 'pSmad2'], '<', ['E', 'pSmad2'], 'pSmad1_6')
 
         smad = [
             smad2_ineq1,
@@ -1345,20 +1474,6 @@ if __name__ == '__main__':
         O = RandomSimulation(
             CROSS_TALK_MODEL, exp_data=exp_data, inequalities=ineq, mappings=mappings,
             free_parameters=free_parameters, iterations=1000
-            )
+        )
 
         O.fit()
-
-
-
-
-
-
-
-
-
-
-
-
-
-

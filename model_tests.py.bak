@@ -1,5 +1,9 @@
 import unittest
+<<<<<<< HEAD
 from cross_talk_model import *
+=======
+from KatrinesModelVersion import *
+>>>>>>> AktActivateErkInhibitTopology2
 
 
 class TestTGFbQualitative(unittest.TestCase):

@@ -1,38 +1,48 @@
-import os
+import os, glob
 from collections import OrderedDict
+import subprocess
 
-MODEL_CODE                      = 'E_A_48'
+import logging
+mpl_logger = logging.getLogger('matplotlib')
+mpl_logger.setLevel(logging.WARNING)
 
-CURRENT_SPECIES = [
-    'pSmad2Tot', 'pSmad2', 'pSmad2n', 'Smad2n', 'Smad2Tot',
-    'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
-]
-
-CURRENT_SPECIES = [
-    'pSmad2Tot',
-    'pErk', 'ppErk', 'pAkt', 'pS6K', 'pmTORC1',
-]
-# CURRENT_SPECIES = ['pSmad2Tot']
-# CURRENT_SPECIES = [
-#     'pSmad2Tot', 'pSmad2', 'pSmad2n', 'Smad2n', 'Smad2Tot',
-#
-# ]
+CURRENT_MODEL_CODE              = 'A_48'
 
 SIMULATE_TIME_SERIES            = False
+<<<<<<< HEAD
 SIMULATE_BAR_GRAPHS             = False
 OPEN_CONDITION_WITH_COPASI      = True
+=======
+SIMULATE_BAR_GRAPHS             = True
+OPEN_CONDITION_WITH_COPASI      = False
+PARAMETER_ESTIMATION            = False
+RUN_PYCOTOOLS_VIZ               = False
+GET_PARAMETERS_FROM_COPASI      = False
+
+
+>>>>>>> AktActivateErkInhibitTopology2
 
 QUALITATIVE_FITTING             = False
 
-GET_PARAMETERS_FROM_COPASI      = False
 
-CONFIGURE_PARAMETER_ESTIMATION  = False
 
 DOSE_RESPONSE_GROWTH_FACTOR     = False
 DOSE_RESPONSE_TGFB              = False
 GET_ODES_WITH_ANTIMONY          = False
 GET_MODEL_AS_SBML               = False
 SIMULATE_INPUTS                 = False
+
+
+
+
+
+CURRENT_SPECIES = [
+    'pSmad2', 'pErk', 'ppErk',
+    'pAkt', 'pS6K', 'pmTORC1',
+]
+
+# CURRENT_SPECIES = ['pSmad2']
+
 
 """
 These are arguments for the conditions simulation functions. 
@@ -77,7 +87,7 @@ MODEL_SPECIES = ['TGFbR',   'TGFbR_a',  'TGFbR_EE', 'TGFbR_Cav',
                  'Mek',     'pMek',     'ppMek',    'Erk',        'pErk',
                  'ppErk',   'PI3K',     'pPI3K',    'Akt',        'pAkt',
                  'mTORC1',  'pmTORC1',  'S6K',      'pS6K',
-                 'pSmad2Tot', 'pSmad2n', 'Smad2Tot', 'Smad2n'
+
                  ]
 
 MODEL_INPUTS = ['TGFb', 'Everolimus', 'MK2206', 'AZD', 'GrowthFactors']
@@ -90,23 +100,57 @@ ALL_CONDITIONS = ['D', 'T', 'E', 'E_A_72', 'E_A_48',
                   'E_M_48', 'E_M_24', 'E_M_1.25', 'M_72',
                   'M_48', 'M_24', 'M_1.25']
 
+<<<<<<< HEAD
 ## windows
 WORKING_DIRECTORY = r'D:\MesiSTRAT\CrossTalkModel'
 
 ## linux
 WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel'
 COPASI_FILENAME = os.path.join(WORKING_DIRECTORY, 'KatrinesTopology.cps')
+=======
+CLUSTER = False
+
+if CLUSTER:
+    WORKING_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel'
+else:
+    WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel'
+
+## on windows
+# WORKING_DIRECTORY = r'D:\MesiSTRAT\CrossTalkModel'
+
+DATA_DIR = os.path.join(WORKING_DIRECTORY, 'data')
+# COPASI_FILENAME = os.path.join(WORKING_DIRECTORY, 'KatrinesTopology.cps')
+>>>>>>> AktActivateErkInhibitTopology2
 GRAPHS_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'SimulationGraphs')
-PICKLE_PATH = os.path.join(WORKING_DIRECTORY, 'models.pickle')
+# PICKLE_PATH = os.path.join(WORKING_DIRECTORY, 'models.pickle')
+
+COPASI_MODELS_DIR = os.path.join(WORKING_DIRECTORY, 'CopasiModelFiles')
+
+COPASI_DATA_DIR = os.path.join(DATA_DIR, 'CopasiDataFiles')
+
+DATA_FILES = sorted(glob.glob(os.path.join(COPASI_DATA_DIR, '*.csv')))
+
+for i in DATA_FILES:
+    assert os.path.isfile(i)
 
 
+# OTHER_COPASI_MODEL = r'D:\MesiSTRAT\CrossTalkModel\copasi_models\E_A_48_2.cps'
+OTHER_COPASI_MODEL = os.path.join(COPASI_MODELS_DIR, 'E/E_other.cps')
 
+# assert os.path.isfile(OTHER_COPASI_MODEL)
 
+# FIT_DIR = os.path.join(WORKING_DIRECTORY, 'fitting')
+# FIT1_DIR = os.path.join(FIT_DIR, 'fit1')
+# FIT_COPASI_FILE = os.path.join(FIT1_DIR, 'CrossTalkBaseModel.cps')
 
+# BASE_COPASI_MODEL = os.path.join(WORKING_DIRECTORY, 'CrossTalkModelBase.cps')
 
+## maximum values in data files:
 
-
-
+PAKT_MAX = 19.72869654
+PERK_MAX = 45.73685166
+PS6K_MAX = 18.05521872
+PSMAD2_MAX = 17.77155917
 
 
 

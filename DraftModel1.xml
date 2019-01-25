@@ -713,7 +713,11 @@
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa180" species="s29">
 <celldesigner:activity>inactive</celldesigner:activity>
+<<<<<<< HEAD
 <celldesigner:bounds x="3267.2884615384614" y="1074.8461538461538" w="229.0" h="78.0"/>
+=======
+<celldesigner:bounds x="3150.2884615384614" y="1066.8461538461538" w="229.0" h="78.0"/>
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:font size="30"/>
 <celldesigner:view state="usual"/>
 <celldesigner:usualView>
@@ -960,7 +964,11 @@
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa193" species="s13">
 <celldesigner:activity>inactive</celldesigner:activity>
+<<<<<<< HEAD
 <celldesigner:bounds x="2685.8333333333335" y="604.0" w="150.0" h="80.0"/>
+=======
+<celldesigner:bounds x="2745.8333333333335" y="584.0" w="150.0" h="80.0"/>
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:font size="30"/>
 <celldesigner:view state="usual"/>
 <celldesigner:usualView>
@@ -977,6 +985,7 @@
 </celldesigner:briefView>
 <celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:speciesAlias>
+<<<<<<< HEAD
 <celldesigner:speciesAlias id="sa194" species="s15">
 <celldesigner:activity>inactive</celldesigner:activity>
 <celldesigner:bounds x="3835.0" y="702.0" w="150.0" h="80.0"/>
@@ -1265,6 +1274,11 @@
 <celldesigner:speciesAlias id="sa209" species="s46">
 <celldesigner:activity>inactive</celldesigner:activity>
 <celldesigner:bounds x="1942.0605419100943" y="2509.994074237665" w="150.0" h="80.0"/>
+=======
+<celldesigner:speciesAlias id="sa194" species="s47">
+<celldesigner:activity>inactive</celldesigner:activity>
+<celldesigner:bounds x="2863.75" y="903.0" w="150.0" h="80.0"/>
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:font size="30"/>
 <celldesigner:view state="usual"/>
 <celldesigner:usualView>
@@ -1281,6 +1295,7 @@
 </celldesigner:briefView>
 <celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:speciesAlias>
+<<<<<<< HEAD
 <celldesigner:speciesAlias id="sa210" species="s8">
 <celldesigner:activity>inactive</celldesigner:activity>
 <celldesigner:bounds x="1672.0605419100943" y="2508.994074237665" w="150.0" h="80.0"/>
@@ -6808,10 +6823,547 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </listOfProducts>
 </reaction>
 <reaction metaid="re175" id="re175" reversible="false">
+=======
+</celldesigner:listOfSpeciesAliases>
+<celldesigner:listOfGroups/>
+<celldesigner:listOfProteins>
+<celldesigner:protein id="pr1" name="TGFbR" type="GENERIC"/>
+<celldesigner:protein id="pr3" name="TGFbR_a" type="GENERIC"/>
+<celldesigner:protein id="pr4" name="Smad2" type="GENERIC"/>
+<celldesigner:protein id="pr5" name="pSmad2" type="GENERIC"/>
+<celldesigner:protein id="pr6" name="Mek" type="GENERIC"/>
+<celldesigner:protein id="pr7" name="pMek" type="GENERIC"/>
+<celldesigner:protein id="pr8" name="Erk" type="GENERIC"/>
+<celldesigner:protein id="pr9" name="pErk" type="GENERIC"/>
+<celldesigner:protein id="pr10" name="pGFR" type="GENERIC"/>
+<celldesigner:protein id="pr11" name="Akt" type="GENERIC"/>
+<celldesigner:protein id="pr12" name="pAkt" type="GENERIC"/>
+<celldesigner:protein id="pr13" name="PI3K" type="GENERIC"/>
+<celldesigner:protein id="pr14" name="pPI3K" type="GENERIC"/>
+<celldesigner:protein id="pr15" name="mTORC1" type="GENERIC"/>
+<celldesigner:protein id="pr16" name="pmTORC1" type="GENERIC"/>
+<celldesigner:protein id="pr17" name="S6K" type="GENERIC"/>
+<celldesigner:protein id="pr18" name="pS6K" type="GENERIC"/>
+<celldesigner:protein id="pr24" name="IGFR" type="GENERIC"/>
+<celldesigner:protein id="pr34" name="TGFbR_EE" type="GENERIC"/>
+<celldesigner:protein id="pr35" name="TGFbR_Cav" type="GENERIC"/>
+<celldesigner:protein id="pr36" name="Raf" type="GENERIC"/>
+<celldesigner:protein id="pr37" name="pRaf" type="GENERIC"/>
+<celldesigner:protein id="pr38" name="ppMek" type="GENERIC"/>
+<celldesigner:protein id="pr39" name="ppErk" type="GENERIC"/>
+</celldesigner:listOfProteins>
+<celldesigner:listOfGenes/>
+<celldesigner:listOfRNAs/>
+<celldesigner:listOfAntisenseRNAs/>
+<celldesigner:listOfLayers>
+<celldesigner:layer id="1" name="text" locked="false" visible="true">
+<celldesigner:listOfTexts>
+<celldesigner:layerSpeciesAlias x="0.0" y="0.0">
+<celldesigner:layerNotes>
+PMID: 24327733
+</celldesigner:layerNotes>
+<celldesigner:bounds x="950.0" y="760.0" w="242.0" h="48.0"/>
+<celldesigner:paint color="ff000000"/>
+<celldesigner:font size="25"/>
+</celldesigner:layerSpeciesAlias>
+<celldesigner:layerSpeciesAlias x="0.0" y="0.0">
+<celldesigner:layerNotes>
+PMID: 17673906 
+</celldesigner:layerNotes>
+<celldesigner:bounds x="1381.0" y="178.0" w="235.0" h="60.0"/>
+<celldesigner:paint color="ff000000"/>
+<celldesigner:font size="25"/>
+</celldesigner:layerSpeciesAlias>
+<celldesigner:layerSpeciesAlias x="0.0" y="0.0">
+<celldesigner:layerNotes>
+PMID: 10576742
+</celldesigner:layerNotes>
+<celldesigner:bounds x="1410.0" y="865.0" w="197.0" h="49.0"/>
+<celldesigner:paint color="ff000000"/>
+<celldesigner:font size="25"/>
+</celldesigner:layerSpeciesAlias>
+<celldesigner:layerSpeciesAlias x="0.0" y="0.0">
+<celldesigner:layerNotes>
+PMID: 11940578 
+</celldesigner:layerNotes>
+<celldesigner:bounds x="1295.0" y="1066.0" w="200.0" h="38.0"/>
+<celldesigner:paint color="ff000000"/>
+<celldesigner:font size="25"/>
+</celldesigner:layerSpeciesAlias>
+<celldesigner:layerSpeciesAlias x="0.0" y="0.0">
+<celldesigner:layerNotes>
+PMID: 17640984 
+</celldesigner:layerNotes>
+<celldesigner:bounds x="1388.0" y="1263.0" w="196.0" h="46.0"/>
+<celldesigner:paint color="ff000000"/>
+<celldesigner:font size="25"/>
+</celldesigner:layerSpeciesAlias>
+<celldesigner:layerSpeciesAlias x="0.0" y="0.0">
+<celldesigner:layerNotes>
+PMID: 20563706 
+</celldesigner:layerNotes>
+<celldesigner:bounds x="1311.0" y="650.0" w="240.0" h="51.0"/>
+<celldesigner:paint color="ff000000"/>
+<celldesigner:font size="25"/>
+</celldesigner:layerSpeciesAlias>
+<celldesigner:layerSpeciesAlias x="0.0" y="0.0">
+<celldesigner:layerNotes>
+PMID: 28286738
+</celldesigner:layerNotes>
+<celldesigner:bounds x="1243.0" y="938.0" w="229.0" h="35.0"/>
+<celldesigner:paint color="ff000000"/>
+<celldesigner:font size="25"/>
+</celldesigner:layerSpeciesAlias>
+<celldesigner:layerSpeciesAlias x="0.0" y="0.0">
+<celldesigner:layerNotes>
+Perhaps a good validation experiment would be to use Smad inhibitor SB? 
+</celldesigner:layerNotes>
+<celldesigner:bounds x="95.0" y="111.0" w="349.0" h="143.0"/>
+<celldesigner:paint color="ff000000"/>
+<celldesigner:font size="11"/>
+</celldesigner:layerSpeciesAlias>
+</celldesigner:listOfTexts>
+</celldesigner:layer>
+</celldesigner:listOfLayers>
+<celldesigner:listOfBlockDiagrams/>
+</celldesigner:extension>
+</annotation>
+<listOfUnitDefinitions>
+<unitDefinition metaid="substance" id="substance" name="substance">
+<listOfUnits>
+<unit metaid="CDMT00108" kind="mole"/>
+</listOfUnits>
+</unitDefinition>
+<unitDefinition metaid="volume" id="volume" name="volume">
+<listOfUnits>
+<unit metaid="CDMT00109" kind="litre"/>
+</listOfUnits>
+</unitDefinition>
+<unitDefinition metaid="area" id="area" name="area">
+<listOfUnits>
+<unit metaid="CDMT00110" kind="metre" exponent="2"/>
+</listOfUnits>
+</unitDefinition>
+<unitDefinition metaid="length" id="length" name="length">
+<listOfUnits>
+<unit metaid="CDMT00111" kind="metre"/>
+</listOfUnits>
+</unitDefinition>
+<unitDefinition metaid="time" id="time" name="time">
+<listOfUnits>
+<unit metaid="CDMT00112" kind="second"/>
+</listOfUnits>
+</unitDefinition>
+</listOfUnitDefinitions>
+<listOfCompartments>
+<compartment metaid="default" id="default" size="1" units="volume"/>
+</listOfCompartments>
+<listOfSpecies>
+<species metaid="s1" id="s1" name="TGFbR" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr1</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s3" id="s3" name="TGFb" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>SIMPLE_MOLECULE</celldesigner:class>
+<celldesigner:name>TGFb</celldesigner:name>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re18"/>
+<celldesigner:catalyzed reaction="re130"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s4" id="s4" name="TGFbR_a" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr3</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re21"/>
+<celldesigner:catalyzed reaction="re22"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s5" id="s5" name="Smad2" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr4</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s6" id="s6" name="pSmad2" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr5</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s7" id="s7" name="Mek" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr6</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s8" id="s8" name="pMek" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr7</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re25"/>
+<celldesigner:catalyzed reaction="re26"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s9" id="s9" name="Erk" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr8</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s10" id="s10" name="pErk" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr9</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re27"/>
+<celldesigner:catalyzed reaction="re30"/>
+<celldesigner:catalyzed reaction="re32"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s11" id="s11" name="pGFR" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr10</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re22"/>
+<celldesigner:catalyzed reaction="re26"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s12" id="s12" name="Akt" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr11</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s13" id="s13" name="pAkt" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr12</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re24"/>
+<celldesigner:catalyzed reaction="re30"/>
+<celldesigner:catalyzed reaction="re136"/>
+<celldesigner:catalyzed reaction="re154"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s14" id="s14" name="PI3K" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr13</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s15" id="s15" name="pPI3K" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr14</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re22"/>
+<celldesigner:catalyzed reaction="re28"/>
+<celldesigner:catalyzed reaction="re134"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s16" id="s16" name="mTORC1" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr15</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s17" id="s17" name="pmTORC1" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr16</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re32"/>
+<celldesigner:catalyzed reaction="re138"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s18" id="s18" name="S6K" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr17</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s19" id="s19" name="pS6K" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr18</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re27"/>
+<celldesigner:catalyzed reaction="re133"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s20" id="s20" name="Everolimus" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>DRUG</celldesigner:class>
+<celldesigner:name>Everolimus</celldesigner:name>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re31"/>
+<celldesigner:catalyzed reaction="re136"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s21" id="s21" name="MK2206" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>DRUG</celldesigner:class>
+<celldesigner:name>MK2206</celldesigner:name>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re29"/>
+<celldesigner:catalyzed reaction="re134"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s22" id="s22" name="AZD" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>DRUG</celldesigner:class>
+<celldesigner:name>AZD</celldesigner:name>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re24"/>
+<celldesigner:catalyzed reaction="re142"/>
+<celldesigner:catalyzed reaction="re143"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s28" id="s28" name="IGFR" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr24</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s29" id="s29" name="GrowthFactors" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>SIMPLE_MOLECULE</celldesigner:class>
+<celldesigner:name>GrowthFactors</celldesigner:name>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re100"/>
+<celldesigner:catalyzed reaction="re132"/>
+<celldesigner:catalyzed reaction="re140"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s42" id="s42" name="TGFbR_EE" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr34</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re154"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s43" id="s43" name="TGFbR_Cav" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr35</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re140"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s44" id="s44" name="Raf" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr36</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s45" id="s45" name="pRaf" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr37</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re142"/>
+<celldesigner:catalyzed reaction="re143"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s46" id="s46" name="ppMek" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr38</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re146"/>
+<celldesigner:catalyzed reaction="re147"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+<species metaid="s47" id="s47" name="ppErk" compartment="default" initialAmount="0">
+<annotation>
+<celldesigner:extension>
+<celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
+<celldesigner:speciesIdentity>
+<celldesigner:class>PROTEIN</celldesigner:class>
+<celldesigner:proteinReference>pr39</celldesigner:proteinReference>
+</celldesigner:speciesIdentity>
+<celldesigner:listOfCatalyzedReactions>
+<celldesigner:catalyzed reaction="re133"/>
+<celldesigner:catalyzed reaction="re140"/>
+<celldesigner:catalyzed reaction="re155"/>
+</celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
+</annotation>
+</species>
+</listOfSpecies>
+<listOfReactions>
+<reaction metaid="re18" id="re18" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s10" alias="sa207">
 <celldesigner:linkAnchor position="WSW"/>
 </celldesigner:baseReactant>
@@ -6819,6 +7371,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s9" alias="sa208">
 <celldesigner:linkAnchor position="ESE"/>
+=======
+<celldesigner:baseReactant species="s1" alias="sa37">
+<celldesigner:linkAnchor position="ENE"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s4" alias="sa36">
+<celldesigner:linkAnchor position="WNW"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -6827,6 +7388,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
+<<<<<<< HEAD
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
@@ -6863,10 +7425,16 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
+=======
+<celldesigner:listOfModification>
+<celldesigner:modification type="CATALYSIS" modifiers="s3" aliases="sa38" targetLineIndex="-1,2">
+<celldesigner:connectScheme connectPolicy="direct">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="unknown"/>
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
+<<<<<<< HEAD
 <celldesigner:line width="4.0" color="ff000000"/>
 </celldesigner:extension>
 </annotation>
@@ -6875,25 +7443,62 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa223</celldesigner:alias>
+=======
+<celldesigner:linkTarget species="s3" alias="sa38">
+<celldesigner:linkAnchor position="S"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+</celldesigner:listOfModification>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00054" species="s1">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa37</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00193" species="s42">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa221</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00055" species="s4">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa36</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
+<<<<<<< HEAD
 </reaction>
 <reaction metaid="re177" id="re177" reversible="false">
+=======
+<listOfModifiers>
+<modifierSpeciesReference metaid="CDMT00056" species="s3">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa38</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+</listOfModifiers>
+</reaction>
+<reaction metaid="re19" id="re19" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s42" alias="sa221">
 <celldesigner:linkAnchor position="NNE"/>
 </celldesigner:baseReactant>
@@ -6901,6 +7506,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s4" alias="sa223">
 <celldesigner:linkAnchor position="SSE"/>
+=======
+<celldesigner:baseReactant species="s4" alias="sa36">
+<celldesigner:linkAnchor position="WSW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s1" alias="sa37">
+<celldesigner:linkAnchor position="ESE"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -6912,29 +7526,48 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00194" species="s42">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa221</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00057" species="s4">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa36</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00195" species="s4">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa223</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00058" species="s1">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa37</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re178" id="re178" reversible="false">
+=======
+<reaction metaid="re20" id="re20" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s4" alias="sa223">
 <celldesigner:linkAnchor position="SSE"/>
 </celldesigner:baseReactant>
@@ -6942,6 +7575,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s43" alias="sa220">
 <celldesigner:linkAnchor position="N"/>
+=======
+<celldesigner:baseReactant species="s6" alias="sa33">
+<celldesigner:linkAnchor position="ESE"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s5" alias="sa34">
+<celldesigner:linkAnchor position="WSW"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -6953,29 +7595,48 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00196" species="s4">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa223</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00059" species="s6">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa33</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00197" species="s43">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa220</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00060" species="s5">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa34</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re179" id="re179" reversible="false">
+=======
+<reaction metaid="re21" id="re21" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s43" alias="sa220">
 <celldesigner:linkAnchor position="NNW"/>
 </celldesigner:baseReactant>
@@ -6983,6 +7644,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s4" alias="sa223">
 <celldesigner:linkAnchor position="S"/>
+=======
+<celldesigner:baseReactant species="s5" alias="sa34">
+<celldesigner:linkAnchor position="WNW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s6" alias="sa33">
+<celldesigner:linkAnchor position="ENE"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -6991,6 +7661,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
+<<<<<<< HEAD
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
@@ -6998,25 +7669,69 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa220</celldesigner:alias>
+=======
+<celldesigner:listOfModification>
+<celldesigner:modification type="CATALYSIS" modifiers="s4" aliases="sa36" targetLineIndex="-1,3">
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s4" alias="sa36">
+<celldesigner:linkAnchor position="S"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+</celldesigner:listOfModification>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00062" species="s5">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa34</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00199" species="s4">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa223</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00063" species="s6">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa33</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
+<<<<<<< HEAD
 </reaction>
 <reaction metaid="re180" id="re180" reversible="false">
+=======
+<listOfModifiers>
+<modifierSpeciesReference metaid="CDMT00001" species="s4">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa36</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+</listOfModifiers>
+</reaction>
+<reaction metaid="re22" id="re22" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s5" alias="sa219">
 <celldesigner:linkAnchor position="ENE"/>
 </celldesigner:baseReactant>
@@ -7024,6 +7739,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s6" alias="sa218">
 <celldesigner:linkAnchor position="WNW"/>
+=======
+<celldesigner:baseReactant species="s7" alias="sa25">
+<celldesigner:linkAnchor position="SSW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s8" alias="sa24">
+<celldesigner:linkAnchor position="NNW"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -7033,6 +7757,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
+<<<<<<< HEAD
 <celldesigner:modification type="CATALYSIS" modifiers="s42" aliases="sa221" targetLineIndex="-1,5" editPoints="-0.00472790116691435,0.15287905437047122 0.9943166099436938,0.18377526660392007">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
@@ -7047,13 +7772,47 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:line width="4.0" color="ff000000"/>
 </celldesigner:modification>
 <celldesigner:modification type="CATALYSIS" modifiers="s13" aliases="sa205" targetLineIndex="-1,2">
+=======
+<celldesigner:modification type="CATALYSIS" modifiers="s4" aliases="sa36" targetLineIndex="-1,6" editPoints="0.31615360901397294,-0.33150599526006097 0.8398447030715519,0.16793242142647613">
+<celldesigner:connectScheme connectPolicy="square">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="horizontal"/>
+<celldesigner:lineDirection index="1" value="vertical"/>
+<celldesigner:lineDirection index="2" value="horizontal"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s4" alias="sa36">
+<celldesigner:linkAnchor position="E"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ffff0099"/>
+</celldesigner:modification>
+<celldesigner:modification type="CATALYSIS" modifiers="s15" aliases="sa31" targetLineIndex="-1,7" editPoints="0.4735338136402927,0.1165066063325837 0.5306125737383649,-0.11548644365758065">
+<celldesigner:connectScheme connectPolicy="square">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="horizontal"/>
+<celldesigner:lineDirection index="1" value="vertical"/>
+<celldesigner:lineDirection index="2" value="horizontal"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s15" alias="sa31">
+<celldesigner:linkAnchor position="E"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ffff0099"/>
+</celldesigner:modification>
+<celldesigner:modification type="CATALYSIS" modifiers="s11" aliases="sa29" targetLineIndex="-1,3">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:connectScheme connectPolicy="direct">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="unknown"/>
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
+<<<<<<< HEAD
 <celldesigner:linkTarget species="s13" alias="sa205">
 <celldesigner:linkAnchor position="SSE"/>
+=======
+<celldesigner:linkTarget species="s11" alias="sa29">
+<celldesigner:linkAnchor position="E"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ff000000"/>
 </celldesigner:modification>
@@ -7061,24 +7820,39 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00200" species="s5">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa219</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00064" species="s7">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa25</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00201" species="s6">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa218</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00065" species="s8">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa24</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 <listOfModifiers>
+<<<<<<< HEAD
 <modifierSpeciesReference metaid="CDMT00202" species="s42">
 <annotation>
 <celldesigner:extension>
@@ -7090,16 +7864,41 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa205</celldesigner:alias>
+=======
+<modifierSpeciesReference metaid="CDMT00066" species="s4">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa36</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+<modifierSpeciesReference metaid="CDMT00067" species="s15">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa31</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+<modifierSpeciesReference metaid="CDMT00068" species="s11">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa29</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re182" id="re182" reversible="false">
+=======
+<reaction metaid="re23" id="re23" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s6" alias="sa218">
 <celldesigner:linkAnchor position="SSE"/>
 </celldesigner:baseReactant>
@@ -7107,6 +7906,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s48" alias="sa226">
 <celldesigner:linkAnchor position="NNE"/>
+=======
+<celldesigner:baseReactant species="s10" alias="sa21">
+<celldesigner:linkAnchor position="ESE"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s9" alias="sa22">
+<celldesigner:linkAnchor position="WSW"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -7118,29 +7926,48 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00212" species="s6">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa218</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00069" species="s10">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa21</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00213" species="s48">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa226</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00070" species="s9">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa22</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re183" id="re183" reversible="false">
+=======
+<reaction metaid="re24" id="re24" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s48" alias="sa226">
 <celldesigner:linkAnchor position="NNW"/>
 </celldesigner:baseReactant>
@@ -7148,6 +7975,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s6" alias="sa218">
 <celldesigner:linkAnchor position="SSW"/>
+=======
+<celldesigner:baseReactant species="s8" alias="sa24">
+<celldesigner:linkAnchor position="NNE"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s7" alias="sa25">
+<celldesigner:linkAnchor position="SSE"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -7156,6 +7992,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
+<<<<<<< HEAD
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
@@ -7163,25 +8000,89 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa226</celldesigner:alias>
+=======
+<celldesigner:listOfModification>
+<celldesigner:modification type="CATALYSIS" modifiers="s13" aliases="sa28" targetLineIndex="-1,6" editPoints="0.9536943359731533,0.46733847661451433 1.1473266322217135,0.0721944141536568">
+<celldesigner:connectScheme connectPolicy="square">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="horizontal"/>
+<celldesigner:lineDirection index="1" value="vertical"/>
+<celldesigner:lineDirection index="2" value="horizontal"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s13" alias="sa28">
+<celldesigner:linkAnchor position="ENE"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ffff0099"/>
+</celldesigner:modification>
+<celldesigner:modification type="CATALYSIS" modifiers="s22" aliases="sa78" targetLineIndex="-1,7">
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s22" alias="sa78">
+<celldesigner:linkAnchor position="W"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+</celldesigner:listOfModification>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00071" species="s8">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa24</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00215" species="s6">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa218</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00072" species="s7">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa25</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
+<<<<<<< HEAD
 </reaction>
 <reaction metaid="re184" id="re184" reversible="false">
+=======
+<listOfModifiers>
+<modifierSpeciesReference metaid="CDMT00073" species="s13">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa28</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+<modifierSpeciesReference metaid="CDMT00002" species="s22">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa78</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+</listOfModifiers>
+</reaction>
+<reaction metaid="re25" id="re25" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s49" alias="sa227">
 <celldesigner:linkAnchor position="NNW"/>
 </celldesigner:baseReactant>
@@ -7189,6 +8090,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s5" alias="sa219">
 <celldesigner:linkAnchor position="SSW"/>
+=======
+<celldesigner:baseReactant species="s9" alias="sa22">
+<celldesigner:linkAnchor position="WNW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s10" alias="sa21">
+<celldesigner:linkAnchor position="ENE"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -7197,6 +8107,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
+<<<<<<< HEAD
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
@@ -7204,31 +8115,82 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa227</celldesigner:alias>
+=======
+<celldesigner:listOfModification>
+<celldesigner:modification type="CATALYSIS" modifiers="s8" aliases="sa24" targetLineIndex="-1,3">
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s8" alias="sa24">
+<celldesigner:linkAnchor position="S"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+</celldesigner:listOfModification>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00074" species="s9">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa22</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00217" species="s5">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa219</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00075" species="s10">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa21</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
+<<<<<<< HEAD
 </reaction>
 <reaction metaid="re185" id="re185" reversible="false">
+=======
+<listOfModifiers>
+<modifierSpeciesReference metaid="CDMT00076" species="s8">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa24</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+</listOfModifiers>
+</reaction>
+<reaction metaid="re26" id="re26" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s5" alias="sa219">
+=======
+<celldesigner:baseReactant species="s14" alias="sa35">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="SSE"/>
 </celldesigner:baseReactant>
 </celldesigner:baseReactants>
 <celldesigner:baseProducts>
+<<<<<<< HEAD
 <celldesigner:baseProduct species="s49" alias="sa227">
+=======
+<celldesigner:baseProduct species="s15" alias="sa31">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="NNE"/>
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
@@ -7238,6 +8200,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
+<<<<<<< HEAD
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
@@ -7245,25 +8208,88 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa219</celldesigner:alias>
+=======
+<celldesigner:listOfModification>
+<celldesigner:modification type="CATALYSIS" modifiers="s11" aliases="sa29" targetLineIndex="-1,4" editPoints="0.13325880984546412,-0.33985423264104586">
+<celldesigner:connectScheme connectPolicy="square">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="vertical"/>
+<celldesigner:lineDirection index="1" value="horizontal"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s11" alias="sa29">
+<celldesigner:linkAnchor position="S"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+<celldesigner:modification type="CATALYSIS" modifiers="s8" aliases="sa24" targetLineIndex="-1,5">
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="horizontal"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s8" alias="sa24">
+<celldesigner:linkAnchor position="W"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ffff0099"/>
+</celldesigner:modification>
+</celldesigner:listOfModification>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00077" species="s14">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa35</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00219" species="s49">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa227</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00078" species="s15">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa31</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
+<<<<<<< HEAD
 </reaction>
 <reaction metaid="re187" id="re187" reversible="false">
+=======
+<listOfModifiers>
+<modifierSpeciesReference metaid="CDMT00079" species="s11">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa29</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+<modifierSpeciesReference metaid="CDMT00080" species="s8">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa24</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+</listOfModifiers>
+</reaction>
+<reaction metaid="re27" id="re27" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s48" alias="sa226">
 <celldesigner:linkAnchor position="WSW"/>
 </celldesigner:baseReactant>
@@ -7271,6 +8297,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s49" alias="sa227">
 <celldesigner:linkAnchor position="ESE"/>
+=======
+<celldesigner:baseReactant species="s15" alias="sa31">
+<celldesigner:linkAnchor position="NNW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s14" alias="sa35">
+<celldesigner:linkAnchor position="SSW"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -7280,6 +8315,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
+<<<<<<< HEAD
 <celldesigner:modification type="CATALYSIS" modifiers="s47" aliases="sa203" targetLineIndex="-1,2">
 <celldesigner:connectScheme connectPolicy="direct">
 <celldesigner:listOfLineDirection>
@@ -7288,6 +8324,33 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:linkTarget species="s47" alias="sa203">
 <celldesigner:linkAnchor position="N"/>
+=======
+<celldesigner:modification type="CATALYSIS" modifiers="s10" aliases="sa21" targetLineIndex="-1,5" editPoints="-0.09593163966529561,-0.25335250403069626 0.9552268530526152,-0.6513724807439012 1.176554772776494,-0.06685226541566208">
+<celldesigner:connectScheme connectPolicy="square">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="vertical"/>
+<celldesigner:lineDirection index="1" value="horizontal"/>
+<celldesigner:lineDirection index="2" value="vertical"/>
+<celldesigner:lineDirection index="3" value="horizontal"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s10" alias="sa21">
+<celldesigner:linkAnchor position="S"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ffff0099"/>
+</celldesigner:modification>
+<celldesigner:modification type="CATALYSIS" modifiers="s19" aliases="sa23" targetLineIndex="-1,4" editPoints="-0.012862996595028875,-0.015152440776910914 0.7144389465684573,-0.6325633619748522 1.1461232698045234,-0.12404490798697942">
+<celldesigner:connectScheme connectPolicy="square">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="vertical"/>
+<celldesigner:lineDirection index="1" value="horizontal"/>
+<celldesigner:lineDirection index="2" value="vertical"/>
+<celldesigner:lineDirection index="3" value="horizontal"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s19" alias="sa23">
+<celldesigner:linkAnchor position="S"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ff000000"/>
 </celldesigner:modification>
@@ -7295,44 +8358,84 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00222" species="s48">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa226</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00081" species="s15">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa31</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00223" species="s49">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa227</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00082" species="s14">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa35</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 <listOfModifiers>
+<<<<<<< HEAD
 <modifierSpeciesReference metaid="CDMT00224" species="s47">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa203</celldesigner:alias>
+=======
+<modifierSpeciesReference metaid="CDMT00083" species="s10">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa21</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+<modifierSpeciesReference metaid="CDMT00084" species="s19">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa23</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re188" id="re188" reversible="false">
+=======
+<reaction metaid="re28" id="re28" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s1" alias="sa253">
+=======
+<celldesigner:baseReactant species="s12" alias="sa32">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="ENE"/>
 </celldesigner:baseReactant>
 </celldesigner:baseReactants>
 <celldesigner:baseProducts>
+<<<<<<< HEAD
 <celldesigner:baseProduct species="s4" alias="sa254">
+=======
+<celldesigner:baseProduct species="s13" alias="sa28">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="WNW"/>
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
@@ -7343,6 +8446,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
+<<<<<<< HEAD
 <celldesigner:modification type="CATALYSIS" modifiers="s3" aliases="sa259" targetLineIndex="-1,2">
 <celldesigner:connectScheme connectPolicy="direct">
 <celldesigner:listOfLineDirection>
@@ -7350,6 +8454,17 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
 <celldesigner:linkTarget species="s3" alias="sa259">
+=======
+<celldesigner:modification type="CATALYSIS" modifiers="s15" aliases="sa31" targetLineIndex="-1,2" editPoints="0.04638384853634747,0.14179285848746215 0.9497179585739666,-0.1537094184583534">
+<celldesigner:connectScheme connectPolicy="square">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="vertical"/>
+<celldesigner:lineDirection index="1" value="horizontal"/>
+<celldesigner:lineDirection index="2" value="vertical"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s15" alias="sa31">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="S"/>
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ff000000"/>
@@ -7358,44 +8473,77 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00225" species="s1">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa253</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00085" species="s12">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa32</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00226" species="s4">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa254</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00086" species="s13">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa28</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 <listOfModifiers>
+<<<<<<< HEAD
 <modifierSpeciesReference metaid="CDMT00227" species="s3">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa259</celldesigner:alias>
+=======
+<modifierSpeciesReference metaid="CDMT00087" species="s15">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa31</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re189" id="re189" reversible="false">
+=======
+<reaction metaid="re29" id="re29" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s4" alias="sa254">
+=======
+<celldesigner:baseReactant species="s13" alias="sa28">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="WSW"/>
 </celldesigner:baseReactant>
 </celldesigner:baseReactants>
 <celldesigner:baseProducts>
+<<<<<<< HEAD
 <celldesigner:baseProduct species="s1" alias="sa253">
+=======
+<celldesigner:baseProduct species="s12" alias="sa32">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="ESE"/>
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
@@ -7405,6 +8553,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
+<<<<<<< HEAD
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
@@ -7412,25 +8561,69 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa254</celldesigner:alias>
+=======
+<celldesigner:listOfModification>
+<celldesigner:modification type="CATALYSIS" modifiers="s21" aliases="sa77" targetLineIndex="-1,2">
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s21" alias="sa77">
+<celldesigner:linkAnchor position="E"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+</celldesigner:listOfModification>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00088" species="s13">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa28</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00229" species="s1">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa253</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00089" species="s12">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa32</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
+<<<<<<< HEAD
 </reaction>
 <reaction metaid="re190" id="re190" reversible="false">
+=======
+<listOfModifiers>
+<modifierSpeciesReference metaid="CDMT00003" species="s21">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa77</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+</listOfModifiers>
+</reaction>
+<reaction metaid="re30" id="re30" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s14" alias="sa256">
 <celldesigner:linkAnchor position="SSE"/>
 </celldesigner:baseReactant>
@@ -7438,6 +8631,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s15" alias="sa258">
 <celldesigner:linkAnchor position="NNE"/>
+=======
+<celldesigner:baseReactant species="s16" alias="sa30">
+<celldesigner:linkAnchor position="ENE"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s17" alias="sa26">
+<celldesigner:linkAnchor position="WNW"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -7447,12 +8649,17 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
+<<<<<<< HEAD
 <celldesigner:modification type="CATALYSIS" modifiers="s29" aliases="sa230" targetLineIndex="-1,5">
+=======
+<celldesigner:modification type="CATALYSIS" modifiers="s13" aliases="sa28" targetLineIndex="-1,4">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:connectScheme connectPolicy="direct">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="unknown"/>
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
+<<<<<<< HEAD
 <celldesigner:linkTarget species="s29" alias="sa230">
 <celldesigner:linkAnchor position="W"/>
 </celldesigner:linkTarget>
@@ -7471,29 +8678,62 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:linkAnchor position="SSW"/>
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ff000000"/>
+=======
+<celldesigner:linkTarget species="s13" alias="sa28">
+<celldesigner:linkAnchor position="S"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+<celldesigner:modification type="CATALYSIS" modifiers="s10" aliases="sa21" targetLineIndex="-1,5" editPoints="0.9818582214532015,0.13346405665180905">
+<celldesigner:connectScheme connectPolicy="square">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="horizontal"/>
+<celldesigner:lineDirection index="1" value="vertical"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s10" alias="sa21">
+<celldesigner:linkAnchor position="WNW"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ffff0099"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:modification>
 </celldesigner:listOfModification>
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00230" species="s14">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa256</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00090" species="s16">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa30</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00231" species="s15">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa258</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00091" species="s17">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa26</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 <listOfModifiers>
+<<<<<<< HEAD
 <modifierSpeciesReference metaid="CDMT00232" species="s29">
 <annotation>
 <celldesigner:extension>
@@ -7505,16 +8745,34 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa244</celldesigner:alias>
+=======
+<modifierSpeciesReference metaid="CDMT00092" species="s13">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa28</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+<modifierSpeciesReference metaid="CDMT00100" species="s10">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa21</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re191" id="re191" reversible="false">
+=======
+<reaction metaid="re31" id="re31" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s15" alias="sa258">
 <celldesigner:linkAnchor position="NNW"/>
 </celldesigner:baseReactant>
@@ -7522,6 +8780,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s14" alias="sa256">
 <celldesigner:linkAnchor position="SSW"/>
+=======
+<celldesigner:baseReactant species="s17" alias="sa26">
+<celldesigner:linkAnchor position="WSW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s16" alias="sa30">
+<celldesigner:linkAnchor position="ESE"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -7531,6 +8798,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
+<<<<<<< HEAD
 <celldesigner:modification type="CATALYSIS" modifiers="s19" aliases="sa231" targetLineIndex="-1,4" editPoints="-0.012748310259782514,-0.015757397330176337 0.743590940041047,-0.6276634895895199 1.1519417000016938,-0.12292638767893904">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
@@ -7558,29 +8826,56 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:linkAnchor position="S"/>
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ffff0066"/>
+=======
+<celldesigner:modification type="CATALYSIS" modifiers="s20" aliases="sa76" targetLineIndex="-1,2">
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s20" alias="sa76">
+<celldesigner:linkAnchor position="N"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:modification>
 </celldesigner:listOfModification>
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00234" species="s15">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa258</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00093" species="s17">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa26</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00235" species="s14">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa256</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00094" species="s16">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa30</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 <listOfModifiers>
+<<<<<<< HEAD
 <modifierSpeciesReference metaid="CDMT00236" species="s19">
 <annotation>
 <celldesigner:extension>
@@ -7592,22 +8887,40 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa228</celldesigner:alias>
+=======
+<modifierSpeciesReference metaid="CDMT00004" species="s20">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa76</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re192" id="re192" reversible="false">
+=======
+<reaction metaid="re32" id="re32" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s12" alias="sa251">
+=======
+<celldesigner:baseReactant species="s18" alias="sa27">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="ENE"/>
 </celldesigner:baseReactant>
 </celldesigner:baseReactants>
 <celldesigner:baseProducts>
+<<<<<<< HEAD
 <celldesigner:baseProduct species="s13" alias="sa240">
+=======
+<celldesigner:baseProduct species="s19" alias="sa23">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="WNW"/>
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
@@ -7618,6 +8931,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
+<<<<<<< HEAD
 <celldesigner:modification type="CATALYSIS" modifiers="s15" aliases="sa258" targetLineIndex="-1,2" editPoints="0.046383848536340366,0.14179285848744705 0.949717958573963,-0.15370941845836583">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
@@ -7627,10 +8941,20 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
 <celldesigner:linkTarget species="s15" alias="sa258">
+=======
+<celldesigner:modification type="CATALYSIS" modifiers="s17" aliases="sa26" targetLineIndex="-1,4">
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s17" alias="sa26">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="S"/>
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ff000000"/>
 </celldesigner:modification>
+<<<<<<< HEAD
 <celldesigner:modification type="INHIBITION" modifiers="s21" aliases="sa246" targetLineIndex="-1,5">
 <celldesigner:connectScheme connectPolicy="direct">
 <celldesigner:listOfLineDirection>
@@ -7641,29 +8965,58 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:linkAnchor position="SSW"/>
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ffff0066"/>
+=======
+<celldesigner:modification type="CATALYSIS" modifiers="s10" aliases="sa21" targetLineIndex="-1,5" editPoints="0.07173194999205545,-0.19253029492426466 0.9498399862921527,0.13463069432305508">
+<celldesigner:connectScheme connectPolicy="square">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="vertical"/>
+<celldesigner:lineDirection index="1" value="horizontal"/>
+<celldesigner:lineDirection index="2" value="vertical"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s10" alias="sa21">
+<celldesigner:linkAnchor position="SSW"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ffff0099"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:modification>
 </celldesigner:listOfModification>
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00238" species="s12">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa251</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00095" species="s18">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa27</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00239" species="s13">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa240</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00096" species="s19">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa23</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 <listOfModifiers>
+<<<<<<< HEAD
 <modifierSpeciesReference metaid="CDMT00240" species="s15">
 <annotation>
 <celldesigner:extension>
@@ -7675,22 +9028,47 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa246</celldesigner:alias>
+=======
+<modifierSpeciesReference metaid="CDMT00097" species="s17">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa26</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+<modifierSpeciesReference metaid="CDMT00101" species="s10">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa21</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re193" id="re193" reversible="false">
+=======
+<reaction metaid="re33" id="re33" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s13" alias="sa240">
+=======
+<celldesigner:baseReactant species="s19" alias="sa23">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="WSW"/>
 </celldesigner:baseReactant>
 </celldesigner:baseReactants>
 <celldesigner:baseProducts>
+<<<<<<< HEAD
 <celldesigner:baseProduct species="s12" alias="sa251">
+=======
+<celldesigner:baseProduct species="s18" alias="sa27">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="ESE"/>
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
@@ -7703,29 +9081,48 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00242" species="s13">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa240</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00098" species="s19">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa23</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00243" species="s12">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa251</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00099" species="s18">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa27</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re194" id="re194" reversible="false">
+=======
+<reaction metaid="re100" id="re100" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s16" alias="sa247">
 <celldesigner:linkAnchor position="ENE"/>
 </celldesigner:baseReactant>
@@ -7733,6 +9130,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s17" alias="sa242">
 <celldesigner:linkAnchor position="WNW"/>
+=======
+<celldesigner:baseReactant species="s28" alias="sa121">
+<celldesigner:linkAnchor position="SSE"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s11" alias="sa29">
+<celldesigner:linkAnchor position="NNE"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -7742,12 +9148,17 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
+<<<<<<< HEAD
 <celldesigner:modification type="CATALYSIS" modifiers="s13" aliases="sa240" targetLineIndex="-1,4">
+=======
+<celldesigner:modification type="CATALYSIS" modifiers="s29" aliases="sa122" targetLineIndex="-1,2">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:connectScheme connectPolicy="direct">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="unknown"/>
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
+<<<<<<< HEAD
 <celldesigner:linkTarget species="s13" alias="sa240">
 <celldesigner:linkAnchor position="S"/>
 </celldesigner:linkTarget>
@@ -7764,28 +9175,50 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ffff0066"/>
 </celldesigner:modification>
+=======
+<celldesigner:linkTarget species="s29" alias="sa122">
+<celldesigner:linkAnchor position="W"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:listOfModification>
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00244" species="s16">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa247</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00005" species="s28">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa121</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00245" species="s17">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa242</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00006" species="s11">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa29</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 <listOfModifiers>
+<<<<<<< HEAD
 <modifierSpeciesReference metaid="CDMT00246" species="s13">
 <annotation>
 <celldesigner:extension>
@@ -7797,16 +9230,27 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa232</celldesigner:alias>
+=======
+<modifierSpeciesReference metaid="CDMT00007" species="s29">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa122</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re195" id="re195" reversible="false">
+=======
+<reaction metaid="re101" id="re101" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s17" alias="sa242">
 <celldesigner:linkAnchor position="WSW"/>
 </celldesigner:baseReactant>
@@ -7814,6 +9258,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s16" alias="sa247">
 <celldesigner:linkAnchor position="ESE"/>
+=======
+<celldesigner:baseReactant species="s11" alias="sa29">
+<celldesigner:linkAnchor position="NNW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s28" alias="sa121">
+<celldesigner:linkAnchor position="SSW"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -7825,35 +9278,61 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00248" species="s17">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa242</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00008" species="s11">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa29</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00249" species="s16">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa247</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00009" species="s28">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa121</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re196" id="re196" reversible="false">
+=======
+<reaction metaid="re130" id="re130" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s18" alias="sa241">
+=======
+<celldesigner:baseReactant species="s1" alias="sa166">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="ENE"/>
 </celldesigner:baseReactant>
 </celldesigner:baseReactants>
 <celldesigner:baseProducts>
+<<<<<<< HEAD
 <celldesigner:baseProduct species="s19" alias="sa231">
+=======
+<celldesigner:baseProduct species="s4" alias="sa167">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="WNW"/>
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
@@ -7864,13 +9343,21 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
+<<<<<<< HEAD
 <celldesigner:modification type="CATALYSIS" modifiers="s17" aliases="sa242" targetLineIndex="-1,4">
+=======
+<celldesigner:modification type="CATALYSIS" modifiers="s3" aliases="sa165" targetLineIndex="-1,2">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:connectScheme connectPolicy="direct">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="unknown"/>
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
+<<<<<<< HEAD
 <celldesigner:linkTarget species="s17" alias="sa242">
+=======
+<celldesigner:linkTarget species="s3" alias="sa165">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="S"/>
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ff000000"/>
@@ -7879,44 +9366,77 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00250" species="s18">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa241</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00010" species="s1">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa166</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00251" species="s19">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa231</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00011" species="s4">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa167</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 <listOfModifiers>
+<<<<<<< HEAD
 <modifierSpeciesReference metaid="CDMT00252" species="s17">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa242</celldesigner:alias>
+=======
+<modifierSpeciesReference metaid="CDMT00012" species="s3">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa165</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re197" id="re197" reversible="false">
+=======
+<reaction metaid="re131" id="re131" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s19" alias="sa231">
+=======
+<celldesigner:baseReactant species="s4" alias="sa167">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="WSW"/>
 </celldesigner:baseReactant>
 </celldesigner:baseReactants>
 <celldesigner:baseProducts>
+<<<<<<< HEAD
 <celldesigner:baseProduct species="s18" alias="sa241">
+=======
+<celldesigner:baseProduct species="s1" alias="sa166">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="ESE"/>
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
@@ -7929,29 +9449,48 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00253" species="s19">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa231</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00013" species="s4">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa167</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00254" species="s18">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa241</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00014" species="s1">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa166</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re198" id="re198" reversible="false">
+=======
+<reaction metaid="re132" id="re132" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s44" alias="sa238">
 <celldesigner:linkAnchor position="ENE"/>
 </celldesigner:baseReactant>
@@ -7959,6 +9498,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s45" alias="sa239">
 <celldesigner:linkAnchor position="WNW"/>
+=======
+<celldesigner:baseReactant species="s14" alias="sa173">
+<celldesigner:linkAnchor position="SSE"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s15" alias="sa174">
+<celldesigner:linkAnchor position="NNE"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -7968,6 +9516,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
+<<<<<<< HEAD
 <celldesigner:modification type="CATALYSIS" modifiers="s29" aliases="sa230" targetLineIndex="-1,4" editPoints="0.37357713106540213,-0.573114905786424 1.0753853797397914,-0.11565077520679345">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
@@ -8006,13 +9555,21 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:line width="4.0" color="ffff0066"/>
 </celldesigner:modification>
 <celldesigner:modification type="CATALYSIS" modifiers="s15" aliases="sa245" targetLineIndex="-1,5">
+=======
+<celldesigner:modification type="CATALYSIS" modifiers="s29" aliases="sa180" targetLineIndex="-1,2">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:connectScheme connectPolicy="direct">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="unknown"/>
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
+<<<<<<< HEAD
 <celldesigner:linkTarget species="s15" alias="sa245">
 <celldesigner:linkAnchor position="WSW"/>
+=======
+<celldesigner:linkTarget species="s29" alias="sa180">
+<celldesigner:linkAnchor position="W"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ff000000"/>
 </celldesigner:modification>
@@ -8020,24 +9577,39 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00255" species="s44">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa238</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00015" species="s14">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa173</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00256" species="s45">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa239</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00016" species="s15">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa174</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 <listOfModifiers>
+<<<<<<< HEAD
 <modifierSpeciesReference metaid="CDMT00257" species="s29">
 <annotation>
 <celldesigner:extension>
@@ -8063,16 +9635,27 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa245</celldesigner:alias>
+=======
+<modifierSpeciesReference metaid="CDMT00113" species="s29">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa180</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re199" id="re199" reversible="false">
+=======
+<reaction metaid="re133" id="re133" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s45" alias="sa239">
 <celldesigner:linkAnchor position="WSW"/>
 </celldesigner:baseReactant>
@@ -8080,6 +9663,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s44" alias="sa238">
 <celldesigner:linkAnchor position="ESE"/>
+=======
+<celldesigner:baseReactant species="s15" alias="sa174">
+<celldesigner:linkAnchor position="NNW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s14" alias="sa173">
+<celldesigner:linkAnchor position="SSW"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -8088,6 +9680,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
+<<<<<<< HEAD
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
@@ -8095,31 +9688,106 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa239</celldesigner:alias>
+=======
+<celldesigner:listOfModification>
+<celldesigner:modification type="CATALYSIS" modifiers="s19" aliases="sa182" targetLineIndex="-1,4" editPoints="-0.012748310259782514,-0.01575739733017778 0.7435909400410425,-0.6276634895895185 1.1519417000016907,-0.12292638767893671">
+<celldesigner:connectScheme connectPolicy="square">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="vertical"/>
+<celldesigner:lineDirection index="1" value="horizontal"/>
+<celldesigner:lineDirection index="2" value="vertical"/>
+<celldesigner:lineDirection index="3" value="horizontal"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s19" alias="sa182">
+<celldesigner:linkAnchor position="S"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ffff0066"/>
+</celldesigner:modification>
+<celldesigner:modification type="CATALYSIS" modifiers="s47" aliases="sa191" targetLineIndex="-1,5" editPoints="-0.007217635354193064,-0.02323766738258129 1.0019005598916175,-0.3366704677860246 1.097102854338972,-0.030160212853180796">
+<celldesigner:connectScheme connectPolicy="square">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="vertical"/>
+<celldesigner:lineDirection index="1" value="horizontal"/>
+<celldesigner:lineDirection index="2" value="vertical"/>
+<celldesigner:lineDirection index="3" value="horizontal"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s47" alias="sa191">
+<celldesigner:linkAnchor position="S"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ffff0066"/>
+</celldesigner:modification>
+</celldesigner:listOfModification>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00017" species="s15">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa174</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00262" species="s44">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa238</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00018" species="s14">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa173</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
+<<<<<<< HEAD
 </reaction>
 <reaction metaid="re200" id="re200" reversible="false">
+=======
+<listOfModifiers>
+<modifierSpeciesReference metaid="CDMT00019" species="s19">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa182</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+<modifierSpeciesReference metaid="CDMT00114" species="s47">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa191</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+</listOfModifiers>
+</reaction>
+<reaction metaid="re134" id="re134" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s7" alias="sa233">
+=======
+<celldesigner:baseReactant species="s12" alias="sa175">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="ENE"/>
 </celldesigner:baseReactant>
 </celldesigner:baseReactants>
 <celldesigner:baseProducts>
+<<<<<<< HEAD
 <celldesigner:baseProduct species="s8" alias="sa234">
+=======
+<celldesigner:baseProduct species="s13" alias="sa178">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="WNW"/>
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
@@ -8130,7 +9798,11 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
+<<<<<<< HEAD
 <celldesigner:modification type="CATALYSIS" modifiers="s45" aliases="sa239" targetLineIndex="-1,2" editPoints="0.2674293446757403,-0.2534061999475803 0.7405245249300361,0.24586940598009832">
+=======
+<celldesigner:modification type="CATALYSIS" modifiers="s15" aliases="sa174" targetLineIndex="-1,2" editPoints="0.046383848536345695,0.1417928584874566 0.9497179585739648,-0.15370941845835895">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="vertical"/>
@@ -8138,19 +9810,32 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:lineDirection index="2" value="vertical"/>
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
+<<<<<<< HEAD
 <celldesigner:linkTarget species="s45" alias="sa239">
+=======
+<celldesigner:linkTarget species="s15" alias="sa174">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="S"/>
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ff000000"/>
 </celldesigner:modification>
+<<<<<<< HEAD
 <celldesigner:modification type="INHIBITION" modifiers="s22" aliases="sa237" targetLineIndex="-1,3">
+=======
+<celldesigner:modification type="INHIBITION" modifiers="s21" aliases="sa172" targetLineIndex="-1,5">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:connectScheme connectPolicy="direct">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="unknown"/>
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
+<<<<<<< HEAD
 <celldesigner:linkTarget species="s22" alias="sa237">
 <celldesigner:linkAnchor position="N"/>
+=======
+<celldesigner:linkTarget species="s21" alias="sa172">
+<celldesigner:linkAnchor position="SSW"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ffff0066"/>
 </celldesigner:modification>
@@ -8158,24 +9843,39 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00263" species="s7">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa233</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00020" species="s12">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa175</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00264" species="s8">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa234</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00021" species="s13">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa178</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 <listOfModifiers>
+<<<<<<< HEAD
 <modifierSpeciesReference metaid="CDMT00265" species="s45">
 <annotation>
 <celldesigner:extension>
@@ -8187,22 +9887,88 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa237</celldesigner:alias>
+=======
+<modifierSpeciesReference metaid="CDMT00022" species="s15">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa174</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+<modifierSpeciesReference metaid="CDMT00115" species="s21">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa172</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re201" id="re201" reversible="false">
+=======
+<reaction metaid="re135" id="re135" reversible="false">
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<celldesigner:baseReactant species="s13" alias="sa178">
+<celldesigner:linkAnchor position="WSW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s12" alias="sa175">
+<celldesigner:linkAnchor position="ESE"/>
+</celldesigner:baseProduct>
+</celldesigner:baseProducts>
+<celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00023" species="s13">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa178</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfReactants>
+<listOfProducts>
+<speciesReference metaid="CDMT00024" species="s12">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa175</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfProducts>
+</reaction>
+<reaction metaid="re136" id="re136" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
+<annotation>
+<celldesigner:extension>
+<celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
+<celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s8" alias="sa234">
+=======
+<celldesigner:baseReactant species="s16" alias="sa176">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="ENE"/>
 </celldesigner:baseReactant>
 </celldesigner:baseReactants>
 <celldesigner:baseProducts>
+<<<<<<< HEAD
 <celldesigner:baseProduct species="s46" alias="sa235">
+=======
+<celldesigner:baseProduct species="s17" alias="sa181">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="WNW"/>
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
@@ -8213,6 +9979,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
+<<<<<<< HEAD
 <celldesigner:modification type="CATALYSIS" modifiers="s45" aliases="sa239" targetLineIndex="-1,2" editPoints="0.23436564051336006,0.2530306212142621 0.7726048505978085,-0.2455049971843808">
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
@@ -8222,18 +9989,36 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
 <celldesigner:linkTarget species="s45" alias="sa239">
-<celldesigner:linkAnchor position="S"/>
-</celldesigner:linkTarget>
-<celldesigner:line width="4.0" color="ff000000"/>
-</celldesigner:modification>
-<celldesigner:modification type="INHIBITION" modifiers="s22" aliases="sa237" targetLineIndex="-1,6">
+=======
+<celldesigner:modification type="CATALYSIS" modifiers="s13" aliases="sa178" targetLineIndex="-1,4">
 <celldesigner:connectScheme connectPolicy="direct">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="unknown"/>
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
+<celldesigner:linkTarget species="s13" alias="sa178">
+>>>>>>> AktActivateErkInhibitTopology2
+<celldesigner:linkAnchor position="S"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+<<<<<<< HEAD
+<celldesigner:modification type="INHIBITION" modifiers="s22" aliases="sa237" targetLineIndex="-1,6">
+=======
+<celldesigner:modification type="INHIBITION" modifiers="s20" aliases="sa183" targetLineIndex="-1,5">
+>>>>>>> AktActivateErkInhibitTopology2
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<<<<<<< HEAD
 <celldesigner:linkTarget species="s22" alias="sa237">
 <celldesigner:linkAnchor position="N"/>
+=======
+<celldesigner:linkTarget species="s20" alias="sa183">
+<celldesigner:linkAnchor position="WSW"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ffff0066"/>
 </celldesigner:modification>
@@ -8241,24 +10026,39 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00267" species="s8">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa234</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00026" species="s16">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa176</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00268" species="s46">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa235</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00027" species="s17">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa181</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 <listOfModifiers>
+<<<<<<< HEAD
 <modifierSpeciesReference metaid="CDMT00269" species="s45">
 <annotation>
 <celldesigner:extension>
@@ -8270,22 +10070,47 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa237</celldesigner:alias>
+=======
+<modifierSpeciesReference metaid="CDMT00028" species="s13">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa178</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+<modifierSpeciesReference metaid="CDMT00116" species="s20">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa183</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re202" id="re202" reversible="false">
+=======
+<reaction metaid="re137" id="re137" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s46" alias="sa235">
+=======
+<celldesigner:baseReactant species="s17" alias="sa181">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="WSW"/>
 </celldesigner:baseReactant>
 </celldesigner:baseReactants>
 <celldesigner:baseProducts>
+<<<<<<< HEAD
 <celldesigner:baseProduct species="s8" alias="sa234">
+=======
+<celldesigner:baseProduct species="s16" alias="sa176">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="ESE"/>
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
@@ -8298,29 +10123,48 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00271" species="s46">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa235</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00029" species="s17">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa181</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00272" species="s8">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa234</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00030" species="s16">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa176</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re203" id="re203" reversible="false">
+=======
+<reaction metaid="re138" id="re138" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s8" alias="sa234">
 <celldesigner:linkAnchor position="WSW"/>
 </celldesigner:baseReactant>
@@ -8328,6 +10172,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s7" alias="sa233">
 <celldesigner:linkAnchor position="ESE"/>
+=======
+<celldesigner:baseReactant species="s18" alias="sa179">
+<celldesigner:linkAnchor position="ENE"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s19" alias="sa182">
+<celldesigner:linkAnchor position="WNW"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -8336,6 +10189,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
+<<<<<<< HEAD
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
@@ -8343,25 +10197,69 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa234</celldesigner:alias>
+=======
+<celldesigner:listOfModification>
+<celldesigner:modification type="CATALYSIS" modifiers="s17" aliases="sa181" targetLineIndex="-1,4">
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s17" alias="sa181">
+<celldesigner:linkAnchor position="S"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+</celldesigner:listOfModification>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00032" species="s18">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa179</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00274" species="s7">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa233</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00033" species="s19">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa182</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
+<<<<<<< HEAD
 </reaction>
 <reaction metaid="re204" id="re204" reversible="false">
+=======
+<listOfModifiers>
+<modifierSpeciesReference metaid="CDMT00034" species="s17">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa181</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+</listOfModifiers>
+</reaction>
+<reaction metaid="re139" id="re139" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s9" alias="sa236">
 <celldesigner:linkAnchor position="ENE"/>
 </celldesigner:baseReactant>
@@ -8369,6 +10267,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s10" alias="sa229">
 <celldesigner:linkAnchor position="WNW"/>
+=======
+<celldesigner:baseReactant species="s19" alias="sa182">
+<celldesigner:linkAnchor position="WSW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s18" alias="sa179">
+<celldesigner:linkAnchor position="ESE"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -8377,6 +10284,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
+<<<<<<< HEAD
 <celldesigner:listOfModification>
 <celldesigner:modification type="CATALYSIS" modifiers="s46" aliases="sa235" targetLineIndex="-1,2" editPoints="0.768969698762763,-0.20921237169700824 0.8378894034259528,0.044105174028368666">
 <celldesigner:connectScheme connectPolicy="square">
@@ -8399,19 +10307,36 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa236</celldesigner:alias>
+=======
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00035" species="s19">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa182</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00276" species="s10">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa229</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00036" species="s18">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa179</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
+<<<<<<< HEAD
 <listOfModifiers>
 <modifierSpeciesReference metaid="CDMT00277" species="s46">
 <annotation>
@@ -8423,16 +10348,28 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </listOfModifiers>
 </reaction>
 <reaction metaid="re205" id="re205" reversible="false">
+=======
+</reaction>
+<reaction metaid="re140" id="re140" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s10" alias="sa229">
+=======
+<celldesigner:baseReactant species="s44" alias="sa184">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="ENE"/>
 </celldesigner:baseReactant>
 </celldesigner:baseReactants>
 <celldesigner:baseProducts>
+<<<<<<< HEAD
 <celldesigner:baseProduct species="s47" alias="sa228">
+=======
+<celldesigner:baseProduct species="s45" alias="sa185">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="WNW"/>
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
@@ -8443,7 +10380,11 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
+<<<<<<< HEAD
 <celldesigner:modification type="CATALYSIS" modifiers="s46" aliases="sa235" targetLineIndex="-1,2" editPoints="0.7631028029273779,0.22227693144067473 0.8413115403911693,-0.04622284667489929">
+=======
+<celldesigner:modification type="CATALYSIS" modifiers="s29" aliases="sa180" targetLineIndex="-1,4" editPoints="0.1967636270237758,-0.4330354906934817 1.0256326712410448,-0.05641213539588552">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="vertical"/>
@@ -8451,7 +10392,596 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:lineDirection index="2" value="vertical"/>
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
+<<<<<<< HEAD
 <celldesigner:linkTarget species="s46" alias="sa235">
+=======
+<celldesigner:linkTarget species="s29" alias="sa180">
+<celldesigner:linkAnchor position="N"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+<celldesigner:modification type="CATALYSIS" modifiers="s43" aliases="sa169" targetLineIndex="-1,5">
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s43" alias="sa169">
+>>>>>>> AktActivateErkInhibitTopology2
+<celldesigner:linkAnchor position="S"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+<<<<<<< HEAD
+=======
+<celldesigner:modification type="INHIBITION" modifiers="s47" aliases="sa191" targetLineIndex="-1,5" editPoints="0.5217324800733159,0.5329590837131377 1.0011458375962925,0.06655377079346891">
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="vertical"/>
+<celldesigner:lineDirection index="1" value="horizontal"/>
+<celldesigner:lineDirection index="2" value="vertical"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s47" alias="sa191">
+<celldesigner:linkAnchor position="N"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ffff0066"/>
+</celldesigner:modification>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:listOfModification>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<<<<<<< HEAD
+<speciesReference metaid="CDMT00278" species="s10">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa229</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00037" species="s44">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa184</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfReactants>
+<listOfProducts>
+<<<<<<< HEAD
+<speciesReference metaid="CDMT00279" species="s47">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa228</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00038" species="s45">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa185</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfProducts>
+<listOfModifiers>
+<<<<<<< HEAD
+<modifierSpeciesReference metaid="CDMT00280" species="s46">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa235</celldesigner:alias>
+=======
+<modifierSpeciesReference metaid="CDMT00117" species="s29">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa180</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+<modifierSpeciesReference metaid="CDMT00118" species="s43">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa169</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+<modifierSpeciesReference metaid="CDMT00119" species="s47">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa191</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+</listOfModifiers>
+</reaction>
+<<<<<<< HEAD
+<reaction metaid="re206" id="re206" reversible="false">
+=======
+<reaction metaid="re141" id="re141" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
+<annotation>
+<celldesigner:extension>
+<celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
+<celldesigner:baseReactants>
+<<<<<<< HEAD
+<celldesigner:baseReactant species="s47" alias="sa228">
+=======
+<celldesigner:baseReactant species="s45" alias="sa185">
+>>>>>>> AktActivateErkInhibitTopology2
+<celldesigner:linkAnchor position="WSW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<<<<<<< HEAD
+<celldesigner:baseProduct species="s10" alias="sa229">
+=======
+<celldesigner:baseProduct species="s44" alias="sa184">
+>>>>>>> AktActivateErkInhibitTopology2
+<celldesigner:linkAnchor position="ESE"/>
+</celldesigner:baseProduct>
+</celldesigner:baseProducts>
+<celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<<<<<<< HEAD
+<speciesReference metaid="CDMT00281" species="s47">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa228</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00039" species="s45">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa185</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfReactants>
+<listOfProducts>
+<<<<<<< HEAD
+<speciesReference metaid="CDMT00282" species="s10">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa229</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00040" species="s44">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa184</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfProducts>
+</reaction>
+<<<<<<< HEAD
+<reaction metaid="re207" id="re207" reversible="false">
+=======
+<reaction metaid="re142" id="re142" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
+<annotation>
+<celldesigner:extension>
+<celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
+<celldesigner:baseReactants>
+<<<<<<< HEAD
+<celldesigner:baseReactant species="s10" alias="sa229">
+<celldesigner:linkAnchor position="WSW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s9" alias="sa236">
+<celldesigner:linkAnchor position="ESE"/>
+=======
+<celldesigner:baseReactant species="s7" alias="sa186">
+<celldesigner:linkAnchor position="ENE"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s8" alias="sa187">
+<celldesigner:linkAnchor position="WNW"/>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:baseProduct>
+</celldesigner:baseProducts>
+<celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:line width="4.0" color="ff000000"/>
+<<<<<<< HEAD
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00283" species="s10">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa229</celldesigner:alias>
+=======
+<celldesigner:listOfModification>
+<celldesigner:modification type="CATALYSIS" modifiers="s45" aliases="sa185" targetLineIndex="-1,2" editPoints="0.2674293446757243,-0.2534061999475661 0.7405245249300201,0.24586940598011253">
+<celldesigner:connectScheme connectPolicy="square">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="vertical"/>
+<celldesigner:lineDirection index="1" value="horizontal"/>
+<celldesigner:lineDirection index="2" value="vertical"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s45" alias="sa185">
+<celldesigner:linkAnchor position="S"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+<celldesigner:modification type="INHIBITION" modifiers="s22" aliases="sa192" targetLineIndex="-1,3">
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s22" alias="sa192">
+<celldesigner:linkAnchor position="N"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ffff0066"/>
+</celldesigner:modification>
+</celldesigner:listOfModification>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00041" species="s7">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa186</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfReactants>
+<listOfProducts>
+<<<<<<< HEAD
+<speciesReference metaid="CDMT00284" species="s9">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa236</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00042" species="s8">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa187</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfProducts>
+<<<<<<< HEAD
+</reaction>
+<reaction metaid="re208" id="re208" reversible="false">
+=======
+<listOfModifiers>
+<modifierSpeciesReference metaid="CDMT00043" species="s45">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa185</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+<modifierSpeciesReference metaid="CDMT00120" species="s22">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa192</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+</listOfModifiers>
+</reaction>
+<reaction metaid="re143" id="re143" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
+<annotation>
+<celldesigner:extension>
+<celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
+<celldesigner:baseReactants>
+<<<<<<< HEAD
+<celldesigner:baseReactant species="s4" alias="sa254">
+<celldesigner:linkAnchor position="S"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s42" alias="sa248">
+<celldesigner:linkAnchor position="N"/>
+=======
+<celldesigner:baseReactant species="s8" alias="sa187">
+<celldesigner:linkAnchor position="ENE"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s46" alias="sa188">
+<celldesigner:linkAnchor position="WNW"/>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:baseProduct>
+</celldesigner:baseProducts>
+<celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:line width="4.0" color="ff000000"/>
+<<<<<<< HEAD
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00285" species="s4">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa254</celldesigner:alias>
+=======
+<celldesigner:listOfModification>
+<celldesigner:modification type="CATALYSIS" modifiers="s45" aliases="sa185" targetLineIndex="-1,2" editPoints="0.23436564051336362,0.25303062121426656 0.772604850597812,-0.24550499718437635">
+<celldesigner:connectScheme connectPolicy="square">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="vertical"/>
+<celldesigner:lineDirection index="1" value="horizontal"/>
+<celldesigner:lineDirection index="2" value="vertical"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s45" alias="sa185">
+<celldesigner:linkAnchor position="S"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+<celldesigner:modification type="INHIBITION" modifiers="s22" aliases="sa192" targetLineIndex="-1,6">
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s22" alias="sa192">
+<celldesigner:linkAnchor position="N"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ffff0066"/>
+</celldesigner:modification>
+</celldesigner:listOfModification>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00044" species="s8">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa187</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfReactants>
+<listOfProducts>
+<<<<<<< HEAD
+<speciesReference metaid="CDMT00286" species="s42">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa248</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00045" species="s46">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa188</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfProducts>
+<<<<<<< HEAD
+</reaction>
+<reaction metaid="re209" id="re209" reversible="false">
+=======
+<listOfModifiers>
+<modifierSpeciesReference metaid="CDMT00046" species="s45">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa185</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+<modifierSpeciesReference metaid="CDMT00121" species="s22">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa192</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+</listOfModifiers>
+</reaction>
+<reaction metaid="re144" id="re144" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
+<annotation>
+<celldesigner:extension>
+<celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
+<celldesigner:baseReactants>
+<<<<<<< HEAD
+<celldesigner:baseReactant species="s42" alias="sa248">
+<celldesigner:linkAnchor position="NNE"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s4" alias="sa254">
+<celldesigner:linkAnchor position="SSE"/>
+=======
+<celldesigner:baseReactant species="s46" alias="sa188">
+<celldesigner:linkAnchor position="WSW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s8" alias="sa187">
+<celldesigner:linkAnchor position="ESE"/>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:baseProduct>
+</celldesigner:baseProducts>
+<celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<<<<<<< HEAD
+<speciesReference metaid="CDMT00287" species="s42">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa248</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00047" species="s46">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa188</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfReactants>
+<listOfProducts>
+<<<<<<< HEAD
+<speciesReference metaid="CDMT00288" species="s4">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa254</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00048" species="s8">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa187</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfProducts>
+</reaction>
+<<<<<<< HEAD
+<reaction metaid="re210" id="re210" reversible="false">
+=======
+<reaction metaid="re145" id="re145" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
+<annotation>
+<celldesigner:extension>
+<celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
+<celldesigner:baseReactants>
+<<<<<<< HEAD
+<celldesigner:baseReactant species="s4" alias="sa254">
+<celldesigner:linkAnchor position="SSE"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s43" alias="sa244">
+<celldesigner:linkAnchor position="N"/>
+=======
+<celldesigner:baseReactant species="s8" alias="sa187">
+<celldesigner:linkAnchor position="WSW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s7" alias="sa186">
+<celldesigner:linkAnchor position="ESE"/>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:baseProduct>
+</celldesigner:baseProducts>
+<celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<<<<<<< HEAD
+<speciesReference metaid="CDMT00289" species="s4">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa254</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00049" species="s8">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa187</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfReactants>
+<listOfProducts>
+<<<<<<< HEAD
+<speciesReference metaid="CDMT00290" species="s43">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa244</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00050" species="s7">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa186</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfProducts>
+</reaction>
+<<<<<<< HEAD
+<reaction metaid="re211" id="re211" reversible="false">
+=======
+<reaction metaid="re146" id="re146" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
+<annotation>
+<celldesigner:extension>
+<celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
+<celldesigner:baseReactants>
+<<<<<<< HEAD
+<celldesigner:baseReactant species="s43" alias="sa244">
+<celldesigner:linkAnchor position="NNW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s4" alias="sa254">
+<celldesigner:linkAnchor position="S"/>
+=======
+<celldesigner:baseReactant species="s9" alias="sa189">
+<celldesigner:linkAnchor position="ENE"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s10" alias="sa190">
+<celldesigner:linkAnchor position="WNW"/>
+>>>>>>> AktActivateErkInhibitTopology2
+</celldesigner:baseProduct>
+</celldesigner:baseProducts>
+<celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:line width="4.0" color="ff000000"/>
+<<<<<<< HEAD
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00291" species="s43">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa244</celldesigner:alias>
+=======
+<celldesigner:listOfModification>
+<celldesigner:modification type="CATALYSIS" modifiers="s46" aliases="sa188" targetLineIndex="-1,2" editPoints="0.7689696987627677,-0.20921237169701 0.837889403425957,0.04410517402836511">
+<celldesigner:connectScheme connectPolicy="square">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="vertical"/>
+<celldesigner:lineDirection index="1" value="horizontal"/>
+<celldesigner:lineDirection index="2" value="vertical"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s46" alias="sa188">
 <celldesigner:linkAnchor position="S"/>
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ff000000"/>
@@ -8460,290 +10990,65 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
-<speciesReference metaid="CDMT00278" species="s10">
+<speciesReference metaid="CDMT00051" species="s9">
 <annotation>
 <celldesigner:extension>
-<celldesigner:alias>sa229</celldesigner:alias>
+<celldesigner:alias>sa189</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
-<speciesReference metaid="CDMT00279" species="s47">
+<<<<<<< HEAD
+<speciesReference metaid="CDMT00292" species="s4">
 <annotation>
 <celldesigner:extension>
-<celldesigner:alias>sa228</celldesigner:alias>
+<celldesigner:alias>sa254</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00052" species="s10">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa190</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
+<<<<<<< HEAD
+</reaction>
+<reaction metaid="re212" id="re212" reversible="false">
+=======
 <listOfModifiers>
-<modifierSpeciesReference metaid="CDMT00280" species="s46">
+<modifierSpeciesReference metaid="CDMT00053" species="s46">
 <annotation>
 <celldesigner:extension>
-<celldesigner:alias>sa235</celldesigner:alias>
+<celldesigner:alias>sa188</celldesigner:alias>
 </celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
 </reaction>
-<reaction metaid="re206" id="re206" reversible="false">
+<reaction metaid="re147" id="re147" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
-<celldesigner:baseReactant species="s47" alias="sa228">
-<celldesigner:linkAnchor position="WSW"/>
-</celldesigner:baseReactant>
-</celldesigner:baseReactants>
-<celldesigner:baseProducts>
-<celldesigner:baseProduct species="s10" alias="sa229">
-<celldesigner:linkAnchor position="ESE"/>
-</celldesigner:baseProduct>
-</celldesigner:baseProducts>
-<celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
-<celldesigner:listOfLineDirection>
-<celldesigner:lineDirection index="0" value="unknown"/>
-</celldesigner:listOfLineDirection>
-</celldesigner:connectScheme>
-<celldesigner:line width="4.0" color="ff000000"/>
-</celldesigner:extension>
-</annotation>
-<listOfReactants>
-<speciesReference metaid="CDMT00281" species="s47">
-<annotation>
-<celldesigner:extension>
-<celldesigner:alias>sa228</celldesigner:alias>
-</celldesigner:extension>
-</annotation>
-</speciesReference>
-</listOfReactants>
-<listOfProducts>
-<speciesReference metaid="CDMT00282" species="s10">
-<annotation>
-<celldesigner:extension>
-<celldesigner:alias>sa229</celldesigner:alias>
-</celldesigner:extension>
-</annotation>
-</speciesReference>
-</listOfProducts>
-</reaction>
-<reaction metaid="re207" id="re207" reversible="false">
-<annotation>
-<celldesigner:extension>
-<celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
-<celldesigner:baseReactants>
-<celldesigner:baseReactant species="s10" alias="sa229">
-<celldesigner:linkAnchor position="WSW"/>
-</celldesigner:baseReactant>
-</celldesigner:baseReactants>
-<celldesigner:baseProducts>
-<celldesigner:baseProduct species="s9" alias="sa236">
-<celldesigner:linkAnchor position="ESE"/>
-</celldesigner:baseProduct>
-</celldesigner:baseProducts>
-<celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
-<celldesigner:listOfLineDirection>
-<celldesigner:lineDirection index="0" value="unknown"/>
-</celldesigner:listOfLineDirection>
-</celldesigner:connectScheme>
-<celldesigner:line width="4.0" color="ff000000"/>
-</celldesigner:extension>
-</annotation>
-<listOfReactants>
-<speciesReference metaid="CDMT00283" species="s10">
-<annotation>
-<celldesigner:extension>
-<celldesigner:alias>sa229</celldesigner:alias>
-</celldesigner:extension>
-</annotation>
-</speciesReference>
-</listOfReactants>
-<listOfProducts>
-<speciesReference metaid="CDMT00284" species="s9">
-<annotation>
-<celldesigner:extension>
-<celldesigner:alias>sa236</celldesigner:alias>
-</celldesigner:extension>
-</annotation>
-</speciesReference>
-</listOfProducts>
-</reaction>
-<reaction metaid="re208" id="re208" reversible="false">
-<annotation>
-<celldesigner:extension>
-<celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
-<celldesigner:baseReactants>
-<celldesigner:baseReactant species="s4" alias="sa254">
-<celldesigner:linkAnchor position="S"/>
-</celldesigner:baseReactant>
-</celldesigner:baseReactants>
-<celldesigner:baseProducts>
-<celldesigner:baseProduct species="s42" alias="sa248">
-<celldesigner:linkAnchor position="N"/>
-</celldesigner:baseProduct>
-</celldesigner:baseProducts>
-<celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
-<celldesigner:listOfLineDirection>
-<celldesigner:lineDirection index="0" value="unknown"/>
-</celldesigner:listOfLineDirection>
-</celldesigner:connectScheme>
-<celldesigner:line width="4.0" color="ff000000"/>
-</celldesigner:extension>
-</annotation>
-<listOfReactants>
-<speciesReference metaid="CDMT00285" species="s4">
-<annotation>
-<celldesigner:extension>
-<celldesigner:alias>sa254</celldesigner:alias>
-</celldesigner:extension>
-</annotation>
-</speciesReference>
-</listOfReactants>
-<listOfProducts>
-<speciesReference metaid="CDMT00286" species="s42">
-<annotation>
-<celldesigner:extension>
-<celldesigner:alias>sa248</celldesigner:alias>
-</celldesigner:extension>
-</annotation>
-</speciesReference>
-</listOfProducts>
-</reaction>
-<reaction metaid="re209" id="re209" reversible="false">
-<annotation>
-<celldesigner:extension>
-<celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
-<celldesigner:baseReactants>
-<celldesigner:baseReactant species="s42" alias="sa248">
-<celldesigner:linkAnchor position="NNE"/>
-</celldesigner:baseReactant>
-</celldesigner:baseReactants>
-<celldesigner:baseProducts>
-<celldesigner:baseProduct species="s4" alias="sa254">
-<celldesigner:linkAnchor position="SSE"/>
-</celldesigner:baseProduct>
-</celldesigner:baseProducts>
-<celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
-<celldesigner:listOfLineDirection>
-<celldesigner:lineDirection index="0" value="unknown"/>
-</celldesigner:listOfLineDirection>
-</celldesigner:connectScheme>
-<celldesigner:line width="4.0" color="ff000000"/>
-</celldesigner:extension>
-</annotation>
-<listOfReactants>
-<speciesReference metaid="CDMT00287" species="s42">
-<annotation>
-<celldesigner:extension>
-<celldesigner:alias>sa248</celldesigner:alias>
-</celldesigner:extension>
-</annotation>
-</speciesReference>
-</listOfReactants>
-<listOfProducts>
-<speciesReference metaid="CDMT00288" species="s4">
-<annotation>
-<celldesigner:extension>
-<celldesigner:alias>sa254</celldesigner:alias>
-</celldesigner:extension>
-</annotation>
-</speciesReference>
-</listOfProducts>
-</reaction>
-<reaction metaid="re210" id="re210" reversible="false">
-<annotation>
-<celldesigner:extension>
-<celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
-<celldesigner:baseReactants>
-<celldesigner:baseReactant species="s4" alias="sa254">
-<celldesigner:linkAnchor position="SSE"/>
-</celldesigner:baseReactant>
-</celldesigner:baseReactants>
-<celldesigner:baseProducts>
-<celldesigner:baseProduct species="s43" alias="sa244">
-<celldesigner:linkAnchor position="N"/>
-</celldesigner:baseProduct>
-</celldesigner:baseProducts>
-<celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
-<celldesigner:listOfLineDirection>
-<celldesigner:lineDirection index="0" value="unknown"/>
-</celldesigner:listOfLineDirection>
-</celldesigner:connectScheme>
-<celldesigner:line width="4.0" color="ff000000"/>
-</celldesigner:extension>
-</annotation>
-<listOfReactants>
-<speciesReference metaid="CDMT00289" species="s4">
-<annotation>
-<celldesigner:extension>
-<celldesigner:alias>sa254</celldesigner:alias>
-</celldesigner:extension>
-</annotation>
-</speciesReference>
-</listOfReactants>
-<listOfProducts>
-<speciesReference metaid="CDMT00290" species="s43">
-<annotation>
-<celldesigner:extension>
-<celldesigner:alias>sa244</celldesigner:alias>
-</celldesigner:extension>
-</annotation>
-</speciesReference>
-</listOfProducts>
-</reaction>
-<reaction metaid="re211" id="re211" reversible="false">
-<annotation>
-<celldesigner:extension>
-<celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
-<celldesigner:baseReactants>
-<celldesigner:baseReactant species="s43" alias="sa244">
-<celldesigner:linkAnchor position="NNW"/>
-</celldesigner:baseReactant>
-</celldesigner:baseReactants>
-<celldesigner:baseProducts>
-<celldesigner:baseProduct species="s4" alias="sa254">
-<celldesigner:linkAnchor position="S"/>
-</celldesigner:baseProduct>
-</celldesigner:baseProducts>
-<celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
-<celldesigner:listOfLineDirection>
-<celldesigner:lineDirection index="0" value="unknown"/>
-</celldesigner:listOfLineDirection>
-</celldesigner:connectScheme>
-<celldesigner:line width="4.0" color="ff000000"/>
-</celldesigner:extension>
-</annotation>
-<listOfReactants>
-<speciesReference metaid="CDMT00291" species="s43">
-<annotation>
-<celldesigner:extension>
-<celldesigner:alias>sa244</celldesigner:alias>
-</celldesigner:extension>
-</annotation>
-</speciesReference>
-</listOfReactants>
-<listOfProducts>
-<speciesReference metaid="CDMT00292" species="s4">
-<annotation>
-<celldesigner:extension>
-<celldesigner:alias>sa254</celldesigner:alias>
-</celldesigner:extension>
-</annotation>
-</speciesReference>
-</listOfProducts>
-</reaction>
-<reaction metaid="re212" id="re212" reversible="false">
-<annotation>
-<celldesigner:extension>
-<celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
-<celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s5" alias="sa255">
+=======
+<celldesigner:baseReactant species="s10" alias="sa190">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="ENE"/>
 </celldesigner:baseReactant>
 </celldesigner:baseReactants>
 <celldesigner:baseProducts>
+<<<<<<< HEAD
 <celldesigner:baseProduct species="s6" alias="sa249">
+=======
+<celldesigner:baseProduct species="s47" alias="sa191">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="WNW"/>
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
@@ -8754,7 +11059,11 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
 <celldesigner:listOfModification>
+<<<<<<< HEAD
 <celldesigner:modification type="CATALYSIS" modifiers="s42" aliases="sa248" targetLineIndex="-1,5" editPoints="-0.0020074664352005556,0.10834007246393718 0.9976493161950453,0.12686301962662627">
+=======
+<celldesigner:modification type="CATALYSIS" modifiers="s46" aliases="sa188" targetLineIndex="-1,2" editPoints="0.7631028029273779,0.22227693144067473 0.8413115403911711,-0.04622284667489929">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:connectScheme connectPolicy="square">
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="vertical"/>
@@ -8762,6 +11071,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:lineDirection index="2" value="vertical"/>
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
+<<<<<<< HEAD
 <celldesigner:linkTarget species="s42" alias="sa248">
 <celldesigner:linkAnchor position="NNW"/>
 </celldesigner:linkTarget>
@@ -8775,6 +11085,10 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:connectScheme>
 <celldesigner:linkTarget species="s13" alias="sa257">
 <celldesigner:linkAnchor position="SSE"/>
+=======
+<celldesigner:linkTarget species="s46" alias="sa188">
+<celldesigner:linkAnchor position="S"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:linkTarget>
 <celldesigner:line width="4.0" color="ff000000"/>
 </celldesigner:modification>
@@ -8782,24 +11096,39 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00293" species="s5">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa255</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00061" species="s10">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa190</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00294" species="s6">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa249</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00102" species="s47">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa191</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 <listOfModifiers>
+<<<<<<< HEAD
 <modifierSpeciesReference metaid="CDMT00295" species="s42">
 <annotation>
 <celldesigner:extension>
@@ -8811,22 +11140,40 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa257</celldesigner:alias>
+=======
+<modifierSpeciesReference metaid="CDMT00103" species="s46">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa188</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re213" id="re213" reversible="false">
+=======
+<reaction metaid="re148" id="re148" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s6" alias="sa249">
+=======
+<celldesigner:baseReactant species="s47" alias="sa191">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="WSW"/>
 </celldesigner:baseReactant>
 </celldesigner:baseReactants>
 <celldesigner:baseProducts>
+<<<<<<< HEAD
 <celldesigner:baseProduct species="s5" alias="sa255">
+=======
+<celldesigner:baseProduct species="s10" alias="sa190">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="ESE"/>
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
@@ -8839,29 +11186,48 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00297" species="s6">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa249</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00104" species="s47">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa191</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00298" species="s5">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa255</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00105" species="s10">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa190</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re214" id="re214" reversible="false">
+=======
+<reaction metaid="re149" id="re149" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s6" alias="sa249">
 <celldesigner:linkAnchor position="SSE"/>
 </celldesigner:baseReactant>
@@ -8869,6 +11235,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s48" alias="sa243">
 <celldesigner:linkAnchor position="NNE"/>
+=======
+<celldesigner:baseReactant species="s10" alias="sa190">
+<celldesigner:linkAnchor position="WSW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s9" alias="sa189">
+<celldesigner:linkAnchor position="ESE"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -8880,29 +11255,48 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00299" species="s6">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa249</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00106" species="s10">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa190</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00300" species="s48">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa243</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00107" species="s9">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa189</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re215" id="re215" reversible="false">
+=======
+<reaction metaid="re150" id="re150" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s48" alias="sa243">
 <celldesigner:linkAnchor position="NNW"/>
 </celldesigner:baseReactant>
@@ -8910,6 +11304,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s6" alias="sa249">
 <celldesigner:linkAnchor position="SSW"/>
+=======
+<celldesigner:baseReactant species="s4" alias="sa167">
+<celldesigner:linkAnchor position="S"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s42" alias="sa168">
+<celldesigner:linkAnchor position="N"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -8921,29 +11324,48 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00301" species="s48">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa243</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00122" species="s4">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa167</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00302" species="s6">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa249</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00123" species="s42">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa168</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re220" id="re220" reversible="false">
+=======
+<reaction metaid="re151" id="re151" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s50" alias="sa260">
 <celldesigner:linkAnchor position="E"/>
 </celldesigner:baseReactant>
@@ -8951,6 +11373,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s5" alias="sa255">
 <celldesigner:linkAnchor position="W"/>
+=======
+<celldesigner:baseReactant species="s42" alias="sa168">
+<celldesigner:linkAnchor position="NNE"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s4" alias="sa167">
+<celldesigner:linkAnchor position="SSE"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -8962,29 +11393,48 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00312" species="s50">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa260</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00124" species="s42">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa168</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00313" species="s5">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa255</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00125" species="s4">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa167</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 </reaction>
+<<<<<<< HEAD
 <reaction metaid="re221" id="re221" reversible="false">
+=======
+<reaction metaid="re152" id="re152" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s48" alias="sa243">
 <celldesigner:linkAnchor position="ESE"/>
 </celldesigner:baseReactant>
@@ -8992,6 +11442,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s52" alias="sa262">
 <celldesigner:linkAnchor position="SW"/>
+=======
+<celldesigner:baseReactant species="s4" alias="sa167">
+<celldesigner:linkAnchor position="SSE"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s43" alias="sa169">
+<celldesigner:linkAnchor position="N"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -9000,13 +11459,53 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
+<<<<<<< HEAD
 <celldesigner:listOfModification>
 <celldesigner:modification type="CATALYSIS" modifiers="s47" aliases="sa250" targetLineIndex="-1,3">
 <celldesigner:connectScheme connectPolicy="direct">
+=======
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00126" species="s4">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa167</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfReactants>
+<listOfProducts>
+<speciesReference metaid="CDMT00127" species="s43">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa169</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</speciesReference>
+</listOfProducts>
+</reaction>
+<reaction metaid="re153" id="re153" reversible="false">
+<annotation>
+<celldesigner:extension>
+<celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
+<celldesigner:baseReactants>
+<celldesigner:baseReactant species="s43" alias="sa169">
+<celldesigner:linkAnchor position="NNW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s4" alias="sa167">
+<celldesigner:linkAnchor position="S"/>
+</celldesigner:baseProduct>
+</celldesigner:baseProducts>
+<celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:listOfLineDirection>
 <celldesigner:lineDirection index="0" value="unknown"/>
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
+<<<<<<< HEAD
 <celldesigner:linkTarget species="s47" alias="sa250">
 <celldesigner:linkAnchor position="N"/>
 </celldesigner:linkTarget>
@@ -9020,19 +11519,37 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa243</celldesigner:alias>
+=======
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00128" species="s43">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa169</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00315" species="s52">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa262</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00129" species="s4">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa167</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
+<<<<<<< HEAD
 <listOfModifiers>
 <modifierSpeciesReference metaid="CDMT00316" species="s47">
 <annotation>
@@ -9044,17 +11561,30 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </listOfModifiers>
 </reaction>
 <reaction metaid="re222" id="re222" reversible="false">
+=======
+</reaction>
+<reaction metaid="re154" id="re154" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s48" alias="sa243">
+=======
+<celldesigner:baseReactant species="s5" alias="sa170">
+>>>>>>> AktActivateErkInhibitTopology2
 <celldesigner:linkAnchor position="ENE"/>
 </celldesigner:baseReactant>
 </celldesigner:baseReactants>
 <celldesigner:baseProducts>
+<<<<<<< HEAD
 <celldesigner:baseProduct species="s52" alias="sa262">
 <celldesigner:linkAnchor position="NW"/>
+=======
+<celldesigner:baseProduct species="s6" alias="sa171">
+<celldesigner:linkAnchor position="WNW"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -9063,6 +11593,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
+<<<<<<< HEAD
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
@@ -9070,25 +11601,88 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa243</celldesigner:alias>
+=======
+<celldesigner:listOfModification>
+<celldesigner:modification type="CATALYSIS" modifiers="s42" aliases="sa168" targetLineIndex="-1,5" editPoints="0.8841940716948118,0.31999205501787475">
+<celldesigner:connectScheme connectPolicy="square">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="horizontal"/>
+<celldesigner:lineDirection index="1" value="vertical"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s42" alias="sa168">
+<celldesigner:linkAnchor position="W"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+<celldesigner:modification type="CATALYSIS" modifiers="s13" aliases="sa193" targetLineIndex="-1,2">
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s13" alias="sa193">
+<celldesigner:linkAnchor position="SSE"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+</celldesigner:listOfModification>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00130" species="s5">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa170</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00318" species="s52">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa262</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00131" species="s6">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa171</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
+<<<<<<< HEAD
 </reaction>
 <reaction metaid="re223" id="re223" reversible="false">
+=======
+<listOfModifiers>
+<modifierSpeciesReference metaid="CDMT00132" species="s42">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa168</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+<modifierSpeciesReference metaid="CDMT00133" species="s13">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa193</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+</listOfModifiers>
+</reaction>
+<reaction metaid="re155" id="re155" reversible="false">
+>>>>>>> AktActivateErkInhibitTopology2
 <annotation>
 <celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
+<<<<<<< HEAD
 <celldesigner:baseReactant species="s48" alias="sa226">
 <celldesigner:linkAnchor position="W"/>
 </celldesigner:baseReactant>
@@ -9096,6 +11690,15 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <celldesigner:baseProducts>
 <celldesigner:baseProduct species="s49" alias="sa227">
 <celldesigner:linkAnchor position="E"/>
+=======
+<celldesigner:baseReactant species="s6" alias="sa171">
+<celldesigner:linkAnchor position="WSW"/>
+</celldesigner:baseReactant>
+</celldesigner:baseReactants>
+<celldesigner:baseProducts>
+<celldesigner:baseProduct species="s5" alias="sa170">
+<celldesigner:linkAnchor position="ESE"/>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:baseProduct>
 </celldesigner:baseProducts>
 <celldesigner:connectScheme connectPolicy="direct" rectangleIndex="0">
@@ -9104,6 +11707,7 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
 <celldesigner:line width="4.0" color="ff000000"/>
+<<<<<<< HEAD
 </celldesigner:extension>
 </annotation>
 <listOfReactants>
@@ -9111,19 +11715,60 @@ Perhaps a good validation experiment would be to use Smad inhibitor SB?
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa226</celldesigner:alias>
+=======
+<celldesigner:listOfModification>
+<celldesigner:modification type="CATALYSIS" modifiers="s47" aliases="sa194" targetLineIndex="-1,2">
+<celldesigner:connectScheme connectPolicy="direct">
+<celldesigner:listOfLineDirection>
+<celldesigner:lineDirection index="0" value="unknown"/>
+</celldesigner:listOfLineDirection>
+</celldesigner:connectScheme>
+<celldesigner:linkTarget species="s47" alias="sa194">
+<celldesigner:linkAnchor position="N"/>
+</celldesigner:linkTarget>
+<celldesigner:line width="4.0" color="ff000000"/>
+</celldesigner:modification>
+</celldesigner:listOfModification>
+</celldesigner:extension>
+</annotation>
+<listOfReactants>
+<speciesReference metaid="CDMT00134" species="s6">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa171</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
+<<<<<<< HEAD
 <speciesReference metaid="CDMT00205" species="s49">
 <annotation>
 <celldesigner:extension>
 <celldesigner:alias>sa227</celldesigner:alias>
+=======
+<speciesReference metaid="CDMT00135" species="s5">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa170</celldesigner:alias>
+>>>>>>> AktActivateErkInhibitTopology2
 </celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
+<<<<<<< HEAD
+=======
+<listOfModifiers>
+<modifierSpeciesReference metaid="CDMT00025" species="s47">
+<annotation>
+<celldesigner:extension>
+<celldesigner:alias>sa194</celldesigner:alias>
+</celldesigner:extension>
+</annotation>
+</modifierSpeciesReference>
+</listOfModifiers>
+>>>>>>> AktActivateErkInhibitTopology2
 </reaction>
 </listOfReactions>
 </model>
