@@ -272,32 +272,30 @@ parameter_set_RSS_is_113 = """
   _kSmad2DephosByErk_kcat = 431.472;
 """
 
-
 parameter_set_RSS_is_112 = """
-
   // Species initializations:
-  TGFbR = 160.435975143928;
-  TGFbR_a = 59.9981907045828;
-  TGFbR_EE = 25.7026960179252;
-  TGFbR_Cav = 14.5954977387445;
-  Smad2 = 0.00237424963216156;
-  pSmad2 = 611.336905286617;
-  Mek = 116.617981932575;
-  pMek = 116.665981925139;
+  TGFbR = 160.147975188548;
+  TGFbR_a = 60.3222906543705;
+  TGFbR_EE = 26.6769958669786;
+  TGFbR_Cav = 14.5595977443064;
+  Smad2 = 0.00104406983824404;
+  pSmad2 = 601.154906864097;
+  Mek = 64.1726900578347;
+  pMek = 116.940981882533;
   Erk = 0.000999999845071731;
-  pErk = 0.0133485979319245;
-  PI3K = 18.8949970726304;
-  pPI3K = 36.8555942900257;
-  Akt = 25.4857960515291;
-  pAkt = 6.151349046982;
-  mTORC1 = 132.0849795363;
-  pmTORC1 = 74.4220884699129;
-  S6K = 2.66152958765377;
-  pS6K = 9.63355850748923;
-  Raf = 0.850047868303535;
-  pRaf = 27.178295789313;
-  ppMek = 0.00102694984089641;
-  ppErk = 150.688976654014;
+  pErk = 0.00295956954147894;
+  PI3K = 18.8295970827627;
+  pPI3K = 38.1999940817402;
+  Akt = 25.5011960491432;
+  pAkt = 6.11081905326124;
+  mTORC1 = 131.732979590834;
+  pmTORC1 = 74.4413884669228;
+  S6K = 2.66365958732377;
+  pS6K = 9.64125850629628;
+  Raf = 0.85554386745205;
+  pRaf = 27.2883957722554;
+  ppMek = 0.00108663983164875;
+  ppErk = 148.615976975181;
 
   // Compartment initializations:
   Cell = 1;
@@ -343,26 +341,26 @@ parameter_set_RSS_is_112 = """
   kPI3KPhosByTGFbR_km = 10;
   kSmad2PhosByAkt_km = 40;
   kSmad2DephosByErk_km = 30;
-  _kTGFbOn = 86.1228;
-  _kTGFbRIntern_EE = 871.051;
-  _kTGFbRIntern_Cav = 871.051;
-  _kSmad2Phos_kcat = 100.586;
-  _kRafPhos_ki = 308.785;
-  _kMekPhos_ki = 0.948176;
-  _kPI3KPhosByGF = 999.011;
-  _kPI3KDephosByS6K = 20.3687;
-  _kAktPhos_ki = 0.308434;
-  _kAktPhos_kcat = 4.03923;
+  _kTGFbOn = 86.1703;
+
+  _kSmad2Phos_kcat = 100.643;
+  _kRafPhos_ki = 362.567;
+  _kMekPhos_ki = 1.01271;
+  _kPI3KPhosByGF = 999.09;
+  _kPI3KDephosByS6K = 19.351;
+  _kAktPhos_ki = 0.311348;
+  _kAktPhos_kcat = 3.84124;
   _kmTORC1Phos_ki = 0.001;
-  _kmTORC1Phos_kcat = 0.0010018;
-  _kmTORCPhosBasal_Vmax = 17.2091;
-  _kS6KPhosBymTORC1_kcat = 21.7469;
-  _kRafPhosByTGFbR_kcat = 64.2878;
+  _kmTORC1Phos_kcat = 0.00100034;
+  _kmTORCPhosBasal_Vmax = 17.2123;
+  _kS6KPhosBymTORC1_kcat = 21.666;
+  _kRafPhosByTGFbR_kcat = 64.4923;
   _kRafPhosByPI3K_kcat = 1000;
-  _kPI3KPhosByTGFbR_kcat = 3.69865;
-  _kPI3KDephosByErk = 0.00100015;
-  _kSmad2PhosByAkt_kcat = 139.62;
-  _kSmad2DephosByErk_kcat = 576.272;
+  _kPI3KPhosByTGFbR_kcat = 3.66587;
+  _kPI3KDephosByErk = 0.00100012;
+  _kSmad2PhosByAkt_kcat = 140.907;
+  _kSmad2DephosByErk_kcat = 587.363;
+
   """
 
 CROSS_TALK_MODEL = """
@@ -557,19 +555,61 @@ def insert_best_parameters(PE, open=True):
     return PE.model
 
 
-def analyse_FIM(FIM_file=r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/CopasiModelFiles/Fit2_2_some_fixed/FIM.csv'):
-    parameters = os.path.join(os.path.dirname(FIM_file), 'parameters.csv')
-    df = pandas.read_csv(FIM_file, header=None)
-    params = pandas.read_csv(parameters, index_col=0)
+def get_rank_of_fim(fim_file, param_file):
+    """
+    The rank of the FIM close to an optimum determines the number
+    of linearly independent rows/columns.
+
+    The scaled FIM is full rank but the unscaled FIM is not.
+    I suspect that to calculate the RANK you should use the
+    unscaled matrix while for analysing the curvature of
+    parameter space around the optimum we should use the
+    scaled version.
+
+    :param fim_file:
+    :param param_file:
+    :return:
+    """
+    df = pandas.read_csv(fim_file, header=None)
+    params = pandas.read_csv(param_file, index_col=0)
     df.columns = params.index
     df.index = params.index
-    print(df)
+    rank = numpy.linalg.matrix_rank(df.values)
+    return rank
 
 
-def analyse_correlations(corr_file=r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/CopasiModelFiles/Fit2_2_some_fixed/correlation_matrix.csv'):
-    parameters = os.path.join(os.path.dirname(corr_file), 'parameters.csv')
+def analyse_fim(fim_file, param_file):
+    """
+
+    :param fim_file:
+    :param param_file:
+    :return:
+    """
+    df = pandas.read_csv(fim_file, header=None)
+    params = pandas.read_csv(param_file, index_col=0)
+    df.columns = params.index
+    df.index = params.index
+    import sympy
+    sym_mat = sympy.Matrix(df.values)
+    print(sym_mat)
+    print(sym_mat.rref(simplify=False))
+
+    # print(df)
+
+
+def analyse_correlations(corr_file, param_file, gl=0.7):
+    """
+
+    :param corr_file: Correlation matrix. Output from copasi parameter estimation talk
+    :param param_file: Parameter file. Output from copasi parameter estimation task. Used for labelling matrix
+    :param gl: greater than. The cut off.
+    :return:
+    """
+    if gl > 1 or gl < 0:
+        raise ValueError
+
     df = pandas.read_csv(corr_file, header=None)
-    params = pandas.read_csv(parameters, index_col=0)
+    params = pandas.read_csv(param_file, index_col=0)
     df.columns = params.index
     df.index = params.index
     import itertools
@@ -578,11 +618,10 @@ def analyse_correlations(corr_file=r'/home/ncw135/Documents/MesiSTRAT/CrossTalkM
     # print(len(comb))
     l = []
     for i, j in comb:
-        if df.loc[i, j] > 0.7:
+        if df.loc[i, j] > gl:
             l.append([i, j, df.loc[i, j]])
-        elif df.loc[i, j] < -0.7:
+        elif df.loc[i, j] < -gl:
             l.append([i, j, df.loc[i, j]])
-
 
     df = pandas.DataFrame(l)
     df.columns = ['param1', 'param2', 'correlation']
@@ -593,11 +632,9 @@ def analyse_correlations(corr_file=r'/home/ncw135/Documents/MesiSTRAT/CrossTalkM
     print('filtered correlations now in "{}"'.format(fname))
 
 
-
-
 if __name__ == '__main__':
 
-    FIT = '3_1_all_parameters'
+    FIT = '3_2_all_parameters'
 
     CLUSTER = False
 
@@ -627,9 +664,9 @@ if __name__ == '__main__':
     tasks.TimeCourse(copasi_mod, start=0, end=72, step_size=0.1, intervals=720, run=False)
 
     run_mode = 'slurm'
-    # run_mode = False
-    copy_number = 250
-    randomize_start_values = True
+    # run_mode = True
+    copy_number = 1
+    randomize_start_values = False
     overwrite_config_file = True
     method = 'particle_swarm'
     population_size = 75
@@ -639,8 +676,9 @@ if __name__ == '__main__':
     lower_bound = 0.001
     upper_bound = 1000
 
-    # analyse_correlations()
+    # analyse_correlations(CORR_FILE, PARAM_FILE)
 
+    #
     # exclude = ['TGFb', 'AZD', 'MK2206', 'GrowthFactors', 'Everolimus', 'ExperimentIndicator']
     # PE = tasks.MultiParameterEstimation(copasi_mod,
     #                                     DATA_FILES,
@@ -661,15 +699,28 @@ if __name__ == '__main__':
     #                                     )
     # PE.write_config_file()
     # PE.setup()
-    # PE.run()
+    # # PE.run()
     #
-    # # viz.LikelihoodRanks(PE, savefig=True)
+    # # viz.Scatters(PE, x='all', y='all', dpi=50, savefig=True, log10=True)
+    # viz.LikelihoodRanks(PE, savefig=True)
     # #
     # insert_best_parameters(PE)
-    FIT = '3_1_some_fixed'
 
+
+
+    FIT = '3_2_some_fixed'
     FIT_DIR, copasi_mod = create_fit_dir(FIT)
+    # CORR_FILE = os.path.join(FIT_DIR, 'Correlations.csv')
+    # PARAM_FILE = os.path.join(FIT_DIR, 'parameters_rss_112.csv')
+    # FIM_unscaled_FILE = os.path.join(FIT_DIR, 'FIMUnscaled.csv')
+    # FIM_scaled_FILE = os.path.join(FIT_DIR, 'FIMScaled.csv')
+    # rank = get_rank_of_fim(FIM_unscaled_FILE, PARAM_FILE)
+    # print(rank)
 
+    # analyse_fim(FIM_unscaled_FILE, PARAM_FILE)
+    # analyse_correlations(CORR_FILE, PARAM_FILE)
+
+    #
     free_params = [i.name for i in global_params if i.name[0] == '_']
     PE = tasks.MultiParameterEstimation(copasi_mod,
                                         DATA_FILES,
@@ -692,12 +743,14 @@ if __name__ == '__main__':
 
     PE.write_config_file()
     PE.setup()
-    PE.run()
-    # viz.LikelihoodRanks(PE, savefig=True)
+    # PE.run()
+    viz.LikelihoodRanks(PE, savefig=True)
+    # viz.Scatters(PE, x=['pPI3K'], y=['_kAktPhos_kcat'], dpi=50, savefig=True, log10=True,
+    #              show=True, truncate_mode='ranks', theta=range(150))
 
-    # insert_best_parameters(PE)
+    insert_best_parameters(PE)
 
-    PE.model.open()
+    # PE.model.open()
     #
     # viz.LikelihoodRanks(PE, savefig=True)
 
