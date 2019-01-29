@@ -8,6 +8,8 @@ site.addsitedir(r'/home/ncw135/Documents/pycotools3')
 site.addsitedir(r'D:\pycotools3')
 from pycotools3 import model, tasks, viz
 from itertools import combinations
+import matplotlib.pyplot as plt
+import seaborn
 
 
 class CrossTalkModel:
@@ -15,21 +17,21 @@ class CrossTalkModel:
     build a factory that churns out functions that return models and take as argument the
     antimony parameter strings
     """
-    FIT = '1_1'
-    run_mode = 'slurm'
-    # run_mode = True
-    copy_number = 33
-    randomize_start_values = True
-    overwrite_config_file = True
-    method = 'particle_swarm'
-    population_size = 75
-    swarm_size = 100
-    iteration_limit = 2000
-    number_of_generations = 500
-    lower_bound = 0.001
-    upper_bound = 1000
 
-    def __init__(self, working_directory, parameter_str=None):
+    def __init__(self, working_directory, parameter_str=None,
+                 FIT='1_1',
+                 run_mode='slurm',
+                 copy_number=33,
+                 randomize_start_values=True,
+                 overwrite_config_file=True,
+                 method='particle_swarm',
+                 population_size=75,
+                 swarm_size=50,
+                 iteration_limit=2000,
+                 number_of_generations=500,
+                 lower_bound=0.001,
+                 upper_bound=1000,
+                 ):
         """
         :param variant: int. 1 to 7. ID of topology
         :param parameter_str: parameter set for the model as antimony string
@@ -40,12 +42,18 @@ class CrossTalkModel:
         if not os.path.isdir(self.working_directory):
             raise ValueError
 
-
-        # self.model_selection_dir = os.path.join(self.working_directory, 'ModelSelection')
-        # self.topology_dir = os.path.join(self.model_selection_dir, 'topology{}'.format(self.topology))
-
-        # if not os.path.isdir(self.topology_dir):
-        #     os.makedirs(self.topology_dir)
+        self.FIT = FIT
+        self.run_mode = run_mode
+        self.copy_number = copy_number
+        self.randomize_start_values = randomize_start_values
+        self.overwrite_config_file = overwrite_config_file
+        self.method = method
+        self.population_size = population_size
+        self.swarm_size = swarm_size
+        self.iteration_limit = iteration_limit
+        self.number_of_generations = number_of_generations
+        self.lower_bound = lower_bound
+        self.upper_bound = upper_bound
 
         self.cps_file = os.path.join(self.topology_dir, 'Topology{}'.format(self.topology))
 
@@ -66,6 +74,10 @@ class CrossTalkModel:
         self.model_specific_reactions = self._assembel_model_reactions()[self.topology]
         ## run 33 models per model
 
+        if self.FIT[0] != '1':
+            print('WARNING. MAKE SURE YOU HAVE ADDED THE METABOLITES ARGUMENT INTO '
+                  'PARAMETER ESTIMATIONS')
+
     def __str__(self):
         return "CrossTalkModel(topology={})".format(self.topology)
 
@@ -74,7 +86,7 @@ class CrossTalkModel:
         Subtract 1 for 0 indexed python
         :return:
         """
-        return len(list(self._get_combinations())) -1
+        return len(list(self._get_combinations())) - 1
 
     def __iter__(self):
         return self
@@ -130,8 +142,128 @@ class CrossTalkModel:
         return d
 
     @property
+    def graphs_dir(self):
+        d = os.path.join(self.fit_dir, 'Graphs')
+        if not os.path.isdir(d):
+            os.makedirs(d)
+        return d
+
+    @property
     def data_files(self):
         return glob.glob(os.path.join(self.data_dir, '*.csv'))
+
+    def get_experimental_data(self):
+        df_dct = {}
+        for i in self.data_files:
+            dire, fle = os.path.split(i)
+            df_dct[fle[:-4]] = pandas.read_csv(i)
+        return pandas.concat(df_dct)
+
+    def get_experiment_names(self):
+        return list(set(self.get_experimental_data().index.get_level_values(0)))
+
+    def get_experimental_conditions(self):
+        """
+        returns pandas dataframe of experimental conditions as independent vars.
+        :return:
+        """
+        cond = {}
+        experimental_data = self.get_experimental_data()
+        for name in self.get_experiment_names():
+            data = experimental_data.loc[name]
+            iconds = {}
+            iconds['AZD'] = data.loc[0, 'AZD_indep']
+            iconds['Everolimus'] = data.loc[0, 'Everolimus_indep']
+            iconds['GrowthFactors'] = data.loc[0, 'GrowthFactors_indep']
+            iconds['MK2206'] = data.loc[0, 'MK2206_indep']
+            iconds['TGFb'] = data.loc[0, 'TGFb_indep']
+            iconds['ExperimentIndicator'] = data.loc[0, 'ExperimentIndicator_indep']
+            cond[name] = iconds
+
+        df = pandas.DataFrame(cond).transpose()
+        return df
+
+    def simulate_conditions(self, selection=['pAkt', 'ppErk', 'pS6K', 'pSmad2']):
+        mod = self.to_tellurium()
+        conditions = self.get_experimental_conditions()
+        # print(conditions)
+        simulation_data = {}
+        for cond in conditions.index:
+            for variable in conditions.columns:
+                value = conditions.loc[cond, variable]
+                setattr(mod, variable, value)
+            df = pandas.DataFrame(mod.simulate(0, 72, 73, selection))
+            df.columns = selection
+            simulation_data[cond] = df
+
+        return pandas.concat(simulation_data)
+
+    def plot_bargraphs(self):
+        import matplotlib
+        matplotlib.use('TkAgg')
+        seaborn.set_style('white')
+        seaborn.set_context(context='talk')
+        selections = ['pAkt', 'pS6K', 'ppErk', 'pSmad2']
+        sim_data = self.simulate_conditions()
+        sim_data = sim_data.reset_index(level=1)
+        sim_data = sim_data.rename(columns={'level_1': 'Time'})
+        sim_data = sim_data[sim_data['Time'] == 72]
+        del sim_data['Time']
+
+        exp_data = self.get_experimental_data()[selections]
+        exp_data.index = exp_data.index.droplevel(1)
+
+        azd_conditions = ['D', 'T', 'E',
+                          'E_A_72', 'E_A_48', 'E_A_24', 'E_A_1.25',
+                          'A_72', 'A_48', 'A_24', 'A_1.25']
+        mk_conditions = ['D', 'T', 'E', 'E_M_72', 'E_M_48', 'E_M_24',
+                         'E_M_1.25', 'M_72', 'M_48', 'M_24', 'M_1.25']
+        both_conditions = ['D', 'T', 'E', 'E_A_M_72', 'E_A_M_48', 'E_A_M_24']
+
+        azd_sim = sim_data.loc[azd_conditions].reset_index()
+        mk_sim = sim_data.loc[mk_conditions].reset_index()
+        both_sim = sim_data.loc[both_conditions].reset_index()
+
+        azd_exp = exp_data.loc[azd_conditions].reset_index()
+        mk_exp = exp_data.loc[mk_conditions].reset_index()
+        both_exp = exp_data.loc[both_conditions].reset_index()
+
+        for sp in ['pAkt', 'pS6K', 'ppErk', 'pSmad2']:
+            fig = plt.figure()
+            seaborn.barplot(x='index', y=sp, data=azd_sim,
+                            palette=['yellow']*2 + ['white'] + ['red']*4 + ['green']*4,
+                            edgecolor='black')
+            plt.title(sp)
+            plt.xlabel('')
+
+            plt.xticks(rotation=90)
+            seaborn.despine(fig=fig, top=True, right=True)
+            fname = os.path.join(self.graphs_dir, 'AZD_' + sp +'.png')
+            plt.savefig(fname, dpi=150, bbox_inches='tight')
+
+            fig = plt.figure()
+            seaborn.barplot(x='index', y=sp, data=mk_sim,
+                            palette=['yellow']*2 + ['white'] + ['red']*4 + ['green']*4,
+                            edgecolor='black')
+            plt.xlabel('')
+            plt.xticks(rotation=90)
+            seaborn.despine(fig=fig, top=True, right=True)
+            plt.title(sp)
+
+            fname = os.path.join(self.graphs_dir, 'MK_' + sp +'.png')
+            plt.savefig(fname, dpi=150, bbox_inches='tight')
+
+            fig = plt.figure()
+            seaborn.barplot(x='index', y=sp, data=both_sim,
+                            palette=['yellow']*2 + ['white'] + ['red']*4 + ['green']*4,
+                            edgecolor='black')
+            plt.xlabel('')
+            plt.xticks(rotation=90)
+            seaborn.despine(fig=fig, top=True, right=True)
+            plt.title(sp)
+
+            fname = os.path.join(self.graphs_dir, 'MK_AZD_' + sp +'.png')
+            plt.savefig(fname, dpi=150, bbox_inches='tight')
 
     @property
     def copasi_file(self):
@@ -171,6 +303,7 @@ class CrossTalkModel:
             mod,
             self.data_files,
             separator=[','] * len(self.data_files),
+            metabolites=[],
             copy_number=self.copy_number,
             pe_number=1,
             global_quantities=free_params,
@@ -189,6 +322,80 @@ class CrossTalkModel:
         PE.setup()
         PE.run()
         return PE
+
+    def _configure_PE_for_viz(self):
+        """
+        execute run_parameter_estimation with some kwargs changed so that we can get the
+        PE object for passing on to viz module classes
+        :return:
+        """
+        self.copy_number = 1
+        self.run_mode = False
+        self.randomize_start_values = False
+        self.method = 'current_solution_statistics'
+        PE = self.run_parameter_estimation()
+        print(PE.results_directory)
+        return PE
+
+    def likelihood_ranks(self):
+        return viz.LikelihoodRanks(self._configure_PE_for_viz(), savefig=True).fig
+
+    def get_param_df(self):
+        """
+        return pandas.DataFrame of estimated parameters
+        :return:
+        """
+        return viz.Parse(self._configure_PE_for_viz()).data
+
+    def insert_best_parameters_and_open_with_copasi(self):
+        parameters = self.get_param_df()
+        mod = self._configure_PE_for_viz().model
+        mod.insert_parameters(df=parameters, index=0, inplace=True)
+        return mod.open()
+
+    def insert_best_parameters(self):
+        parameters = self.get_param_df()
+        mod = self._configure_PE_for_viz().model
+        mod.insert_parameters(df=parameters, index=0, inplace=True)
+        return mod
+
+    def _get_number_estimated_model_parameters(self):
+        return len(self._configure_PE_for_viz().model.fit_item_order)
+
+    def _get_n(self):
+        '''
+        get number of observed data points for AIC calculation
+        '''
+        n = 0
+        for exp in self.data_files:
+            data = pandas.read_csv(exp, sep=',')
+            data = data[['pAkt', 'ppErk', 'pS6K', 'pSmad2']]
+            data = data.iloc[6]
+            n += len(data)
+        return n
+
+    def aic(self, RSS):
+        """
+        Calculate the corrected AIC:
+
+            AICc = -2*ln(RSS/n) + 2*K + (2*K*(K+1))/(n-K-1)
+
+            or if likelihood function used instead of RSS
+
+            AICc = -2*ln(likelihood) + 2*K + (2*K*(K+1))/(n-K-1)
+
+        Where:
+            RSS:
+                Residual sum of squares for model fit
+            n:
+                Number of observations collectively in all data files
+
+            K:
+                Number of model parameters
+        """
+        n = self._get_n()
+        K = self._get_number_estimated_model_parameters()
+        return n * numpy.log((RSS / n)) + 2 * K + (2 * K * (K + 1)) / (n - K - 1)
 
     def _get_combinations(self):
         perm_list = []
@@ -256,28 +463,26 @@ class CrossTalkModel:
         return """
         // Species initializations:
         
-        TGFbR = 160.147975188548;
-        TGFbR_a = 60.3222906543705;
-        TGFbR_EE = 26.6769958669786;
-        TGFbR_Cav = 14.5595977443064;
-        Smad2 = 0.00104406983824404;
-        pSmad2 = 601.154906864097;
-        Mek = 64.1726900578347;
-        pMek = 116.940981882533;
-        Erk = 0.000999999845071731;
-        pErk = 0.00295956954147894;
-        PI3K = 18.8295970827627;
-        pPI3K = 38.1999940817402;
-        Akt = 25.5011960491432;
-        pAkt = 6.11081905326124;
-        mTORC1 = 131.732979590834;
-        pmTORC1 = 74.4413884669228;
-        S6K = 2.66365958732377;
-        pS6K = 9.64125850629628;
-        Raf = 0.85554386745205;
-        pRaf = 27.2883957722554;
-        ppMek = 0.00108663983164875;
-        ppErk = 148.615976975181;
+        TGFbR = 45
+        Smad2 = 45
+        Mek = 40
+        Erk = 40
+        PI3K = 45
+        Akt = 45
+        mTORC1 = 45
+        S6K = 45
+        Raf = 45
+        ppMek = 45
+        TGFbR_a = 5
+        pSmad2 = 5
+        pMek = 5
+        pErk = 5
+        pPI3K = 5
+        pAkt = 5
+        pmTORC1 = 5
+        pS6K = 5
+        pRaf = 5
+        ppErk = 5
         
         // Compartment initializations:
         Cell = 1;
@@ -322,6 +527,7 @@ class CrossTalkModel:
         kRafPhosByTGFbR_km = 25;
         kRafPhosByPI3K_km = 50;
         kPI3KPhosByTGFbR_km = 10;
+        kPI3KDephosByErk_km = 10;
         
         kSmad2PhosByAkt_km = 50;
         kSmad2DephosByErk_km = 50;
@@ -350,15 +556,14 @@ class CrossTalkModel:
         _kPI3KPhosByTGFbR_kcat = 3.66587;
         _kSmad2PhosByAkt_kcat = 140.907;
         _kSmad2DephosByErk_kcat = 587.363;
+        _kPI3KDephosByErk_kcat = 50;
         
         _kSmad2PhosByAkt_kcat = 0.1;
         _kSmad2PhosByErk_kcat = 0.1;
         _kSmad2DephosByErk_kcat = 0.1;
         _kSmad2DephosByAkt_kcat = 0.1;
         _kSmad2DephosByAkt_kcat = 0.1;
-        
-
-          """
+        """
 
     def _functions(self):
         return """
@@ -414,8 +619,6 @@ class CrossTalkModel:
 
         var TGFbR           in Cell  
         var TGFbR_a         in Cell  
-        var TGFbR_EE        in Cell
-        var TGFbR_Cav       in Cell
         var Smad2           in Cell  
         var pSmad2          in Cell  
         var Mek             in Cell
@@ -449,7 +652,7 @@ class CrossTalkModel:
         //TGFb module
         TGF_R1 : TGFbR       => TGFbR_a    ; Cell * Hill(kTGFbRAct_km, _kTGFbRAct_Vmax, TGFb, TGFbR, kTGFbRAct_h)      ;
         TGF_R2 : TGFbR_a     => TGFbR      ; Cell * MM(kTGFbRDephos_km, _kTGFbRDephos_Vmax, TGFbR_a)               ;
-        TGF_R3 : Smad2       => pSmad2     ; Cell * MMWithKcat( kSmad2Phos_km,  _kSmad2Phos_kcat, Smad2, TGFbR_EE );
+        TGF_R3 : Smad2       => pSmad2     ; Cell * MMWithKcat( kSmad2Phos_km,  _kSmad2Phos_kcat, Smad2, TGFbR_a );
         TGF_R4 : pSmad2      => Smad2      ; Cell * MM(         kSmad2Dephos_km, kSmad2Dephos_Vmax, pSmad2 )
 
         //MAPK module
@@ -477,10 +680,10 @@ class CrossTalkModel:
         PI3K_R8 :   pS6K    => S6K          ; Cell *  MM(kS6KDephos_km, kS6KDephos_Vmax, pS6K)                    ;
 
         // Cross talk reactions
-        CrossTalkR1  :    Raf       => pRaf      ;   Cell *  MMWithKcat(kRafPhosByTGFbR_km, _kRafPhosByTGFbR_kcat, Raf, TGFbR_Cav)    ;
-        CrossTalkR2  :    Raf       => pRaf      ;   Cell *  MMWithKcat(kRafPhosByPI3K_km,_kRafPhosByPI3K_kcat, Raf, pPI3K)           ;
-        CrossTalkR3  :    PI3K      => pPI3K     ;   Cell *  MMWithKcat(kPI3KPhosByTGFbR_km, _kPI3KPhosByTGFbR_kcat, PI3K, TGFbR_Cav) ;
-        CrossTalkR4  :    pPI3K     => PI3K      ;   Cell *  MMWithKcat(_kPI3KDephosByErk_km, _kPI3KDephosByErk_kcat, pPI3K, ppErk  ) ;
+        CrossTalkR1  :    Raf       => pRaf      ;   Cell *  MMWithKcat(kRafPhosByTGFbR_km, _kRafPhosByTGFbR_kcat, Raf, TGFbR_a)    ;
+        CrossTalkR2  :    Raf       => pRaf      ;   Cell *  MMWithKcat(kRafPhosByPI3K_km,  _kRafPhosByPI3K_kcat, Raf, pPI3K)           ;
+        CrossTalkR3  :    PI3K      => pPI3K     ;   Cell *  MMWithKcat(kPI3KPhosByTGFbR_km, _kPI3KPhosByTGFbR_kcat, PI3K, TGFbR_a) ;
+        CrossTalkR4  :    pPI3K     => PI3K      ;   Cell *  MMWithKcat(kPI3KDephosByErk_km, _kPI3KDephosByErk_kcat, pPI3K, ppErk  ) ;
         {}
     """.format(additional_reactions)
 
@@ -527,7 +730,7 @@ class CrossTalkModel:
 
     def _akt_activate_smad2(self):
         """
-
+        CompetitiveInhibitionWithKcat(km, ki, kcat, E, I, S)
         :return:
         """
         return """
@@ -552,30 +755,46 @@ class CrossTalkModel:
 
 if __name__ == '__main__':
 
-    CLUSTER = True
+    FIT = '3_1_ICsAreFixed'
+    # FIT = '1_1'
+    CLUSTER = False
+    RUN_PARAMETER_ESTIMATION = False
+    PLOT_SIMULATION_GRAPHS = True
 
     if CLUSTER:
         WORKING_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel'
     else:
         WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel'
 
-    C = CrossTalkModel(WORKING_DIRECTORY)
+    C = CrossTalkModel(WORKING_DIRECTORY, FIT=FIT)
 
-    for model_id in C:
-        C[model_id].run_parameter_estimation()
+    if RUN_PARAMETER_ESTIMATION:
+        for model_id in C:
+            C[model_id].run_parameter_estimation()
+
+    if PLOT_SIMULATION_GRAPHS:
+        for model_id in C:
+            C[model_id].plot_bargraphs()
+
+    # C[7]._configure_PE_for_viz().model.open()
+
+    # C[4].run_parameter_estimation_from_best_estimates()
 
     # PE = C[4].run_parameter_estimation()
     # PE.model.open()
 
+    # PE = C[2]._configure_PE_for_viz()
+    # PE.model.open()
 
+    best_rss = {}
+    aic = {}
+    for model_id in C:
+        data = C[model_id].get_param_df()
+        C[model_id].likelihood_ranks()
+        best_rss[model_id] = data.iloc[0]['RSS']
+        aic[model_id] = C[model_id].aic(data.iloc[0]['RSS'])
+    #
+    df = pandas.DataFrame({'RSS': best_rss, 'AICc': aic})
+    print(df)
 
-
-
-
-
-
-
-
-
-
-
+    print(C.list_topologies())

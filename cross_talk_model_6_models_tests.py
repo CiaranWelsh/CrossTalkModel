@@ -53,11 +53,47 @@ class TestModel1(unittest.TestCase):
         C = CrossTalkModel()
         self.assertEqual(len(C.data_files), 22)
 
+    def test_insert_best_parameters_and_open_with_copasi(self):
+        ms = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelection'
+        C = CrossTalkModel(working_directory=os.path.dirname(ms))
+
+        print(C[2].insert_best_parameters_and_open_with_copasi())
+
     def test_iter(self):
         C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel')
         for i in C:
             print(i)
             C[i]
+
+    def test_get_n(self):
+        C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel')
+        self.assertEqual(C[1]._get_n(), 88)
+
+    def test_get_data(self):
+        C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel')
+        self.assertIsInstance(C.get_experimental_data(), pandas.DataFrame)
+
+    def test_get_experimental_conditions(self):
+        C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel')
+        for i in range(C.get_experimental_conditions().shape[0]):
+            self.assertEqual(C.get_experimental_conditions().iloc[i]['GrowthFactors'], 1)
+
+    def test_get_experimental_conditions2(self):
+        C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel')
+        df = C.get_experimental_conditions()
+        fname = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/data/cond.csv'
+        # df.to_csv(fname)
+        # for i in range(C.get_experimental_conditions().shape[0]):
+        #     print(C.get_experimental_conditions())
+            # self.assertEqual(C.get_experimental_conditions().iloc[i]['GrowthFactors'], 1)
+
+    def test_simulate_conditions(self):
+        C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel')
+        C.simulate_conditions()
+
+    def test_plot_bargraphs(self):
+        C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel')
+        C.plot_bargraphs()
 
 
 
