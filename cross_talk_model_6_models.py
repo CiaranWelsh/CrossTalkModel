@@ -12,13 +12,19 @@ import matplotlib.pyplot as plt
 import seaborn
 
 
+class ParameterSet(dict):
+    def __init__(self, *args):
+        super().__init__(*args)
+
+
 class CrossTalkModel:
     """
     build a factory that churns out functions that return models and take as argument the
     antimony parameter strings
     """
 
-    def __init__(self, working_directory, parameter_str=None,
+    def __init__(self, working_directory,
+                 parameter_str=None,
                  FIT='1_1',
                  run_mode='slurm',
                  copy_number=33,
@@ -31,6 +37,7 @@ class CrossTalkModel:
                  number_of_generations=500,
                  lower_bound=0.001,
                  upper_bound=1000,
+                 use_best_parameters=False
                  ):
         """
         :param variant: int. 1 to 7. ID of topology
@@ -54,6 +61,7 @@ class CrossTalkModel:
         self.number_of_generations = number_of_generations
         self.lower_bound = lower_bound
         self.upper_bound = upper_bound
+        self.use_best_parameters = use_best_parameters
 
         self.cps_file = os.path.join(self.topology_dir, 'Topology{}'.format(self.topology))
 
@@ -183,8 +191,8 @@ class CrossTalkModel:
         df = pandas.DataFrame(cond).transpose()
         return df
 
-    def simulate_conditions(self, selection=['pAkt', 'ppErk', 'pS6K', 'pSmad2']):
-        mod = self.to_tellurium()
+    def simulate_conditions(self, selection=['pAkt', 'ppErk', 'pS6K', 'pSmad2'], best_parameters=False):
+        mod = self.to_tellurium(best_parameters=best_parameters)
         conditions = self.get_experimental_conditions()
         # print(conditions)
         simulation_data = {}
@@ -198,13 +206,13 @@ class CrossTalkModel:
 
         return pandas.concat(simulation_data)
 
-    def plot_bargraphs(self):
+    def plot_bargraphs(self, best_parameters=False):
         import matplotlib
         matplotlib.use('TkAgg')
         seaborn.set_style('white')
         seaborn.set_context(context='talk')
         selections = ['pAkt', 'pS6K', 'ppErk', 'pSmad2']
-        sim_data = self.simulate_conditions()
+        sim_data = self.simulate_conditions(best_parameters=best_parameters)
         sim_data = sim_data.reset_index(level=1)
         sim_data = sim_data.rename(columns={'level_1': 'Time'})
         sim_data = sim_data[sim_data['Time'] == 72]
@@ -228,41 +236,59 @@ class CrossTalkModel:
         mk_exp = exp_data.loc[mk_conditions].reset_index()
         both_exp = exp_data.loc[both_conditions].reset_index()
 
+        marker = '_'
+        markersize = 3
         for sp in ['pAkt', 'pS6K', 'ppErk', 'pSmad2']:
-            fig = plt.figure()
-            seaborn.barplot(x='index', y=sp, data=azd_sim,
-                            palette=['yellow']*2 + ['white'] + ['red']*4 + ['green']*4,
-                            edgecolor='black')
+            fig, ax = plt.subplots()
+            seaborn.barplot(x='index', y=sp, data=azd_sim, ax=ax,
+                            palette=['yellow'] * 2 + ['white'] + ['red'] * 4 + ['green'] * 4,
+                            edgecolor='black', zorder=0)
+
+            seaborn.pointplot(x='index', y=sp, data=azd_exp, join=False,
+                              color='blue', zorder=1, markers=marker, ax=ax,
+                              markersize=markersize, legend=False,
+                              mec='black')
+
+            # for i in azd_exp
             plt.title(sp)
             plt.xlabel('')
 
             plt.xticks(rotation=90)
             seaborn.despine(fig=fig, top=True, right=True)
-            fname = os.path.join(self.graphs_dir, 'AZD_' + sp +'.png')
+            fname = os.path.join(self.graphs_dir, 'AZD_' + sp + '.png')
             plt.savefig(fname, dpi=150, bbox_inches='tight')
 
-            fig = plt.figure()
+            fig, ax = plt.subplots()
             seaborn.barplot(x='index', y=sp, data=mk_sim,
-                            palette=['yellow']*2 + ['white'] + ['red']*4 + ['green']*4,
-                            edgecolor='black')
+                            palette=['yellow'] * 2 + ['white'] + ['red'] * 4 + ['green'] * 4,
+                            edgecolor='black', ax=ax, zorder=0)
+            seaborn.pointplot(x='index', y=sp, data=mk_exp, join=False,
+                              color='blue', markers=marker,
+                              zorder=1, markersize=markersize, ax=ax,
+                              legend=False)
             plt.xlabel('')
             plt.xticks(rotation=90)
             seaborn.despine(fig=fig, top=True, right=True)
             plt.title(sp)
 
-            fname = os.path.join(self.graphs_dir, 'MK_' + sp +'.png')
+            fname = os.path.join(self.graphs_dir, 'MK_' + sp + '.png')
             plt.savefig(fname, dpi=150, bbox_inches='tight')
 
-            fig = plt.figure()
+            fig, ax = plt.subplots()
             seaborn.barplot(x='index', y=sp, data=both_sim,
-                            palette=['yellow']*2 + ['white'] + ['red']*4 + ['green']*4,
-                            edgecolor='black')
+                            palette=['yellow'] * 2 + ['white'] + ['red'] * 4 + ['green'] * 4,
+                            edgecolor='black', ax=ax, zorder=0)
+            seaborn.pointplot(x='index', y=sp, data=both_exp, join=False,
+                              color='blue', markers=marker, ax=ax,
+                              zorder=1, markersize=markersize,
+                              legend=False)
+
             plt.xlabel('')
             plt.xticks(rotation=90)
             seaborn.despine(fig=fig, top=True, right=True)
             plt.title(sp)
 
-            fname = os.path.join(self.graphs_dir, 'MK_AZD_' + sp +'.png')
+            fname = os.path.join(self.graphs_dir, 'MK_AZD_' + sp + '.png')
             plt.savefig(fname, dpi=150, bbox_inches='tight')
 
     @property
@@ -280,22 +306,25 @@ class CrossTalkModel:
         df.index.name = 'ModelID'
         return df
 
-    def to_copasi(self):
+    def to_copasi(self, best_parameters=False):
         with model.BuildAntimony(self.copasi_file) as loader:
-            mod = loader.load(self._build_antimony())
+            mod = loader.load(self._build_antimony(best_parameters=best_parameters))
         return mod
 
-    def to_tellurium(self):
-        return te.loada(self._build_antimony())
+    def to_tellurium(self, best_parameters):
+        return te.loada(self._build_antimony(best_parameters=best_parameters))
 
-    def to_antimony(self):
-        return self._build_antimony()
+    def to_antimony(self, best_parameters):
+        return self._build_antimony(best_parameters=best_parameters)
 
     def configure_timecourse(self):
         pass
 
-    def run_parameter_estimation(self):
-        mod = self.to_copasi()
+    def run_parameter_estimation(self, mod=None):
+        if mod is None:
+            mod = self.to_copasi(best_parameters=self.use_best_parameters)
+        else:
+            assert isinstance(mod, model.Model)
 
         free_params = [i.name for i in mod.global_quantities if i.name[0] == '_']
 
@@ -359,6 +388,19 @@ class CrossTalkModel:
         mod.insert_parameters(df=parameters, index=0, inplace=True)
         return mod
 
+    def get_best_model_parameters_as_antimony(self):
+        import re
+        parameters = self.get_param_df()
+        # print(parameters)
+        best_params = parameters.iloc[0].to_dict()
+        params = []
+        current_params = self._default_parameter_set_as_dict()
+        current_params.update(best_params)
+        s = ''
+        for k, v in current_params.items():
+            s += "\t\t{} = {};\n".format(k, v)
+        return s
+
     def _get_number_estimated_model_parameters(self):
         return len(self._configure_PE_for_viz().model.fit_item_order)
 
@@ -370,7 +412,7 @@ class CrossTalkModel:
         for exp in self.data_files:
             data = pandas.read_csv(exp, sep=',')
             data = data[['pAkt', 'ppErk', 'pS6K', 'pSmad2']]
-            data = data.iloc[6]
+            data = data.iloc[0]
             n += len(data)
         return n
 
@@ -416,16 +458,16 @@ class CrossTalkModel:
 
         return model_specific_reactions
 
-    def _build_antimony(self):
+    def _build_antimony(self, best_parameters=False):
         s = ''
         s += self._functions()
         s += 'model CrossTalkModelTopology{}'.format(self.topology)
         s += self._compartments()
         s += self._reactions(self.model_specific_reactions)
-        if self.parameter_str is None:
+        if best_parameters is False:
             s += self._default_parameter_str()
         else:
-            s += self.parameter_str
+            s += self.get_best_model_parameters_as_antimony()
         s += self._events()
         s += self._units()
         s += "\nend"
@@ -564,6 +606,21 @@ class CrossTalkModel:
         _kSmad2DephosByAkt_kcat = 0.1;
         _kSmad2DephosByAkt_kcat = 0.1;
         """
+
+    def _default_parameter_set_as_dict(self):
+        string = self._default_parameter_str()
+        # print(string)
+        strings = string.split('\n')
+        # print(strings)
+        dct = OrderedDict()
+        for s in strings:
+            if '=' in s:
+                k, v = s.split('=')
+                k = k.strip()
+                v = v.replace(';', '')
+                v = float(v)
+                dct[k] = v
+        return dct
 
     def _functions(self):
         return """
@@ -755,11 +812,16 @@ class CrossTalkModel:
 
 if __name__ == '__main__':
 
-    FIT = '3_1_ICsAreFixed'
-    # FIT = '1_1'
+    # FIT = '3_1_ICsAreFixed'
+    FIT = '1_1'
     CLUSTER = False
     RUN_PARAMETER_ESTIMATION = False
-    PLOT_SIMULATION_GRAPHS = True
+    PLOT_SIMULATION_GRAPHS = False
+    AICs = False
+    LIKELIHOOD_RANKS = True
+    INSERT_BEST_PARAMETERS = False
+
+    CURRENT_MODEL_ID = 7
 
     if CLUSTER:
         WORKING_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel'
@@ -768,15 +830,20 @@ if __name__ == '__main__':
 
     C = CrossTalkModel(WORKING_DIRECTORY, FIT=FIT)
 
+    print(C.FIT)
+    print(C.fit_dir)
+
     if RUN_PARAMETER_ESTIMATION:
         for model_id in C:
             C[model_id].run_parameter_estimation()
 
     if PLOT_SIMULATION_GRAPHS:
         for model_id in C:
-            C[model_id].plot_bargraphs()
+            C[model_id].plot_bargraphs(best_parameters=True)
 
-    # C[7]._configure_PE_for_viz().model.open()
+    if INSERT_BEST_PARAMETERS:
+        mod = C[CURRENT_MODEL_ID].insert_best_parameters()
+        mod.open()
 
     # C[4].run_parameter_estimation_from_best_estimates()
 
@@ -786,15 +853,20 @@ if __name__ == '__main__':
     # PE = C[2]._configure_PE_for_viz()
     # PE.model.open()
 
-    best_rss = {}
-    aic = {}
-    for model_id in C:
-        data = C[model_id].get_param_df()
-        C[model_id].likelihood_ranks()
-        best_rss[model_id] = data.iloc[0]['RSS']
-        aic[model_id] = C[model_id].aic(data.iloc[0]['RSS'])
-    #
-    df = pandas.DataFrame({'RSS': best_rss, 'AICc': aic})
-    print(df)
+    if LIKELIHOOD_RANKS:
+        for model_id in C:
+            C[model_id].likelihood_ranks()
 
-    print(C.list_topologies())
+
+    if AICs:
+        best_rss = {}
+        aic = {}
+        for model_id in C:
+            data = C[model_id].get_param_df()
+            best_rss[model_id] = data.iloc[0]['RSS']
+            aic[model_id] = C[model_id].aic(data.iloc[0]['RSS'])
+        df = pandas.DataFrame({'RSS': best_rss, 'AICc': aic})
+        # print(df)
+        df = pandas.concat([C.list_topologies(), df], axis=1)
+        fname = os.path.join(WORKING_DIRECTORY, 'ModelSelectionDataFit{}.csv'.format(FIT))
+        df.to_csv(fname)

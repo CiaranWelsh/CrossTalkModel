@@ -85,7 +85,7 @@ class TestModel1(unittest.TestCase):
         # df.to_csv(fname)
         # for i in range(C.get_experimental_conditions().shape[0]):
         #     print(C.get_experimental_conditions())
-            # self.assertEqual(C.get_experimental_conditions().iloc[i]['GrowthFactors'], 1)
+        # self.assertEqual(C.get_experimental_conditions().iloc[i]['GrowthFactors'], 1)
 
     def test_simulate_conditions(self):
         C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel')
@@ -95,7 +95,29 @@ class TestModel1(unittest.TestCase):
         C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel')
         C.plot_bargraphs()
 
+    def test_default_parameter_set_as_dict(self):
+        C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel')
+        self.assertIsInstance(C._default_parameter_set_as_dict(), dict)
 
+    def test_get_model_parameters_as_antimony(self):
+        C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel')
+        v = 0.333757
+        p = '_kAktPhos_ki'
+        s = C.get_best_model_parameters_as_antimony()
+        self.assertIn("{} = {}".format(p, v), s)
+
+    def test_get_model_parameters_as_antimony2(self):
+        C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel')
+        s = C[7].plot_bargraphs(best_parameters=True)
+
+
+    def test_gx(self):
+        C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel',
+                           run_mode=False
+                           )
+        C[7].insert_best_parameters_and_open_with_copasi()
+        # mod = C.to_copasi(best_parameters=True,)
+        # C[7].run_parameter_estimation(mod).model.open()
 
     # def test_that_a_global_variable_is_removed_from_the_correct_model(self):
     #     C = CrossTalkModel()
