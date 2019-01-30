@@ -61,9 +61,23 @@ class TestModel1(unittest.TestCase):
 
     def test_iter(self):
         C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel')
+        count = 0
         for i in C:
-            print(i)
-            C[i]
+            count += 1
+        self.assertEqual(count, 16)
+
+    def test_getitem(self):
+        C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel')
+        # print (C[6].to_copasi().open())
+        for i in C:
+            C = C[i]
+        self.assertEqual(C[i].topology, 15)
+
+    def test_topology_changes(self):
+        C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel')
+        current_topology = C.topology
+        C = C[4]
+        self.assertEqual(C.topology, 4)
 
     def test_get_n(self):
         C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel')
@@ -111,7 +125,7 @@ class TestModel1(unittest.TestCase):
         s = C[7].plot_bargraphs(best_parameters=True)
 
 
-    def test_gx(self):
+    def test_fit_dir(self):
         C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel',
                            run_mode=False
                            )

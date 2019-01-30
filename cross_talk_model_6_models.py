@@ -25,7 +25,7 @@ class CrossTalkModel:
 
     def __init__(self, working_directory,
                  parameter_str=None,
-                 FIT='1_1',
+                 fit='1_1',
                  run_mode='slurm',
                  copy_number=33,
                  randomize_start_values=True,
@@ -49,7 +49,7 @@ class CrossTalkModel:
         if not os.path.isdir(self.working_directory):
             raise ValueError
 
-        self.FIT = FIT
+        self.fit = fit
         self.run_mode = run_mode
         self.copy_number = copy_number
         self.randomize_start_values = randomize_start_values
@@ -82,7 +82,7 @@ class CrossTalkModel:
         self.model_specific_reactions = self._assembel_model_reactions()[self.topology]
         ## run 33 models per model
 
-        if self.FIT[0] != '1':
+        if self.fit[0] != '1':
             print('WARNING. MAKE SURE YOU HAVE ADDED THE METABOLITES ARGUMENT INTO '
                   'PARAMETER ESTIMATIONS')
 
@@ -94,26 +94,22 @@ class CrossTalkModel:
         Subtract 1 for 0 indexed python
         :return:
         """
+        # print('len', len(self._get_combinations()))
         return len(list(self._get_combinations())) - 1
 
     def __iter__(self):
-        return self
 
-    def __next__(self):
-        if self.topology > len(self):
-            raise StopIteration
-        else:
+        while self.topology < len(self)+1:
+            yield self.topology
             self.topology += 1
-            return self.topology - 1
 
     def __getitem__(self, item):
         if item > len(self):
-            raise IndexError
+            raise IndexError("item is '{}' but max item is '{}'".format(item, len(self)))
 
-        C = CrossTalkModel(self.working_directory)
-        C.topology = item
-        C.model_specific_reactions = self._assembel_model_reactions()[item]
-        return C
+        self.topology = item
+        self.model_specific_reactions = self._assembel_model_reactions()[item]
+        return self
 
     @property
     def topology(self):
@@ -144,7 +140,7 @@ class CrossTalkModel:
 
     @property
     def fit_dir(self):
-        d = os.path.join(self.topology_dir, 'Fit{}'.format(self.FIT))
+        d = os.path.join(self.topology_dir, 'Fit{}'.format(self.fit))
         if not os.path.isdir(d):
             os.makedirs(d)
         return d
@@ -363,7 +359,6 @@ class CrossTalkModel:
         self.randomize_start_values = False
         self.method = 'current_solution_statistics'
         PE = self.run_parameter_estimation()
-        print(PE.results_directory)
         return PE
 
     def likelihood_ranks(self):
@@ -547,11 +542,9 @@ class CrossTalkModel:
         kRafDephos_km = 8;
         kRafDephosVmax = 3602.5;
         kMekPhos_km1 = 15;
-        kMekPhos_kcat = 90;
         kMekDephos_km = 15;
         kMekDephos_Vmax = 2700;
         kErkPhos_km = 50;
-        kErkPhos_kcat = 200;
         kErkDephos_km = 15;
         kErkDephos_Vmax = 1800;
         kPI3KPhosByGF_km =   50;
@@ -585,6 +578,8 @@ class CrossTalkModel:
         _kSmad2Phos_kcat = 100.643;
         _kRafPhos_ki = 362.567;
         _kMekPhos_ki = 1.01271;
+        _kMekPhos_kcat = 90;
+        _kErkPhos_kcat = 200;
         _kPI3KPhosByGF_kcat     =   0.1;
         _kPI3KDephosByS6K_kcat  =   0.1;
         _kAktPhos_ki = 0.311348;
@@ -715,12 +710,12 @@ class CrossTalkModel:
         //MAPK module
         MAPK_R0  : Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kRafPhos_km,  _kRafPhos_ki, kRafPhos_Vmax, kRafPhos_n, ppErk, Raf);
         MAPK_R1  : pRaf    => Raf       ; Cell*MM(            kRafDephos_km ,   kRafDephosVmax,      pRaf           );
-        MAPK_R2  : Mek     => pMek      ; Cell*CompetitiveInhibitionWithKcat(    kMekPhos_km1 , _kMekPhos_ki, kMekPhos_kcat, pRaf, AZD, Mek       );
-        MAPK_R3  : pMek    => ppMek     ; Cell*CompetitiveInhibitionWithKcat(    kMekPhos_km1 , _kMekPhos_ki, kMekPhos_kcat, pRaf, AZD, pMek     );
+        MAPK_R2  : Mek     => pMek      ; Cell*CompetitiveInhibitionWithKcat(    kMekPhos_km1 , _kMekPhos_ki, _kMekPhos_kcat, pRaf, AZD, Mek       );
+        MAPK_R3  : pMek    => ppMek     ; Cell*CompetitiveInhibitionWithKcat(    kMekPhos_km1 , _kMekPhos_ki, _kMekPhos_kcat, pRaf, AZD, pMek     );
         MAPK_R4  : ppMek   => pMek      ; Cell*MM(            kMekDephos_km,   kMekDephos_Vmax,     ppMek         );
         MAPK_R5  : pMek    => Mek       ; Cell*MM(            kMekDephos_km,   kMekDephos_Vmax,     pMek          );
-        MAPK_R6  : Erk     => pErk      ; Cell*MMWithKcat(    kErkPhos_km,     kErkPhos_kcat, Erk,  ppMek         );
-        MAPK_R7  : pErk    => ppErk     ; Cell*MMWithKcat(    kErkPhos_km,     kErkPhos_kcat, pErk, ppMek         );
+        MAPK_R6  : Erk     => pErk      ; Cell*MMWithKcat(    kErkPhos_km,     _kErkPhos_kcat, Erk,  ppMek         );
+        MAPK_R7  : pErk    => ppErk     ; Cell*MMWithKcat(    kErkPhos_km,     _kErkPhos_kcat, pErk, ppMek         );
         MAPK_R8  : ppErk   => pErk      ; Cell*MM(            kErkDephos_km,   kErkDephos_Vmax,     ppErk         );
         MAPK_R9  : pErk    => Erk       ; Cell*MM(            kErkDephos_km,   kErkDephos_Vmax,     pErk          );
 
@@ -812,26 +807,28 @@ class CrossTalkModel:
 
 if __name__ == '__main__':
 
-    # FIT = '3_1_ICsAreFixed'
     FIT = '1_1'
     CLUSTER = False
     RUN_PARAMETER_ESTIMATION = False
-    PLOT_SIMULATION_GRAPHS = False
+    PLOT_SIMULATION_GRAPHS = True
     AICs = False
-    LIKELIHOOD_RANKS = True
+    LIKELIHOOD_RANKS = False
     INSERT_BEST_PARAMETERS = False
 
-    CURRENT_MODEL_ID = 7
+    CURRENT_MODEL_ID = 6
 
     if CLUSTER:
         WORKING_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel'
     else:
         WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel'
 
-    C = CrossTalkModel(WORKING_DIRECTORY, FIT=FIT)
+    C = CrossTalkModel(WORKING_DIRECTORY, fit=FIT)
 
-    print(C.FIT)
-    print(C.fit_dir)
+    # print(C.fit)
+    # print(C.fit_dir)
+    # for i in C:
+    #     print(i)
+    #     print(C[i].get_param_df())
 
     if RUN_PARAMETER_ESTIMATION:
         for model_id in C:
@@ -839,7 +836,12 @@ if __name__ == '__main__':
 
     if PLOT_SIMULATION_GRAPHS:
         for model_id in C:
-            C[model_id].plot_bargraphs(best_parameters=True)
+            try:
+                C[model_id].plot_bargraphs(best_parameters=True)
+            except:
+                print('model {} failed'.format(model_id))
+                continue
+
 
     if INSERT_BEST_PARAMETERS:
         mod = C[CURRENT_MODEL_ID].insert_best_parameters()
@@ -862,7 +864,12 @@ if __name__ == '__main__':
         best_rss = {}
         aic = {}
         for model_id in C:
-            data = C[model_id].get_param_df()
+            try:
+                print(C[model_id])
+                data = C[model_id].get_param_df()
+            except:
+                continue
+
             best_rss[model_id] = data.iloc[0]['RSS']
             aic[model_id] = C[model_id].aic(data.iloc[0]['RSS'])
         df = pandas.DataFrame({'RSS': best_rss, 'AICc': aic})
@@ -870,3 +877,4 @@ if __name__ == '__main__':
         df = pandas.concat([C.list_topologies(), df], axis=1)
         fname = os.path.join(WORKING_DIRECTORY, 'ModelSelectionDataFit{}.csv'.format(FIT))
         df.to_csv(fname)
+        print(df)
