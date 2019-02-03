@@ -1,6 +1,6 @@
 import unittest
 import os, pandas, glob, numpy, re
-from cross_talk_model_6_models import CrossTalkModel
+from cross_talk_model_combinations import CrossTalkModel
 
 import tellurium as te
 
@@ -21,16 +21,16 @@ class TestModel1(unittest.TestCase):
         self.assertIsInstance(C._build_antimony(), str)
 
     def test_combinations(self):
-        C = CrossTalkModel()
+        C = CrossTalkModel(self.working_directory)
         self.assertEqual(len(C), 16)
 
     def test_get_topology(self):
-        C = CrossTalkModel()
+        C = CrossTalkModel(self.working_directory)
         C = C[3]
         self.assertEqual(C.topology, 3)
 
     def test_list_topologies(self):
-        C = CrossTalkModel()
+        C = CrossTalkModel(self.working_directory)
         l = C.list_topologies()
         self.assertEqual(l.loc[6, 'Topology'], 'AktActivate_AktInhibit')
 
@@ -50,7 +50,7 @@ class TestModel1(unittest.TestCase):
         self.assertEqual(C[6].topology_dir, r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelection/Topology6')
 
     def test_number_of_data_files(self):
-        C = CrossTalkModel()
+        C = CrossTalkModel(self.working_directory)
         self.assertEqual(len(C.data_files), 22)
 
     def test_insert_best_parameters_and_open_with_copasi(self):
@@ -129,7 +129,8 @@ class TestModel1(unittest.TestCase):
         C = CrossTalkModel(r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel',
                            run_mode=False
                            )
-        C[7].insert_best_parameters_and_open_with_copasi()
+        print(C.fit_dir)
+        # C[7].insert_best_parameters_and_open_with_copasi()
         # mod = C.to_copasi(best_parameters=True,)
         # C[7].run_parameter_estimation(mod).model.open()
 
