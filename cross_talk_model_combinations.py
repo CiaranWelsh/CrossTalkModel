@@ -759,7 +759,7 @@ class CrossTalkModel:
         return """        
         Akt = 45.000013943547444;
         Erk = 80.0000247885287;
-        Mek = 40.00001239426435;
+        Mek = 80.00001239426435;
         PI3K = 45.000013943547444;
         Raf = 45.000013943547444;
         S6K = 45.000013943547444;
@@ -769,14 +769,14 @@ class CrossTalkModel:
         mTORC1 = 45.000013943547444;
         pAkt = 5.000001549283042;
         pErk = 10.000003098566063;
-        pMek = 5.000001549283042;
+        pMek = 10.000001549283042;
         pPI3K = 5.000001549283042;
         pRaf = 5.000001549283042;
         pS6K = 5.000001549283042;
         pSmad2 = 5.000001549283042;
         pmTORC1 = 5.000001549283042;
         ppErk = 10.000003098566063;
-        ppMek = 45.000013943547444;
+        ppMek = 10.000013943547444;
         Cell = 1.0;
         AZD = 0.0;
         Everolimus = 0.0;
@@ -1116,6 +1116,7 @@ class CrossTalkModel:
 
 if __name__ == '__main__':
 
+    PROBLEM = 2
     ## Which model is the current focus of analysis
     CURRENT_MODEL_ID = 52
 
@@ -1166,13 +1167,13 @@ if __name__ == '__main__':
     INSERT_BEST_PARAMETERS_INTO_ALL_MODELS = False
 
     if CLUSTER == 'slurm':
-        WORKING_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel/ModelSelectionProblems/Problem2'
+        WORKING_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(PROBLEM)
 
     elif CLUSTER == 'sge':
-        WORKING_DIRECTORY = r'/sharedlustre/users/b3053674/2019/CrossTalkModel/ModelSelectionProblems/Problem2'
+        WORKING_DIRECTORY = r'/sharedlustre/users/b3053674/2019/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(PROBLEM)
 
     elif CLUSTER == False:
-        WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelectionProblems/Problem2'
+        WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(PROBLEM)
 
     else:
         raise ValueError
