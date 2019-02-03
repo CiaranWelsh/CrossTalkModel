@@ -804,15 +804,21 @@ class CrossTalkModel:
         _kmTORC1Phos_kcat = 0.8455966670759398;
         _kmTORC1Phos_ki = 0.010189617324148574;
         _kmTORCPhosBasal_Vmax = 269.9381551648628;
+        _kMekPhos_kcat1 = 0.1;
+        _kMekPhos_kcat2 = 0.1;
+        _kErkPhos_kcat1 = 0.1;
+        _kErkPhos_kcat2 = 0.1;
         kAktDephos_Vmax = 30.0;
         kAktDephos_km = 15.0;
         kAktPhos_km = 12.5;
         kErkDephos_Vmax = 1800.0;
         kErkDephos_km = 15.0;
-        kErkPhos_km = 50.0;
+        kErkPhos_km1 = 50.0;
+        kErkPhos_km2 := kErkPhos_km1;
         kMekDephos_Vmax = 2700.0;
         kMekDephos_km = 15.0;
         kMekPhos_km1 = 15.0;
+        kMekPhos_km2 := kMekPhos_km1;
         kPI3KDephosByErk_km = 10.0;
         kPI3KDephosByS6K_km = 50.0;
         kPI3KPhosByGF_km = 50.0;
@@ -961,12 +967,12 @@ class CrossTalkModel:
         //MAPK module
         MAPK_R0  : Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kRafPhos_km,  _kRafPhos_ki, kRafPhos_Vmax, kRafPhos_n, ppErk, Raf);
         MAPK_R1  : pRaf    => Raf       ; Cell*MM(            kRafDephos_km ,   kRafDephosVmax,      pRaf           );
-        MAPK_R2  : Mek     => pMek      ; Cell*CompetitiveInhibitionWithKcat(    kMekPhos_km1 , _kMekPhos_ki, _kMekPhos_kcat, pRaf, AZD, Mek       );
-        MAPK_R3  : pMek    => ppMek     ; Cell*CompetitiveInhibitionWithKcat(    kMekPhos_km1 , _kMekPhos_ki, _kMekPhos_kcat, pRaf, AZD, pMek     );
+        MAPK_R2  : Mek     => pMek      ; Cell*CompetitiveInhibitionWithKcat(    kMekPhos_km1 , _kMekPhos_ki, _kMekPhos_kcat1, pRaf, AZD, Mek       );
+        MAPK_R3  : pMek    => ppMek     ; Cell*CompetitiveInhibitionWithKcat(    kMekPhos_km2 , _kMekPhos_ki, _kMekPhos_kcat2, pRaf, AZD, pMek     );
         MAPK_R4  : ppMek   => pMek      ; Cell*MM(            kMekDephos_km,   kMekDephos_Vmax,     ppMek         );
         MAPK_R5  : pMek    => Mek       ; Cell*MM(            kMekDephos_km,   kMekDephos_Vmax,     pMek          );
-        MAPK_R6  : Erk     => pErk      ; Cell*MMWithKcat(    kErkPhos_km,     _kErkPhos_kcat, Erk,  ppMek         );
-        MAPK_R7  : pErk    => ppErk     ; Cell*MMWithKcat(    kErkPhos_km,     _kErkPhos_kcat, pErk, ppMek         );
+        MAPK_R6  : Erk     => pErk      ; Cell*MMWithKcat(    kErkPhos_km2,     _kErkPhos_kcat1, Erk,  ppMek         );
+        MAPK_R7  : pErk    => ppErk     ; Cell*MMWithKcat(    kErkPhos_km1,     _kErkPhos_kcat2, pErk, ppMek         );
         MAPK_R8  : ppErk   => pErk      ; Cell*MM(            kErkDephos_km,   kErkDephos_Vmax,     ppErk         );
         MAPK_R9  : pErk    => Erk       ; Cell*MM(            kErkDephos_km,   kErkDephos_Vmax,     pErk          );
 
@@ -1122,7 +1128,7 @@ if __name__ == '__main__':
 
     ## either False, 'slurm' or 'sge'. Determines the main working directory
     ## for easy switching between environments
-    CLUSTER = False
+    CLUSTER = 'slurm'
 
     ## True, False, 'slurm' or 'sge'. Passed onto parameter estimation class
     RUN_MODE = 'slurm'
@@ -1176,7 +1182,7 @@ if __name__ == '__main__':
                        copy_number=3,
                        run_mode=RUN_MODE,
                        iteration_limit=3000,
-                       swarm_size=150,
+                       swarm_size=75,
                        overwrite_config_file=True
                        )
 
