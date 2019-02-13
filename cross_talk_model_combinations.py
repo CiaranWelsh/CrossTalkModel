@@ -128,7 +128,7 @@ class CrossTalkModel:
                  iteration_limit=2000,
                  number_of_generations=500,
                  lower_bound=0.001,
-                 upper_bound=1000,
+                 upper_bound=10000,
                  use_best_parameters=False
                  ):
         """
@@ -138,8 +138,11 @@ class CrossTalkModel:
         self.parameter_str = parameter_str
         self._topology = 0
         self.working_directory = working_directory
+
+
+
         if not os.path.isdir(self.working_directory):
-            raise ValueError
+            os.makedirs(self.working_directory)
 
         self.fit = fit
         self.run_mode = run_mode
@@ -263,6 +266,12 @@ class CrossTalkModel:
             os.makedirs(d)
         return d
 
+    @property
+    def time_course_graphs(self):
+        d = os.path.join(self.graphs_dir, 'TimeCourseSimulations')
+        if not os.path.isdir(d):
+            os.makedirs(d)
+        return d
     @property
     def old_results_directory(self):
         return os.path.join(self.fit_dir, 'MultipleParameterEstimationResults')
@@ -443,12 +452,16 @@ class CrossTalkModel:
             self.randomize_start_values = False
 
         free_params = [i.name for i in mod.global_quantities if i.name[0] == '_']
-
+        exclude = ['TGFb', 'ExperimentIndicator',
+                   'GrowthFactors', 'Everolimus',
+                   'MK2206', 'AZD']
         PE = tasks.MultiParameterEstimation(
             mod,
             self.data_files,
             separator=[','] * len(self.data_files),
+            weight_method=['value_scaling'] * len(self.data_files),
             metabolites=[],
+            # metabolites=[i.name for i in mod.metabolites if i.name not in exclude],
             copy_number=self.copy_number,
             pe_number=1,
             global_quantities=free_params,
@@ -498,6 +511,7 @@ class CrossTalkModel:
             mod,
             self.data_files,
             separator=[','] * len(self.data_files),
+            weight_method=['value_scaling']*len(self.data_files),
             metabolites=[],
             copy_number=self.copy_number,
             pe_number=1,
@@ -560,9 +574,7 @@ class CrossTalkModel:
         """
         if not os.path.isdir(self.fit_dir):
             raise ValueError('"{}" is not a file'.format(self.fit_dir))
-        print('get_paran_df', self.fit_dir)
         PE = self._configure_PE_for_viz()
-        print('pe res dir ', PE.results_directory)
 
         parse = viz.Parse(PE)
 
@@ -578,12 +590,22 @@ class CrossTalkModel:
         return mod.open()
 
     def insert_best_parameters(self):
-        parameters = self.get_param_df()
-        mod = self._configure_PE_for_viz().model
+
+        try:
+            parameters = self.get_param_df()
+            mod = self._configure_PE_for_viz().model
+        except ValueError:
+            mod = self._configure_PE_for_viz().model
+            return mod
         print(parameters.iloc[0])
         print(parameters.iloc[0].shape)
         mod.insert_parameters(df=parameters, index=0, inplace=True)
+        mod.save()
         return mod
+
+    def insert_parameters(self, params):
+        return self.to_copasi().insert_parameters(params)
+
 
     def get_best_model_parameters_as_antimony(self):
         parameters = self.get_param_df()
@@ -641,7 +663,10 @@ class CrossTalkModel:
         return n * numpy.log((RSS / n)) + 2 * K + (2 * K * (K + 1)) / (n - K - 1)
 
 
-    def compute_all_aics(self):
+    def compute_all_aics(self, overwrite=False):
+        fname = os.path.join(C.model_selection_dir, 'ModelSelectionDataFit{}.csv'.format(FIT))
+        if os.path.isfile(fname) and not overwrite:
+            return pandas.read_csv(fname, index_col=0), fname
         best_rss = {}
         aic = {}
         for model_id in self:
@@ -660,7 +685,7 @@ class CrossTalkModel:
         df = df.sort_values(by='RSS')
         df['RSS Rank'] = range(df.shape[0])
         df = df.sort_index()
-        fname = os.path.join(C.model_selection_dir, 'ModelSelectionDataFit{}.csv'.format(FIT))
+        df['f'] = df['RSS'] * df['RSS Rank'] * df['AICc Rank']
         df.to_csv(fname)
 
         return df, fname
@@ -699,11 +724,18 @@ class CrossTalkModel:
         s += self._compartments()
         s += self._reactions(self.model_specific_reactions)
         if best_parameters is False:
+            print('best_parameters is False')
             s += self._default_parameter_str()
         elif best_parameters is True:
+            print('best_parameters is True')
             s += self.get_best_model_parameters_as_antimony()
             print('The best parameters are \n{}'.format(self.get_best_model_parameters_as_antimony()))
+        # elif best_parameters == 'current_model_parameters':
+        #     print('Building model with the parameters already in the copasi model')
+        #     s += self.get_parameters_from_copasi()[1] ## returns (dct, antimony)
         elif isinstance(best_parameters, str):
+            print('best_parameters is a string:\n{}'.format(best_parameters))
+
             s += best_parameters
         else:
             raise ValueError
@@ -723,6 +755,9 @@ class CrossTalkModel:
         """
         returns a list of parameters that do not appear in every version
         of the model - i.e. the smad topology module
+
+        You could get these parameters automatically by
+        looking at the combinatorial reactions
         :return:
         """
         return [
@@ -758,106 +793,95 @@ class CrossTalkModel:
     def _default_parameter_str(self):
         return """        
         Akt = 45.000013943547444;
-        Erk = 80.0000247885287;
-        Mek = 80.00001239426435;
-        PI3K = 45.000013943547444;
-        Raf = 90.000013943547444;
-        S6K = 45.000013943547444;
-        Smad2 = 45.000013943547444;
-        TGFbR = 45.000013943547444;
-        TGFbR_a = 5.000001549283042;
-        mTORC1 = 45.000013943547444;
-        pAkt = 5.000001549283042;
-        pErk = 10.000003098566063;
-        pMek = 10.000001549283042;
-        pPI3K = 5.000001549283042;
-        pRaf = 10;
-        pS6K = 5.000001549283042;
-        pSmad2 = 5.000001549283042;
-        pmTORC1 = 5.000001549283042;
-        ppErk = 10.000003098566063;
-        ppMek = 10.000013943547444;
-        Cell = 1.0;
-        AZD = 0.0;
-        Everolimus = 0.0;
-        ExperimentIndicator = 0.0;
-        GrowthFactors = 1.0;
-        MK2206 = 0.0;
-        TGFb = 0.005;
-        _kAktPhos_kcat = 0.5116871029;
-        _kAktPhos_ki = 0.14915372377942274;
-        _kErkPhos_kcat = 30.099933662603963;
-        _kMekPhos_kcat = 696.8063972266095;
-        _kMekPhos_ki = 0.03626301124506966;
-        _kPI3KDephosByErk_kcat = 0.2489815508164157;
-        _kPI3KDephosByS6K_kcat = 952.1786653065416;
-        _kPI3KPhosByGF_kcat = 564.0813721857468;
-        _kPI3KPhosByTGFbR_kcat = 134.1007615712106;
-        _kRafPhosByPI3K_kcat = 30.361815558432227;
-        _kRafPhosByTGFbR_kcat = 921.41839777352;
-        _kRafPhos_ki = 541.8261672478695;
-        _kS6KPhosBymTORC1_kcat = 2.369353108839003;
-        _kSmad2DephosByErk_kcat = 1.1103241865113556;
-        _kSmad2PhosByAkt_kcat = 0.9506957602693265;
-        _kSmad2Phos_kcat = 0.14275095796581258;
-        _kTGFbRAct_Vmax = 139.2261954147154;
-        _kmTORC1Phos_kcat = 0.8455966670759398;
-        _kmTORC1Phos_ki = 0.010189617324148574;
-        _kmTORCPhosBasal_Vmax = 269.9381551648628;
-        _kMekPhos_kcat1 = 0.1;
-        _kMekPhos_kcat2 = 0.1;
-        _kErkPhos_kcat1 = 0.1;
-        _kErkPhos_kcat2 = 0.1;
-        kAktDephos_Vmax = 30.0;
-        kAktDephos_km = 15.0;
-        kAktPhos_km = 12.5;
-        kErkDephos_Vmax = 1800.0;
-        kErkDephos_km = 15.0;
-        kErkPhos_km1 = 50.0;
-        kErkPhos_km2 := kErkPhos_km1;
-        kMekDephos_Vmax = 2700.0;
-        kMekDephos_km = 15.0;
-        kMekPhos_km1 = 15.0;
-        kMekPhos_km2 := kMekPhos_km1;
-        kPI3KDephosByErk_km = 10.0;
-        kPI3KDephosByS6K_km = 50.0;
-        kPI3KPhosByGF_km = 50.0;
-        kPI3KPhosByTGFbR_km = 10.0;
-        kRafDephosVmax = 3602.5;
-        kRafDephos_km = 8.0;
-        kRafPhosByPI3K_km = 50.0;
-        kRafPhosByTGFbR_km = 25.0;
-        kRafPhos_Vmax = 9000.0;
-        kRafPhos_km = 10.0;
-        kRafPhos_n = 1.0;
-        kS6KDephos_Vmax = 50.0;
-        kS6KDephos_km = 10.0;
-        kS6KPhosBymTORC1_km = 100.0;
-        kSmad2DephosByErk_km = 50.0;
-        kSmad2Dephos_Vmax = 20.0;
-        kSmad2Dephos_km = 30.0;
-        kSmad2PhosByAkt_km = 50.0;
-        kSmad2Phos_km = 50.0;
-        kTGFbRAct_h = 2.0;
-        kTGFbRAct_km = 10.0;
-        kTGFbRDephos_Vmax = 15.0;
-        kTGFbRDephos_km = 100.0;
-        kmTORC1Dephos_Vmax = 15.0;
-        kmTORC1Dephos_km = 100.0;
-        kmTORC1Phos_km = 50.0;
-        kmTORCPhosBasal_km = 25.0;
-        
-        kRafPhosByPI3K_km = 50;
-        kPI3KDephosByErk_km = 50;
-        kMekPhosByPI3K_km = 50;
-        kPI3KPhosByMek_km = 50;
-        kMekDephosByAkt_km = 50;
-        _kMekPhosByPI3K_kcat = 0.1;
-        _kRafPhosByPI3K_kcat = 0.1;
-        _kPI3KDephosByErk_kcat = 0.1;
-        _kPI3KPhosByMek_kcat = 0.1;
-        _kMekDephosByAkt_kcat = 0.1;
-        """
+		Erk = 80.0000247885287;
+		Mek = 80.00001239426435;
+		PI3K = 45.000013943547444;
+		Raf = 90.00001394354744;
+		S6K = 45.000013943547444;
+		Smad2 = 45.000013943547444;
+		TGFbR = 45.000013943547444;
+		TGFbR_a = 5.000001549283042;
+		mTORC1 = 45.000013943547444;
+		pAkt = 5.000001549283042;
+		pErk = 10.000003098566063;
+		pMek = 10.000001549283041;
+		pPI3K = 5.000001549283042;
+		pRaf = 10.0;
+		pS6K = 5.000001549283042;
+		pSmad2 = 5.000001549283042;
+		pmTORC1 = 5.000001549283042;
+		ppErk = 10.000003098566063;
+		ppMek = 10.000013943547444;
+		Cell = 1.0;
+		AZD = 0.0;
+		Everolimus = 0.0;
+		ExperimentIndicator = 0.0;
+		GrowthFactors = 1.0;
+		MK2206 = 0.0;
+		TGFb = 0.005;
+		_kAktPhos_kcat = 0.683533;
+		_kAktPhos_ki = 0.0028897;
+		_kMekPhos_ki = 0.06851139999999999;
+		_kPI3KDephosByS6K_kcat = 17.0599;
+		_kPI3KPhosByGF_kcat = 477.571;
+		_kRafPhosByTGFbR_kcat = 8444.06;
+		_kRafPhos_ki = 1295.69;
+		_kS6KPhosBymTORC1_kcat = 2.01081;
+		_kSmad2Phos_kcat = 9470.66;
+		_kTGFbRAct_Vmax = 0.00209677;
+		_kmTORC1Phos_kcat = 212.249;
+		_kmTORC1Phos_ki = 0.001;
+		_kmTORCPhosBasal_Vmax = 139.66;
+		_kMekPhos_kcat1 = 0.345291; //0.345291;
+		_kMekPhos_kcat2 = 9999.88; //9999.88;
+		_kErkPhos_kcat1 = 9993.67; //9993.67;
+		_kErkPhos_kcat2 = 25; //12.5468;
+		kAktDephos_Vmax = 30.0;
+		kAktDephos_km = 15.0;
+		kAktPhos_km = 12.5;
+		kErkDephos_Vmax = 1800.0;
+		kErkDephos_km = 15.0;
+		kErkPhos_km1 = 50.0;
+		kErkPhos_km2 =   kErkPhos_km1;
+		kMekDephos_Vmax = 2700.0;
+		kMekDephos_km = 15.0;
+		kMekPhos_km1 = 15.0;
+		kMekPhos_km2 =   kMekPhos_km1;
+		kPI3KDephosByS6K_km = 50.0;
+		kPI3KPhosByGF_km = 50.0;
+		kRafDephosVmax = 3602.5;
+		kRafDephos_km = 8.0;
+		kRafPhosByTGFbR_km = 25.0;
+		kRafPhos_Vmax = 9000.0;
+		kRafPhos_km = 10.0;
+		kRafPhos_n = 1.0;
+		kS6KDephos_Vmax = 50.0;
+		kS6KDephos_km = 10.0;
+		kS6KPhosBymTORC1_km = 100.0;
+		kSmad2Dephos_Vmax = 20.0;
+		kSmad2Dephos_km = 30.0;
+		kSmad2Phos_km = 50.0;
+		kTGFbRAct_h = 2.0;
+		kTGFbRAct_km = 10.0;
+		kTGFbRDephos_Vmax = 15.0;
+		kTGFbRDephos_km = 100.0;
+		kmTORC1Dephos_Vmax = 15.0;
+		kmTORC1Dephos_km = 100.0;
+		kmTORC1Phos_km = 50.0;
+		kmTORCPhosBasal_km = 25.0;
+		kPI3KPhosByMek_km = 50.0;
+		_kPI3KPhosByMek_kcat = 0.335106;
+		
+		kPI3KPhosByTGFbR_km = 50;
+		
+		kRafPhosByPI3K_km = 50;
+		kPI3KDephosByErk_km = 50;
+		_kRafPhosByPI3K_kcat = 0.1;
+		_kPI3KDephosByErk_kcat = 0.5;
+		kMekPhosByPI3K_km = 50;
+		kMekDephosByAkt_km = 50;
+		
+		"""
 
     def _default_parameter_set_as_dict(self):
         string = self._default_parameter_str()
@@ -866,12 +890,21 @@ class CrossTalkModel:
         # print(strings)
         dct = OrderedDict()
         for s in strings:
-            if '=' in s:
+            if s.strip() == '':
+                continue
+            if ':=' in s:
+                k, v = s.split(':=')
+            elif '=' in s:
                 k, v = s.split('=')
-                k = k.strip()
-                v = v.replace(';', '')
-                v = float(v)
+
+            k = k.strip()
+            v = v.replace(';', '')
+            try:
+                dct[k] = float(v)
+            except ValueError:
                 dct[k] = v
+
+
         return dct
 
     def _functions(self):
@@ -1051,8 +1084,8 @@ class CrossTalkModel:
         """
         return """
         // events in all simulations
-        SerumStarveRemoveTGFb: at (time>70.25): TGFb=0;
-        SerumStarveRemoveGrowthFactors: at (time>70.25): GrowthFactors=0;
+        SerumStarveRemoveTGFb: at (time>70.25): TGFb=0.00005;
+        SerumStarveRemoveGrowthFactors: at (time>70.25): GrowthFactors=0.005;
 
         // these events are dependent on the experiment indicated by the ExperimentIndicator Variable
         AddTGFb:        at (time>71.25  and ExperimentIndicator >  0):   TGFb=1;
@@ -1113,34 +1146,246 @@ class CrossTalkModel:
         self.fit = current_fit
         return best_parameters_antimony
 
+    def get_rank_of_fim(self, fim_file, param_file):
+        """
+        The rank of the FIM close to an optimum determines the number
+        of linearly independent rows/columns.
+
+        The scaled FIM is full rank but the unscaled FIM is not.
+        I suspect that to calculate the RANK you should use the
+        unscaled matrix while for analysing the curvature of
+        parameter space around the optimum we should use the
+        scaled version.
+
+        :param fim_file:
+        :param param_file:
+        :return:
+        """
+        df = pandas.read_csv(fim_file, header=None)
+        params = pandas.read_csv(param_file, index_col=0)
+        df.columns = params.index
+        df.index = params.index
+        rank = numpy.linalg.matrix_rank(df.values)
+        return rank
+
+
+    def analyse_fim(self, fim_file, param_file):
+        """
+
+        :param fim_file:
+        :param param_file:
+        :return:
+        """
+        df = pandas.read_csv(fim_file, header=None)
+        params = pandas.read_csv(param_file, index_col=0)
+        df.columns = params.index
+        df.index = params.index
+        import sympy
+        sym_mat = sympy.Matrix(df.values)
+        print(sym_mat)
+        print(sym_mat.rref(simplify=False))
+
+        # print(df)
+
+    def get_parameters_from_copasi(self, mod):
+        """
+        get parameters from copasi model
+        :param mod:
+        :return:
+        """
+        dct = {i.name: i.initial_value for i in mod.global_quantities}
+        metab = {i.name: i.concentration for i in mod.metabolites}
+        vol = {i.name: i.initial_value for i in mod.compartments}
+        s = ''
+        for k in sorted(metab):
+            s += "        {} = {};\n".format(k, metab[k])
+
+        for k in sorted(vol):
+            s += "        {} = {};\n".format(k, vol[k])
+
+        for k in sorted(dct):
+            s += "        {} = {};\n".format(k, dct[k])
+
+        return dct, s
+
+    def analyse_correlations(self, gl=0.7):
+        """
+
+        :param corr_file: Correlation matrix. Output from copasi parameter estimation talk
+        :param param_file: Parameter file. Output from copasi parameter estimation task. Used for labelling matrix
+        :param gl: greater than. The cut off.
+        :return:
+        """
+        corr_file = os.path.join(self.fit_dir, 'correlation_matrix.csv')
+        if not os.path.isfile(corr_file):
+            raise ValueError('"{}" is not a file. You need to '
+                             'run a current solution statistics '
+                             'parameter estimation with the '
+                             'calculate statistics button turned on '
+                             'and a regular "Parameter Estimation" '
+                             'report defined. Then extract the '
+                             'correlation matrix, save it in a '
+                             'csv file called "correlation_matrix.csv" in '
+                             'your current fit dir, i.e. "{}"'.format(
+                corr_file, self.fit_dir
+            ))
+
+        if gl > 1 or gl < 0:
+            raise ValueError
+
+        df = pandas.read_csv(corr_file, header=None)
+        params = self._configure_PE_for_viz().model.fit_item_order
+        df.columns = params
+        df.index = params
+        print(df)
+        import itertools
+        comb = itertools.combinations(list(df.columns), 2)
+        print(comb)
+        # # print(len(comb))
+        l = []
+        for i, j in comb:
+            if df.loc[i, j] > gl:
+                l.append([i, j, df.loc[i, j]])
+            elif df.loc[i, j] < -gl:
+                l.append([i, j, df.loc[i, j]])
+
+        df = pandas.DataFrame(l)
+        df.columns = ['param1', 'param2', 'correlation']
+        print(df.shape)
+        df.sort_values(by='correlation', inplace=True)
+        fname = os.path.join(os.path.dirname(corr_file), 'filtered_correlation_matrix_gl_0.7.csv')
+        df.to_csv(fname)
+        print('filtered correlations now in "{}"'.format(fname))
+
+    def plot_timecourse(self, selection=['pAkt', 'ppErk', 'pS6K', 'pSmad2']):
+        """
+
+        :return:
+        """
+        import matplotlib
+        matplotlib.use('TkAgg')
+        seaborn.set_context('talk')
+        df = self.simulate_conditions(selection=selection, best_parameters=True)
+        # df = df.reset_index()
+        # df = df.rename(columns={'level_0': 'Condition', 'level_1': 'Time'})
+
+        conditions = set(list(df.index.get_level_values(0)))
+
+        print(len(conditions))
+
+        mk_cond = ['D', 'T', 'E', 'E_M_72', 'E_M_48', 'E_M_24',
+                   'E_M_1.25', 'M_72', 'M_48', 'M_24', 'M_1.25']
+
+        azd_cond = ['D', 'T', 'E', 'E_A_72', 'E_A_48', 'E_A_24',
+                    'E_A_1.25', 'A_72', 'A_48', 'A_24', 'A_1.25']
+
+        both = ['E_A_M_24', 'E_A_M_48', 'E_A_M_72']
+
+        cond_dct = {'MK': mk_cond,
+                    'AZD': azd_cond,
+                    'Both': both}
+
+        cols = seaborn.color_palette("hls", len(selection))
+        cols = iter(cols)
+
+        from matplotlib import gridspec
+
+        print(len(conditions))
+
+        for v in range(len(selection)):
+            for cond in cond_dct:
+                f = cond_dct[cond]
+                fig = plt.figure(constrained_layout=True, figsize=(10, 15))
+                spec = gridspec.GridSpec(nrows=len(f), ncols=1, figure=fig)
+                ax_num = 0
+
+                for cond in f:
+                    df_selection = df.loc[cond]
+
+                    ax = fig.add_subplot(spec[ax_num, 0])
+                    seaborn.despine(ax=ax, top=True, right=True)
+                    ax_num +=1
+                    plt.plot(list(df_selection.index), df_selection[selection[v]], label=cond)
+                    plt.setp(ax.get_xticklabels(), visible=False)
+                    plt.title(cond)
+
+                plt.setp(ax.get_xticklabels(), visible=True)
+                plt.suptitle(selection[v])
+                plt.xlabel('Time(h)')
+                plt.ylabel('Conc.')
+                fname = os.path.join(self.time_course_graphs, "{}_{}.png".format(cond, selection[v]))
+                fig.savefig(fname, bbox_inches='tight', dpi=100)
+                print('saving "{}"'.format(fname))
+        # plt.show()
+            # fig = plt.figure(figsize=(5, 15))
+            #
+            #
+            #
+            # for i in range(len(conditions)):
+            #     condition = list(conditions)[i]
+            #     ax = fig.add_subplot(len(conditions), 1, i+1)
+            #     ax_count += 1
+            #     df_selection = df.loc[condition]
+            #     time = list(df_selection.index)
+            #
+            #     seaborn.set_context('talk')
+            #     ax_count += 1
+            #     # plt.setp(ax.get_xticklabels(), visible=False)
+            #     # box = sub_ax.get_position()
+            #     # sub_ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+            #
+            #     # seaborn.despine(ax=ax, top=True, right=True)
+            #     # plt.yticks(fontsize=12)
+            #     # # print(df_selection[selection[v]])
+            #     # plt.suptitle(condition)
+            #     plt.plot(time, df_selection[selection[v]], label=condition)
+                # plt.legend(loc=(0.75, 0.5), bbox_to_anchor=(1.0, 0.5), fontsize=10)
+                # plt.xticks(numpy.arange(0, 72, 5.0), fontsize=12, rotation=90)
+                #
+                # plt.subplots_adjust(bottom=0.2, left=0.2, right=0.7)
+                # if v == len(selection) - 1:
+                #     plt.xlabel('Time(h)')
+
+            # plt.setp(sub_ax.get_xticklabels(), visible=True)
+
+            # fig.text(0.05, 0.5, 'nmol L$^{-1}$', ha='center', va='center', rotation='vertical')
+            # plt.tight_layout()
+        # plt.show()
+        # return fig
+
 
 if __name__ == '__main__':
 
-    PROBLEM = 2
+    PROBLEM = 3
     ## Which model is the current focus of analysis
-    CURRENT_MODEL_ID = 52
+    CURRENT_MODEL_ID = 77
 
     ## Label for previous fit. Used to take best parameters for another parameter estimation
     ## and so must be the actual label for the previous fit
-    # LAST_FIT = '2_2_particle_swarm'
+    # LAST_FIT = '2_all_params'
 
     ## A label for the current fit directory
     FIT = '1'
 
     ## either False, 'slurm' or 'sge'. Determines the main working directory
     ## for easy switching between environments
-    CLUSTER = 'slurm'
+    CLUSTER = False
 
     ## True, False, 'slurm' or 'sge'. Passed onto parameter estimation class
-    RUN_MODE = 'slurm'
+    RUN_MODE = False
 
     ## Configure and run the parameter estimations
-    RUN_PARAMETER_ESTIMATION = True
+    RUN_PARAMETER_ESTIMATION = False
 
     RUN_PARAMETER_ESTIMATION_FROM_BEST_PARAMETERS = False
 
     ## plot comparison between model and simulation for the current model ID
     PLOT_CURRENT_SIMULATION_GRAPHS = False
+
+    ## Plot current simulation graphs with the default parameter instead of best estimated
+    PLOT_CURRENT_SIMULATION_GRAPHS_WITH_DEAULT_PARAMETERS = False
+
+    PLOT_CURRENT_SIMULATION_GRAPHS_WITH_COPASI_PARAMETERS = True
 
     ## iterate over all models and plot comparison between model and simulation
     PLOT_ALL_SIMULATION_GRAPHS = False
@@ -1164,7 +1409,16 @@ if __name__ == '__main__':
     GET_PARAMETERS_FROM_COPASI = False
 
     ## insert the best parameters from current fit into the models
-    INSERT_BEST_PARAMETERS_INTO_ALL_MODELS = False
+    INSERT_BEST_PARAMETERS_INTO_ALL_COPASI_FILES = False
+
+    INSERT_BEST_PARAMETERS_FROM_LAST_FIT_AND_PLOT = False
+
+    ## analyse correlations
+    ANALYSE_CORRELATIONS = False
+
+    PLOT_TIMESERIES_WITH_CURRENT_MODEL = False
+
+    ##===========================================================================================
 
     if CLUSTER == 'slurm':
         WORKING_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(PROBLEM)
@@ -1182,9 +1436,11 @@ if __name__ == '__main__':
                        method='particle_swarm',
                        copy_number=3,
                        run_mode=RUN_MODE,
-                       iteration_limit=3000,
+                       iteration_limit=2500,
                        swarm_size=75,
-                       overwrite_config_file=True
+                       overwrite_config_file=True,
+                       lower_bound=0.01,
+                       upper_bound=10000,
                        )
 
     # print('fit_dir', C.fit_dir)
@@ -1214,6 +1470,12 @@ if __name__ == '__main__':
     if OPEN_WITH_COPASI_WITH_BEST_PARAMETERS:
         mod = C[CURRENT_MODEL_ID].insert_best_parameters()
         print(C[CURRENT_MODEL_ID].get_best_model_parameters_as_antimony())
+
+        mod = tasks.TimeCourse(mod, end=75, intervals=75*100, step_size=0.01, run=False).model
+        mod = tasks.Scan(mod, variable='Everolimus', minimum=0, maximum=1, number_of_steps=1,
+                         subtask='timecourse').model
+
+
         mod.open()
 
     if RUN_PARAMETER_ESTIMATION:
@@ -1223,21 +1485,41 @@ if __name__ == '__main__':
     if RUN_PARAMETER_ESTIMATION_FROM_BEST_PARAMETERS:
         for model_id in C:
             best_params = C[model_id].get_best_parameters_from_last_fit(LAST_FIT)
+            print('best parameters\n'.format(
+                best_params
+            ))
             PE = C[model_id].run_parameter_estimation_from_parameter_set(best_params, run_mode=RUN_MODE)
             # PE.model.open()
 
     if PLOT_ALL_SIMULATION_GRAPHS:
-        for model_id in C:
+        for model_id in range(len(C)):
             try:
                 C[model_id].plot_bargraphs(best_parameters=True)
             except ValueError:
                 print("model '{}' skipped! No data to plot".format(model_id))
+                continue
+            except RuntimeError:
+                print("model '{}' skipped! RunTimeError".format(model_id))
                 continue
 
 
     if PLOT_CURRENT_SIMULATION_GRAPHS:
         print('fit dir', C[CURRENT_MODEL_ID].fit_dir)
         C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=True)
+
+
+    if PLOT_CURRENT_SIMULATION_GRAPHS_WITH_DEAULT_PARAMETERS:
+        print('fit dir', C[CURRENT_MODEL_ID].fit_dir)
+        C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=False)
+
+    # if PLOT_CURRENT_SIMULATION_GRAPHS_WITH_COPASI_PARAMETERS:
+    #     copasi_file = '/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelectionProblems/Problem3/ModelSelection/Topology77/Fit1/topology77_for_playing_with.cps'
+    #     mod = model.Model(copasi_file)
+    #     # print(C[CURRENT_MODEL_ID].fit_dir)
+    #     dct, ant = C[CURRENT_MODEL_ID].get_parameters_from_copasi(mod)
+    #     # print(ant)
+    #     C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=ant)
+
 
     if GET_BEST_PARAMETERS:
         ant = C[CURRENT_MODEL_ID].get_best_model_parameters_as_antimony()
@@ -1259,8 +1541,74 @@ if __name__ == '__main__':
 
     if AICs:
         df, fname = C.compute_all_aics()
+
+        hypo = [
+            'RafPhosByTGFbR',
+            'PI3KPhosByTGFbR',
+            'RafPhosByPI3K',
+            'PI3KDephosByErk',
+            'MekPhosByPI3K',
+            'PI3KPhosByMek',
+            'MekDephosByAkt'
+            ]
+
         print(df)
         print('csv file at "{}"'.format(fname))
+        dct = {}
+        for h in hypo:
+            dct[h] = 0
+            for t in df['Topology']:
+                if h in t:
+                    number = float(df[df['Topology'] == t]['f'])
+                    dct[h] += number
+
+        for h in dct:
+            dct[h] = dct[h] / df['f'].sum()
+
+        df2 = pandas.DataFrame(dct, index=[0])
+        print(df2.transpose().sort_values(by=0))
+
+        """
+                                0
+        RafPhosByTGFbR   0.163642
+        RafPhosByPI3K    0.255940
+        PI3KPhosByMek    0.469784
+        MekPhosByPI3K    0.473941
+        PI3KPhosByTGFbR  0.479514
+        PI3KDephosByErk  0.527216
+        MekDephosByAkt   0.583209
+        
+        """
+
+
+
+    if INSERT_BEST_PARAMETERS_INTO_ALL_COPASI_FILES:
+        for i in C:
+            print(C[i].insert_best_parameters())
+
+    if INSERT_BEST_PARAMETERS_FROM_LAST_FIT_AND_PLOT:
+        """
+        Used in Problem3 fit 3 because the second parameter estimation 
+        I ran was a subproblem of the first 
+        """
+        # for model_id in C:
+        prev_best_params = C[CURRENT_MODEL_ID].get_best_parameters_from_last_fit(LAST_FIT)
+        C[CURRENT_MODEL_ID].insert_parameters(prev_best_params)
+        current_best_params = C[CURRENT_MODEL_ID].get_best_model_parameters_as_antimony()
+        C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=current_best_params)
+
+    if ANALYSE_CORRELATIONS:
+        C[CURRENT_MODEL_ID].analyse_correlations()
+
+
+    if PLOT_TIMESERIES_WITH_CURRENT_MODEL:
+        C[CURRENT_MODEL_ID].plot_timecourse()
+
+
+
+
+
+
 
 
 
