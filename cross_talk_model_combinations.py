@@ -278,7 +278,10 @@ class CrossTalkModel:
 
     @property
     def data_files(self):
-        return glob.glob(os.path.join(self.data_dir, '*.csv'))
+        files = glob.glob(os.path.join(self.data_dir, '*.csv'))
+        if files == []:
+            raise ValueError('No data files')
+        return files
 
     def get_experimental_data(self):
         df_dct = {}
@@ -455,6 +458,7 @@ class CrossTalkModel:
         exclude = ['TGFb', 'ExperimentIndicator',
                    'GrowthFactors', 'Everolimus',
                    'MK2206', 'AZD']
+
         PE = tasks.MultiParameterEstimation(
             mod,
             self.data_files,
@@ -670,14 +674,14 @@ class CrossTalkModel:
         best_rss = {}
         aic = {}
         for model_id in self:
-            try:
-                print(C[model_id])
-                data = C[model_id].get_param_df()
-                best_rss[model_id] = data.iloc[0]['RSS']
-                aic[model_id] = C[model_id].aic(data.iloc[0]['RSS'])
-            except ValueError:
-                best_rss[model_id] = None
-                aic[model_id] = None
+            # try:
+            print(C[model_id])
+            data = C[model_id].get_param_df()
+            best_rss[model_id] = data.iloc[0]['RSS']
+            aic[model_id] = C[model_id].aic(data.iloc[0]['RSS'])
+            # except ValueError:
+            #     best_rss[model_id] = None
+            #     aic[model_id] = None
         df = pandas.DataFrame({'RSS': best_rss, 'AICc': aic})
         df = pandas.concat([C.list_topologies(), df], axis=1)
         df = df.sort_values(by='AICc')
@@ -685,7 +689,7 @@ class CrossTalkModel:
         df = df.sort_values(by='RSS')
         df['RSS Rank'] = range(df.shape[0])
         df = df.sort_index()
-        df['f'] = df['RSS'] * df['RSS Rank'] * df['AICc Rank']
+        df['f'] = df['RSS Rank'] * df['AICc Rank']
         df.to_csv(fname)
 
         return df, fname
@@ -793,178 +797,94 @@ class CrossTalkModel:
     def _default_parameter_str(self):
         return """        
         
-        Akt = 45.00002091532272;
-        Erk = 80.00003718279595;
-        Mek = 80.00002478852963;
-        PI3K = 45.00002091532272;
-        Raf = 90.00002788709588;
-        S6K = 45.00002091532272;
-        Smad2 = 45.00002091532272;
-        TGFbR = 45.00002091532272;
-        TGFbR_a = 5.000002323924742;
-        mTORC1 = 45.00002091532272;
-        pAkt = 5.000002323924742;
-        pErk = 10.000004647849504;
-        pMek = 10.000003098566165;
-        pPI3K = 5.000002323924742;
-        pRaf = 10.000001549282924;
-        pS6K = 5.000002323924742;
-        pSmad2 = 5.000002323924742;
-        pmTORC1 = 5.000002323924742;
-        ppErk = 10.000004647849504;
-        ppMek = 10.000015492832484;
-        Cell = 1.0;
-        AZD = 0.0;
-        Everolimus = 0.0;
-        ExperimentIndicator = 0.0;
-        GrowthFactors = 1.0;
-        MK2206 = 0.0;
-        TGFb = 0.005;
-        _kAktPhos_kcat = 2.21547;
-        _kAktPhos_ki = 0.00968628;
-        _kErkPhos_kcat1 = 6158.96;
-        _kErkPhos_kcat2 = 24.2457;
-        _kMekPhosByPI3K_kcat = 0.0483388;
-        _kMekPhos_kcat1 = 0.103558;
-        _kMekPhos_kcat2 = 9999.96;
-        _kMekPhos_ki = 0.14348699999999998;
-        _kPI3KDephosByS6K_kcat = 1618.6;
-        _kPI3KPhosByGF_kcat = 9999.74;
-        _kPI3KPhosByMek_kcat = 18.6056;
-        _kRafPhosByPI3K_kcat = 41.1749;
-        _kRafPhosByTGFbR_kcat = 227.81799999999998;
-        _kRafPhos_ki = 0.001;
-        _kS6KPhosBymTORC1_kcat = 1.99046;
-        _kSmad2Phos_kcat = 103.65299999999999;
-        _kTGFbRAct_Vmax = 0.00218219;
-        _kmTORC1Phos_kcat = 164.519;
-        _kmTORC1Phos_ki = 0.00100008;
-        _kmTORCPhosBasal_Vmax = 16.5066;
-        kAktDephos_Vmax = 30.0;
-        kAktDephos_km = 15.0;
-        kAktPhos_km = 12.5;
-        kErkDephos_Vmax = 1800.0;
-        kErkDephos_km = 15.0;
-        kErkPhos_km1 = 50.0;
-        kErkPhos_km2 = 50.0;
-        kMekDephos_Vmax = 2700.0;
-        kMekDephos_km = 15.0;
-        kMekPhosByPI3K_km = 50.0;
-        kMekPhos_km1 = 15.0;
-        kMekPhos_km2 = 15.0;
-        kPI3KDephosByS6K_km = 50.0;
-        kPI3KPhosByGF_km = 50.0;
-        kPI3KPhosByMek_km = 50.0;
-        kRafDephosVmax = 3602.5;
-        kRafDephos_km = 8.0;
-        kRafPhosByPI3K_km = 50.0;
-        kRafPhosByTGFbR_km = 25.0;
-        kRafPhos_Vmax = 9000.0;
-        kRafPhos_km = 10.0;
-        kRafPhos_n = 1.0;
-        kS6KDephos_Vmax = 50.0;
-        kS6KDephos_km = 10.0;
-        kS6KPhosBymTORC1_km = 100.0;
-        kSmad2Dephos_Vmax = 20.0;
-        kSmad2Dephos_km = 30.0;
-        kSmad2Phos_km = 50.0;
-        kTGFbRAct_h = 2.0;
-        kTGFbRAct_km = 10.0;
-        kTGFbRDephos_Vmax = 15.0;
-        kTGFbRDephos_km = 100.0;
-        kmTORC1Dephos_Vmax = 15.0;
-        kmTORC1Dephos_km = 100.0;
-        kmTORC1Phos_km = 50.0;
-        kmTORCPhosBasal_km = 25.0;
-        
-        //Akt = 45.000013943547444;
-		//Erk = 80.0000247885287;
-		//Mek = 80.00001239426435;
-		//PI3K = 45.000013943547444;
-		//Raf = 90.00001394354744;
-		//S6K = 45.000013943547444;
-		//Smad2 = 45.000013943547444;
-		//TGFbR = 45.000013943547444;
-		//TGFbR_a = 5.000001549283042;
-		//mTORC1 = 45.000013943547444;
-		//pAkt = 5.000001549283042;
-		//pErk = 10.000003098566063;
-		//pMek = 10.000001549283041;
-		//pPI3K = 5.000001549283042;
-		//pRaf = 10.0;
-		//pS6K = 5.000001549283042;
-		//pSmad2 = 5.000001549283042;
-		//pmTORC1 = 5.000001549283042;
-		//ppErk = 10.000003098566063;
-		//ppMek = 10.000013943547444;
-		//Cell = 1.0;
-		//AZD = 0.0;
-		//Everolimus = 0.0;
-		//ExperimentIndicator = 0.0;
-		//GrowthFactors = 1.0;
-		//MK2206 = 0.0;
-		//TGFb = 0.005;
-		//_kAktPhos_kcat = 0.683533;
-		//_kAktPhos_ki = 0.0028897;
-		//_kMekPhos_ki = 0.06851139999999999;
-		//_kPI3KDephosByS6K_kcat = 17.0599;
-		//_kPI3KPhosByGF_kcat = 477.571;
-		//_kRafPhosByTGFbR_kcat = 8444.06;
-		//_kRafPhos_ki = 1295.69;
-		//_kS6KPhosBymTORC1_kcat = 2.01081;
-		//_kSmad2Phos_kcat = 9470.66;
-		//_kTGFbRAct_Vmax = 0.00209677;
-		//_kmTORC1Phos_kcat = 212.249;
-		//_kmTORC1Phos_ki = 0.001;
-		//_kmTORCPhosBasal_Vmax = 139.66;
-		//_kMekPhos_kcat1 = 0.345291; //0.345291;
-		//_kMekPhos_kcat2 = 9999.88; //9999.88;
-		//_kErkPhos_kcat1 = 9993.67; //9993.67;
-		//_kErkPhos_kcat2 = 25; //12.5468;
-		//kAktDephos_Vmax = 30.0;
-		//kAktDephos_km = 15.0;
-		//kAktPhos_km = 12.5;
-		//kErkDephos_Vmax = 1800.0;
-		//kErkDephos_km = 15.0;
-		//kErkPhos_km1 = 50.0;
-		//kErkPhos_km2 =   kErkPhos_km1;
-		//kMekDephos_Vmax = 2700.0;
-		//kMekDephos_km = 15.0;
-		//kMekPhos_km1 = 15.0;
-		//kMekPhos_km2 =   kMekPhos_km1;
-		//kPI3KDephosByS6K_km = 50.0;
-		//kPI3KPhosByGF_km = 50.0;
-		//kRafDephosVmax = 3602.5;
-		//kRafDephos_km = 8.0;
-		//kRafPhosByTGFbR_km = 25.0;
-		//kRafPhos_Vmax = 9000.0;
-		//kRafPhos_km = 10.0;
-		//kRafPhos_n = 1.0;
-		//kS6KDephos_Vmax = 50.0;
-		//kS6KDephos_km = 10.0;
-		//kS6KPhosBymTORC1_km = 100.0;
-		//kSmad2Dephos_Vmax = 20.0;
-		//kSmad2Dephos_km = 30.0;
-		//kSmad2Phos_km = 50.0;
-		//kTGFbRAct_h = 2.0;
-		//kTGFbRAct_km = 10.0;
-		//kTGFbRDephos_Vmax = 15.0;
-		//kTGFbRDephos_km = 100.0;
-		//kmTORC1Dephos_Vmax = 15.0;
-		//kmTORC1Dephos_km = 100.0;
-		//kmTORC1Phos_km = 50.0;
-		//kmTORCPhosBasal_km = 25.0;
-		//kPI3KPhosByMek_km = 50.0;
-		//_kPI3KPhosByMek_kcat = 0.335106;
-		//
-		//kPI3KPhosByTGFbR_km = 50;
-		//
-		//kRafPhosByPI3K_km = 50;
-		//kPI3KDephosByErk_km = 50;
-		//_kRafPhosByPI3K_kcat = 0.1;
-		//_kPI3KDephosByErk_kcat = 0.5;
-		//kMekPhosByPI3K_km = 50;
-		//kMekDephosByAkt_km = 50;
+        Akt = 45.000013943547444;
+		Erk = 80.0000247885287;
+		Mek = 80.00001239426435;
+		PI3K = 45.000013943547444;
+		Raf = 90.00001394354744;
+		S6K = 45.000013943547444;
+		Smad2 = 45.000013943547444;
+		TGFbR = 45.000013943547444;
+		TGFbR_a = 5.000001549283042;
+		mTORC1 = 45.000013943547444;
+		pAkt = 5.000001549283042;
+		pErk = 10.000003098566063;
+		pMek = 10.000001549283041;
+		pPI3K = 5.000001549283042;
+		pRaf = 10.0;
+		pS6K = 5.000001549283042;
+		pSmad2 = 5.000001549283042;
+		pmTORC1 = 5.000001549283042;
+		ppErk = 10.000003098566063;
+		ppMek = 10.000013943547444;
+		Cell = 1.0;
+		AZD = 0.0;
+		Everolimus = 0.0;
+		ExperimentIndicator = 0.0;
+		GrowthFactors = 1.0;
+		MK2206 = 0.0;
+		TGFb = 0.005;
+		_kAktPhos_kcat = 0.683533;
+		_kAktPhos_ki = 0.0028897;
+		_kMekPhos_ki = 0.06851139999999999;
+		_kPI3KDephosByS6K_kcat = 17.0599;
+		_kPI3KPhosByGF_kcat = 477.571;
+		_kRafPhosByTGFbR_kcat = 8444.06;
+		_kRafPhos_ki = 1295.69;
+		_kS6KPhosBymTORC1_kcat = 2.01081;
+		_kSmad2Phos_kcat = 9470.66;
+		_kTGFbRAct_Vmax = 0.00209677;
+		_kmTORC1Phos_kcat = 212.249;
+		_kmTORC1Phos_ki = 0.001;
+		_kmTORCPhosBasal_Vmax = 139.66;
+		_kMekPhos_kcat1 = 0.345291; //0.345291;
+		_kMekPhos_kcat2 = 9999.88; //9999.88;
+		_kErkPhos_kcat1 = 9993.67; //9993.67;
+		_kErkPhos_kcat2 = 25; //12.5468;
+		kAktDephos_Vmax = 30.0;
+		kAktDephos_km = 15.0;
+		kAktPhos_km = 12.5;
+		kErkDephos_Vmax = 1800.0;
+		kErkDephos_km = 15.0;
+		kErkPhos_km1 = 50.0;
+		kErkPhos_km2 =   kErkPhos_km1;
+		kMekDephos_Vmax = 2700.0;
+		kMekDephos_km = 15.0;
+		kMekPhos_km1 = 15.0;
+		kMekPhos_km2 =   kMekPhos_km1;
+		kPI3KDephosByS6K_km = 50.0;
+		kPI3KPhosByGF_km = 50.0;
+		kRafDephosVmax = 3602.5;
+		kRafDephos_km = 8.0;
+		kRafPhosByTGFbR_km = 25.0;
+		kRafPhos_Vmax = 9000.0;
+		kRafPhos_km = 10.0;
+		kRafPhos_n = 1.0;
+		kS6KDephos_Vmax = 50.0;
+		kS6KDephos_km = 10.0;
+		kS6KPhosBymTORC1_km = 100.0;
+		kSmad2Dephos_Vmax = 20.0;
+		kSmad2Dephos_km = 30.0;
+		kSmad2Phos_km = 50.0;
+		kTGFbRAct_h = 2.0;
+		kTGFbRAct_km = 10.0;
+		kTGFbRDephos_Vmax = 15.0;
+		kTGFbRDephos_km = 100.0;
+		kmTORC1Dephos_Vmax = 15.0;
+		kmTORC1Dephos_km = 100.0;
+		kmTORC1Phos_km = 50.0;
+		kmTORCPhosBasal_km = 25.0;
+		kPI3KPhosByMek_km = 50.0;
+		_kPI3KPhosByMek_kcat = 0.335106;
+		
+		kPI3KPhosByTGFbR_km = 50;
+		
+		kRafPhosByPI3K_km = 50;
+		kPI3KDephosByErk_km = 50;
+		_kRafPhosByPI3K_kcat = 0.1;
+		_kPI3KDephosByErk_kcat = 0.5;
+		kMekPhosByPI3K_km = 50;
+		kMekDephosByAkt_km = 50;
 		
 		"""
 
@@ -1401,6 +1321,7 @@ class CrossTalkModel:
                 fname = os.path.join(self.time_course_graphs, "{}_{}.png".format(cond, selection[v]))
                 fig.savefig(fname, bbox_inches='tight', dpi=100)
                 print('saving "{}"'.format(fname))
+
         # plt.show()
             # fig = plt.figure(figsize=(5, 15))
             #
@@ -1441,9 +1362,9 @@ class CrossTalkModel:
 
 if __name__ == '__main__':
 
-    PROBLEM = 3
+    PROBLEM = 9
     ## Which model is the current focus of analysis
-    CURRENT_MODEL_ID = 77
+    CURRENT_MODEL_ID = 1
 
     ## Label for previous fit. Used to take best parameters for another parameter estimation
     ## and so must be the actual label for the previous fit
@@ -1454,13 +1375,13 @@ if __name__ == '__main__':
 
     ## either False, 'slurm' or 'sge'. Determines the main working directory
     ## for easy switching between environments
-    CLUSTER = False
+    CLUSTER = 'slurm'
 
     ## True, False, 'slurm' or 'sge'. Passed onto parameter estimation class
-    RUN_MODE = False
+    RUN_MODE = 'slurm'
 
     ## Configure and run the parameter estimations
-    RUN_PARAMETER_ESTIMATION = False
+    RUN_PARAMETER_ESTIMATION = True
 
     RUN_PARAMETER_ESTIMATION_FROM_BEST_PARAMETERS = False
 
@@ -1468,7 +1389,7 @@ if __name__ == '__main__':
     PLOT_CURRENT_SIMULATION_GRAPHS = False
 
     ## Plot current simulation graphs with the default parameter instead of best estimated
-    PLOT_CURRENT_SIMULATION_GRAPHS_WITH_DEAULT_PARAMETERS = True
+    PLOT_CURRENT_SIMULATION_GRAPHS_WITH_DEAULT_PARAMETERS = False
 
     PLOT_CURRENT_SIMULATION_GRAPHS_WITH_COPASI_PARAMETERS = False
 
@@ -1521,15 +1442,15 @@ if __name__ == '__main__':
                        method='particle_swarm',
                        copy_number=3,
                        run_mode=RUN_MODE,
-                       iteration_limit=2500,
-                       swarm_size=75,
+                       iteration_limit=3000,
+                       swarm_size=100,
                        overwrite_config_file=True,
-                       lower_bound=0.01,
+                       lower_bound=0.001,
                        upper_bound=10000,
                        )
 
     # print('fit_dir', C.fit_dir)
-    # C[CURRENT_MODEL_ID].get_param_df()
+    C[CURRENT_MODEL_ID]
 
     if GET_PARAMETERS_FROM_COPASI:
         mod = model.Model(C[CURRENT_MODEL_ID].copasi_file)
@@ -1625,7 +1546,7 @@ if __name__ == '__main__':
             C[model_id].likelihood_ranks()
 
     if AICs:
-        df, fname = C.compute_all_aics()
+        df, fname = C.compute_all_aics(overwrite=True)
 
         hypo = [
             'RafPhosByTGFbR',
@@ -1651,19 +1572,10 @@ if __name__ == '__main__':
             dct[h] = dct[h] / df['f'].sum()
 
         df2 = pandas.DataFrame(dct, index=[0])
-        print(df2.transpose().sort_values(by=0))
+        df2 = df2.transpose().sort_values(by=0)
+        df2 = df2 / df2.max()
+        print(df2)
 
-        """
-                                0
-        RafPhosByTGFbR   0.163642
-        RafPhosByPI3K    0.255940
-        PI3KPhosByMek    0.469784
-        MekPhosByPI3K    0.473941
-        PI3KPhosByTGFbR  0.479514
-        PI3KDephosByErk  0.527216
-        MekDephosByAkt   0.583209
-        
-        """
 
 
 
