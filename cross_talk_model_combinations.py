@@ -332,7 +332,7 @@ class CrossTalkModel:
 
     def plot_bargraphs(self, best_parameters=False, selections=['pAkt', 'pS6K', 'ppErk']):
         import matplotlib
-        matplotlib.use('TkAgg')
+        matplotlib.use('tkagg')
         seaborn.set_style('white')
         seaborn.set_context(context='talk')
         # , 'pSmad2']
@@ -675,15 +675,19 @@ class CrossTalkModel:
         best_rss = {}
         aic = {}
         for model_id in self:
-            # try:
-            print(C[model_id])
-            data = C[model_id].get_param_df()
-            best_rss[model_id] = data.iloc[0]['RSS']
-            aic[model_id] = C[model_id].aic(data.iloc[0]['RSS'])
-            # except ValueError:
-            #     best_rss[model_id] = None
-            #     aic[model_id] = None
+            try:
+                print(C[model_id])
+                data = C[model_id].get_param_df()
+                best_rss[model_id] = data.iloc[0]['RSS']
+                aic[model_id] = C[model_id].aic(data.iloc[0]['RSS'])
+            except ValueError:
+                best_rss[model_id] = None
+                aic[model_id] = None
+            except ZeroDivisionError:
+                best_rss[model_id] = None
+                aic[model_id] = None
         df = pandas.DataFrame({'RSS': best_rss, 'AICc': aic})
+
         df = pandas.concat([C.list_topologies(), df], axis=1)
         df = df.sort_values(by='AICc')
         df['AICc Rank'] = range(df.shape[0])
@@ -1391,9 +1395,11 @@ class CrossTalkModel:
 
 if __name__ == '__main__':
 
-    PROBLEM = 9
+    # for i in range(16, 22):
+
+    PROBLEM = 21
     ## Which model is the current focus of analysis
-    CURRENT_MODEL_ID = 150
+    CURRENT_MODEL_ID = 46
 
     ## Label for previous fit. Used to take best parameters for another parameter estimation
     ## and so must be the actual label for the previous fit
@@ -1404,18 +1410,18 @@ if __name__ == '__main__':
 
     ## either False, 'slurm' or 'sge'. Determines the main working directory
     ## for easy switching between environments
-    CLUSTER = 'slurm'
+    CLUSTER = False
 
     ## True, False, 'slurm' or 'sge'. Passed onto parameter estimation class
-    RUN_MODE = 'slurm'
+    RUN_MODE = False
 
     ## Configure and run the parameter estimations
-    RUN_PARAMETER_ESTIMATION = True
+    RUN_PARAMETER_ESTIMATION = False
 
     RUN_PARAMETER_ESTIMATION_FROM_BEST_PARAMETERS = False
 
     ## plot comparison between model and simulation for the current model ID
-    PLOT_CURRENT_SIMULATION_GRAPHS = False
+    PLOT_CURRENT_SIMULATION_GRAPHS = True
 
     ## Plot current simulation graphs with the default parameter instead of best estimated
     PLOT_CURRENT_SIMULATION_GRAPHS_WITH_DEAULT_PARAMETERS = False
@@ -1469,10 +1475,10 @@ if __name__ == '__main__':
 
     C = CrossTalkModel(WORKING_DIRECTORY, fit=FIT,
                        method='particle_swarm',
-                       copy_number=2,
+                       copy_number=3,
                        run_mode=RUN_MODE,
-                       iteration_limit=3000,
-                       swarm_size=100,
+                       iteration_limit=2500,
+                       swarm_size=75,
                        overwrite_config_file=True,
                        lower_bound=0.001,
                        upper_bound=10000,
@@ -1480,7 +1486,7 @@ if __name__ == '__main__':
 
     # print('fit_dir', C.fit_dir)
     print(len(C))
-    C[CURRENT_MODEL_ID].to_copasi().open()
+    # C[CURRENT_MODEL_ID].to_copasi().open()
 
     if GET_PARAMETERS_FROM_COPASI:
         mod = model.Model(C[CURRENT_MODEL_ID].copasi_file)
@@ -1509,7 +1515,7 @@ if __name__ == '__main__':
 
         mod = tasks.TimeCourse(mod, end=75, intervals=75*100, step_size=0.01, run=False).model
         mod = tasks.Scan(mod, variable='Everolimus', minimum=0, maximum=1, number_of_steps=1,
-                         subtask='timecourse').model
+                         subtask='time_course').model
 
 
         mod.open()
@@ -1577,35 +1583,6 @@ if __name__ == '__main__':
 
     if AICs:
         df, fname = C.compute_all_aics(overwrite=True)
-
-        hypo = [
-            'RafPhosByTGFbR',
-            'PI3KPhosByTGFbR',
-            'RafPhosByPI3K',
-            'PI3KDephosByErk',
-            'MekPhosByPI3K',
-            'PI3KPhosByMek',
-            'MekDephosByAkt'
-            ]
-
-        print(df)
-        print('csv file at "{}"'.format(fname))
-        dct = {}
-        for h in hypo:
-            dct[h] = 0
-            for t in df['Topology']:
-                if h in t:
-                    number = float(df[df['Topology'] == t]['f'])
-                    dct[h] += number
-
-        for h in dct:
-            dct[h] = dct[h] / df['f'].sum()
-
-        df2 = pandas.DataFrame(dct, index=[0])
-        df2 = df2.transpose().sort_values(by=0)
-        df2 = df2 / df2.max()
-        print(df2)
-
 
 
 
