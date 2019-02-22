@@ -17,7 +17,8 @@ class TestModel1(unittest.TestCase):
         self.copasi_file = os.path.join(self.working_directory, 'test_copasi_file.cps')
 
     def test_that_a_model_builds(self):
-        C = CrossTalkModel()
+        C = CrossTalkModel(self.working_directory)
+        C[1].to_copasi().open()
         self.assertIsInstance(C._build_antimony(), str)
 
     def test_combinations(self):

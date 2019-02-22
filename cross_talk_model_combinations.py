@@ -160,39 +160,41 @@ class CrossTalkModel:
 
         self.cps_file = os.path.join(self.topology_dir, 'Topology{}'.format(self.topology))
 
-        self.old_model_variant_reactions = {
+        self.smad2_model_variant_reactions = {
             1: self._akt_activate_smad2(),
             2: self._akt_inhibits_smad2(),
             3: self._erk_activates_smad2(),
             4: self._erk_inhibits_smad2()
         }
-        self.model_variant_reactions = {
-            1: self.mek_phos_by_akt(),
-            2: self.pi3k_phos_by_TGFbR(),
-            3: self.erk_phos_by_akt(),
-            4: self.pi3k_dephos_by_erk(),
-            5: self.mek_phos_by_pi3k(),
-            6: self.pi3k_phos_by_mek(),
-            7: self.mek_dephos_by_akt(),
-            8: self.raf_dephos_by_akt()
-        }
 
-        self.old_topology_names = {
+        ## These reactions were varied when only fitting pAkt, pErk and pS6K Datasets
+        # self.pi3k_model_variant_reactions = {
+        #     1: self.mek_phos_by_akt(),
+        #     2: self.pi3k_phos_by_TGFbR(),
+        #     3: self.erk_phos_by_akt(),
+        #     4: self.pi3k_dephos_by_erk(),
+        #     5: self.mek_phos_by_pi3k(),
+        #     6: self.pi3k_phos_by_mek(),
+        #     7: self.mek_dephos_by_akt(),
+        #     8: self.raf_dephos_by_akt()
+        # }
+
+        self.smad_topology_names = {
             1: 'AktActivate',
             2: 'ErkActivate',
             3: 'AktInhibit',
             4: 'ErkInhibit',
         }
-        self.topology_names = {
-            1: 'MekPhosByAkt',
-            2: 'PI3KPhosByTGFbR',
-            3: 'ErkPhosByAkt',
-            4: 'PI3KDephosByErk',
-            5: 'MekPhosByPI3K',
-            6: 'PI3KPhosByMek',
-            7: 'MekDephosByAkt',
-            8: 'RafDephosByAkt',
-        }
+        # self.pi3k_erk_topology_names = {
+        #     1: 'MekPhosByAkt',
+        #     2: 'PI3KPhosByTGFbR',
+        #     3: 'ErkPhosByAkt',
+        #     4: 'PI3KDephosByErk',
+        #     5: 'MekPhosByPI3K',
+        #     6: 'PI3KPhosByMek',
+        #     7: 'MekDephosByAkt',
+        #     8: 'RafDephosByAkt',
+        # }
 
         # print(self.topology)
         self.model_specific_reactions = self._assembel_model_reactions()[self.topology]
@@ -427,7 +429,7 @@ class CrossTalkModel:
             if i == 0:
                 topologies[i] = 'Null'
             else:
-                topologies[i] = '_'.join([self.topology_names[x].strip() for x in tup])
+                topologies[i] = '_'.join([self.smad2_smad_topology_names[x].strip() for x in tup])
         df = pandas.DataFrame(topologies, index=['Topology']).transpose()
         df.index.name = 'ModelID'
         return df
@@ -702,8 +704,8 @@ class CrossTalkModel:
     def _get_combinations(self):
         perm_list = [()]
         # print(range(1, len(self.model_variant_reactions)))
-        for i in range(1, len(self.model_variant_reactions) + 1):
-            perm_list += [j for j in combinations(range(1, len(self.model_variant_reactions) + 1), i)]
+        for i in range(1, len(self.smad2_model_variant_reactions) + 1):
+            perm_list += [j for j in combinations(range(1, len(self.smad2_model_variant_reactions) + 1), i)]
 
         ## plus the full set
         return enumerate(perm_list)  # + [tuple(range(1, len(self.model_variant_reactions)+1))])
@@ -715,7 +717,7 @@ class CrossTalkModel:
         """
         model_specific_reactions = {}
         for i, tup in self._get_combinations():
-            model_specific_reactions[i] = '\n'.join([self.model_variant_reactions[x].strip() for x in tup])
+            model_specific_reactions[i] = '\n'.join([self.smad2_model_variant_reactions[x].strip() for x in tup])
             # print(i, tup, '\n\n', model_specific_reactions[i])
         return model_specific_reactions
 
@@ -888,7 +890,6 @@ class CrossTalkModel:
 		_kPI3KPhosByMek_kcat = 0.335106;
 		
 		kPI3KPhosByTGFbR_km = 50;
-		
 		kRafPhosByPI3K_km = 50;
 		kPI3KDephosByErk_km = 50;
 		_kRafPhosByPI3K_kcat = 0.1;
@@ -903,6 +904,19 @@ class CrossTalkModel:
         _kErkPhosByAkt_kcat = 0.1;
         kRafDephosByAkt_km = 50;
         _kRafDephosByAkt_kcat = 0.1;
+        
+        kSmad2PhosByAkt_km = 50;
+        kSmad2DephosByErk_km = 50;
+        kSmad2PhosByAkt_km = 50;
+        kSmad2PhosByErk_km = 50;
+        kSmad2DephosByErk_km = 50;
+        kSmad2DehosByAkt_km = 50;
+        kSmad2DephosByAkt_km = 50;
+        _kSmad2PhosByAkt_kcat = 50;
+        _kSmad2PhosByErk_kcat = 50;
+        _kSmad2DephosByErk_kcat = 50;
+        _kSmad2DephosByAkt_kcat = 50;
+        _kSmad2DephosByAkt_kcat = 50;
 		
 		"""
 
@@ -1045,10 +1059,16 @@ class CrossTalkModel:
         PI3K_R8 :   pS6K    => S6K          ; Cell *  MM(kS6KDephos_km, kS6KDephos_Vmax, pS6K)                    ;
 
         // Cross talk reactions
-        CrossTalkR1  :    Raf       => pRaf      ;   Cell *  MMWithKcat(kRafPhosByTGFbR_km, _kRafPhosByTGFbR_kcat, Raf, TGFbR_a)    ;
-        CrossTalkR3  :    Raf       => pRaf      ;   Cell *  MMWithKcat(kRafPhosByPI3K_km,  _kRafPhosByPI3K_kcat, Raf, pPI3K)           ;
+        CrossTalkR1  :  Raf  =>  pRaf   ; Cell * MMWithKcat(kRafPhosByTGFbR_km, _kRafPhosByTGFbR_kcat, Raf, TGFbR_a)    ;
+        CrossTalkR3  :  Raf  =>  pRaf   ; Cell * MMWithKcat(kRafPhosByPI3K_km,  _kRafPhosByPI3K_kcat, Raf, pPI3K)           ;
+        CrossTalkR2  :  PI3K =>  pPI3K  ; Cell * MMWithKcat(kPI3KPhosByTGFbR_km, _kPI3KPhosByTGFbR_kcat, PI3K, TGFbR_a) ;
+        CrossTalkR9_1:  Erk  =>  pErk   ; Cell * MMWithKcat(kErkPhosByAkt_km, _kErkPhosByAkt_kcat, Erk, pAkt);
+        CrossTalkR9_2:  pErk =>  ppErk  ; Cell * MMWithKcat(kErkPhosByAkt_km, _kErkPhosByAkt_kcat, pErk, pAkt);
+        CrossTalkR6 :   PI3K =>  pPI3K  ; Cell * MMWithKcat(kPI3KPhosByMek_km, _kPI3KPhosByMek_kcat, PI3K, ppMek);
+        CrossTalkR7_1:  ppMek=>  pMek   ; Cell * MMWithKcat(kMekDephosByAkt_km, _kMekDephosByAkt_kcat, ppMek, pAkt);
+        CrossTalkR7_2:  pMek =>  Mek    ; Cell * MMWithKcat(kMekDephosByAkt_km, _kMekDephosByAkt_kcat, pMek, pAkt);
+        CrossTalkR10:   pRaf =>  Raf    ; Cell * MMWithKcat(kRafDephosByAkt_km, _kRafDephosByAkt_kcat, pRaf, pAkt);
 
-        
         {}
     """.format(additional_reactions)
 
@@ -1056,9 +1076,7 @@ class CrossTalkModel:
         raise NotImplementedError
 
     def pi3k_phos_by_TGFbR(self):
-        return """
-        CrossTalkR2  :    PI3K      => pPI3K     ;   Cell *  MMWithKcat(kPI3KPhosByTGFbR_km, _kPI3KPhosByTGFbR_kcat, PI3K, TGFbR_a) ;
-        """
+        raise NotImplementedError
 
     def raf_phos_by_PI3K(self):
         raise NotImplementedError
@@ -1075,15 +1093,10 @@ class CrossTalkModel:
         """
 
     def pi3k_phos_by_mek(self):
-        return """
-        CrossTalkR6 :     PI3K => pPI3K       ; Cell * MMWithKcat(kPI3KPhosByMek_km, _kPI3KPhosByMek_kcat, PI3K, ppMek);
-        """
+        raise NotImplementedError
 
     def mek_dephos_by_akt(self):
-        return """
-        CrossTalkR7_1:    ppMek => pMek     ; Cell * MMWithKcat(kMekDephosByAkt_km, _kMekDephosByAkt_kcat, ppMek, pAkt);
-        CrossTalkR7_2:    pMek => Mek     ; Cell * MMWithKcat(kMekDephosByAkt_km, _kMekDephosByAkt_kcat, pMek, pAkt);
-        """
+        raise NotImplementedError
 
     def mek_phos_by_akt(self):
         return """
@@ -1092,15 +1105,10 @@ class CrossTalkModel:
         """
 
     def erk_phos_by_akt(self):
-        return """
-        CrossTalkR9_1: Erk => pErk      ; Cell * MMWithKcat(kErkPhosByAkt_km, _kErkPhosByAkt_kcat, Erk, pAkt);
-        CrossTalkR9_2: pErk => ppErk      ; Cell * MMWithKcat(kErkPhosByAkt_km, _kErkPhosByAkt_kcat, pErk, pAkt);
-        """
+        raise NotImplementedError
 
     def raf_dephos_by_akt(self):
-        return """
-        CrossTalkR10: pRaf => Raf ; Cell * MMWithKcat(kRafDephosByAkt_km, _kRafDephosByAkt_kcat, pRaf, pAkt);
-        """
+        raise NotImplementedError
 
     def _events(self):
         """
@@ -1153,22 +1161,22 @@ class CrossTalkModel:
         :return:
         """
         return """
-        CrossTalkR8  :    Smad2     => pSmad2    ;   Cell *  MMWithKcat(kSmad2PhosByAkt_km, _kSmad2PhosByAkt_kcat, Smad2, pAkt)       ;
+        CrossTalkR11  :    Smad2     => pSmad2    ;   Cell *  MMWithKcat(kSmad2PhosByAkt_km, _kSmad2PhosByAkt_kcat, Smad2, pAkt)       ;
         """
 
     def _erk_activates_smad2(self):
         return """
-        CrossTalkR9  :    Smad2     => pSmad2    ;   Cell *  MMWithKcat(kSmad2PhosByErk_km, _kSmad2PhosByErk_kcat, Smad2, ppErk)       ;
+        CrossTalkR12  :    Smad2     => pSmad2    ;   Cell *  MMWithKcat(kSmad2PhosByErk_km, _kSmad2PhosByErk_kcat, Smad2, ppErk)       ;
         """
 
     def _akt_inhibits_smad2(self):
         return """
-        CrossTalkR10  :    pSmad2     => Smad2    ;   Cell *  MMWithKcat(kSmad2DehosByAkt_km, _kSmad2DephosByAkt_kcat, pSmad2, pAkt)       ;
+        CrossTalkR13  :    pSmad2     => Smad2    ;   Cell *  MMWithKcat(kSmad2DehosByAkt_km, _kSmad2DephosByAkt_kcat, pSmad2, pAkt)       ;
         """
 
     def _erk_inhibits_smad2(self):
         return """
-        CrossTalkR11  :    pSmad2     => Smad2    ;   Cell *  MMWithKcat(kSmad2DephosByErk_km, _kSmad2DephosByErk_kcat, pSmad2, ppErk)       ;
+        CrossTalkR14  :    pSmad2     => Smad2    ;   Cell *  MMWithKcat(kSmad2DephosByErk_km, _kSmad2DephosByErk_kcat, pSmad2, ppErk)       ;
         """
 
     def plot_model_selection_criteria(self, model_selection_criteria_file=None):
@@ -1399,7 +1407,7 @@ if __name__ == '__main__':
 
     PROBLEM = 21
     ## Which model is the current focus of analysis
-    CURRENT_MODEL_ID = 46
+    CURRENT_MODEL_ID = 1
 
     ## Label for previous fit. Used to take best parameters for another parameter estimation
     ## and so must be the actual label for the previous fit
@@ -1421,7 +1429,7 @@ if __name__ == '__main__':
     RUN_PARAMETER_ESTIMATION_FROM_BEST_PARAMETERS = False
 
     ## plot comparison between model and simulation for the current model ID
-    PLOT_CURRENT_SIMULATION_GRAPHS = True
+    PLOT_CURRENT_SIMULATION_GRAPHS = False
 
     ## Plot current simulation graphs with the default parameter instead of best estimated
     PLOT_CURRENT_SIMULATION_GRAPHS_WITH_DEAULT_PARAMETERS = False
@@ -1486,7 +1494,7 @@ if __name__ == '__main__':
 
     # print('fit_dir', C.fit_dir)
     print(len(C))
-    # C[CURRENT_MODEL_ID].to_copasi().open()
+    C[CURRENT_MODEL_ID].to_copasi().open()
 
     if GET_PARAMETERS_FROM_COPASI:
         mod = model.Model(C[CURRENT_MODEL_ID].copasi_file)
