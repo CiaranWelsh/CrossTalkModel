@@ -332,7 +332,7 @@ class CrossTalkModel:
 
         return pandas.concat(simulation_data)
 
-    def plot_bargraphs(self, best_parameters=False, selections=['pAkt', 'pS6K', 'ppErk']):
+    def plot_bargraphs(self, best_parameters=False, selections=['pAkt', 'pS6K', 'ppErk', 'pSmad2']):
         import matplotlib
         matplotlib.use('tkagg')
         seaborn.set_style('white')
@@ -429,7 +429,7 @@ class CrossTalkModel:
             if i == 0:
                 topologies[i] = 'Null'
             else:
-                topologies[i] = '_'.join([self.smad2_smad_topology_names[x].strip() for x in tup])
+                topologies[i] = '_'.join([self.smad_topology_names[x].strip() for x in tup])
         df = pandas.DataFrame(topologies, index=['Topology']).transpose()
         df.index.name = 'ModelID'
         return df
@@ -486,6 +486,7 @@ class CrossTalkModel:
         )
         PE.write_config_file()
         PE.setup()
+
         PE.run()
         return PE
 
@@ -637,11 +638,11 @@ class CrossTalkModel:
         '''
         get number of observed data points for AIC calculation
         '''
-        print('WARNING. REMEMBER TO ADD SMAD2 BACK INTO THE AICC CALCULATION')
+        # print('WARNING. REMEMBER TO ADD SMAD2 BACK INTO THE AICC CALCULATION')
         n = 0
         for exp in self.data_files:
             data = pandas.read_csv(exp, sep=',')
-            data = data[['pAkt', 'ppErk', 'pS6K']]  # , 'pSmad2']]
+            data = data[['pAkt', 'ppErk', 'pS6K', 'pSmad2']]
             data = data.iloc[0]
             n += len(data)
         return n
@@ -683,10 +684,10 @@ class CrossTalkModel:
                 best_rss[model_id] = data.iloc[0]['RSS']
                 aic[model_id] = C[model_id].aic(data.iloc[0]['RSS'])
             except ValueError:
-                best_rss[model_id] = None
+                best_rss[model_id] = data.iloc[0]['RSS']
                 aic[model_id] = None
             except ZeroDivisionError:
-                best_rss[model_id] = None
+                best_rss[model_id] = data.iloc[0]['RSS']
                 aic[model_id] = None
         df = pandas.DataFrame({'RSS': best_rss, 'AICc': aic})
 
@@ -808,7 +809,6 @@ class CrossTalkModel:
 
     def _default_parameter_str(self):
         return """        
-        
         Akt = 45.000013943547444;
 		Erk = 80.0000247885287;
 		Mek = 80.00001239426435;
@@ -836,23 +836,6 @@ class CrossTalkModel:
 		GrowthFactors = 1.0;
 		MK2206 = 0.0;
 		TGFb = 0.005;
-		_kAktPhos_kcat = 0.683533;
-		_kAktPhos_ki = 0.0028897;
-		_kMekPhos_ki = 0.06851139999999999;
-		_kPI3KDephosByS6K_kcat = 17.0599;
-		_kPI3KPhosByGF_kcat = 477.571;
-		_kRafPhosByTGFbR_kcat = 8444.06;
-		_kRafPhos_ki = 1295.69;
-		_kS6KPhosBymTORC1_kcat = 2.01081;
-		_kSmad2Phos_kcat = 9470.66;
-		_kTGFbRAct_Vmax = 0.00209677;
-		_kmTORC1Phos_kcat = 212.249;
-		_kmTORC1Phos_ki = 0.001;
-		_kmTORCPhosBasal_Vmax = 139.66;
-		_kMekPhos_kcat1 = 0.345291; //0.345291;
-		_kMekPhos_kcat2 = 9999.88; //9999.88;
-		_kErkPhos_kcat1 = 9993.67; //9993.67;
-		_kErkPhos_kcat2 = 25; //12.5468;
 		kAktDephos_Vmax = 30.0;
 		kAktDephos_km = 15.0;
 		kAktPhos_km = 12.5;
@@ -887,24 +870,42 @@ class CrossTalkModel:
 		kmTORC1Phos_km = 50.0;
 		kmTORCPhosBasal_km = 25.0;
 		kPI3KPhosByMek_km = 50.0;
-		_kPI3KPhosByMek_kcat = 0.335106;
-		
 		kPI3KPhosByTGFbR_km = 50;
 		kRafPhosByPI3K_km = 50;
 		kPI3KDephosByErk_km = 50;
-		_kRafPhosByPI3K_kcat = 0.1;
-		_kPI3KDephosByErk_kcat = 0.5;
 		kMekPhosByPI3K_km = 50;
 		kMekDephosByAkt_km = 50;
 		kMekDephosByAkt_km = 50;
-        _kMekDephosByAkt_kcat = 0.1;
         kMekPhosByAkt_km = 50;
-        _kMekPhosByAkt_kcat = 0.1;
         kErkPhosByAkt_km = 50;
-        _kErkPhosByAkt_kcat = 0.1;
         kRafDephosByAkt_km = 50;
-        _kRafDephosByAkt_kcat = 0.1;
         
+		_kPI3KDephosByErk_kcat = 0.5;
+        _kMekPhosByAkt_kcat = 0.1;
+        _kAktPhos_kcat = 0.59788;
+		_kAktPhos_ki = 0.222091;
+		_kMekPhos_ki = 0.0324159;
+		_kPI3KDephosByS6K_kcat = 6207.03;
+		_kPI3KPhosByGF_kcat = 0.00211852;
+		_kRafPhosByTGFbR_kcat = 0.001;
+		_kRafPhos_ki = 0.00100013;
+		_kS6KPhosBymTORC1_kcat = 2.28906;
+		_kSmad2Phos_kcat = 10.9338;
+		_kTGFbRAct_Vmax = 140.494;
+		_kmTORC1Phos_kcat = 0.00256716;
+		_kmTORC1Phos_ki = 0.001;
+		_kmTORCPhosBasal_Vmax = 2936.63;
+		_kMekPhos_kcat1 = 402.062;
+		_kMekPhos_kcat2 = 9999.77;
+		_kErkPhos_kcat1 = 85.32700000000001;
+		_kErkPhos_kcat2 = 12.1603;
+		_kPI3KPhosByMek_kcat = 206.865;
+		_kRafPhosByPI3K_kcat = 1545.65;
+		_kMekDephosByAkt_kcat = 935.046;
+		_kErkPhosByAkt_kcat = 90.9855;
+		_kRafDephosByAkt_kcat = 9998.43;
+		_kPI3KPhosByTGFbR_kcat = 1233.66;
+                
         kSmad2PhosByAkt_km = 50;
         kSmad2DephosByErk_km = 50;
         kSmad2PhosByAkt_km = 50;
@@ -1403,7 +1404,7 @@ class CrossTalkModel:
 
 if __name__ == '__main__':
 
-    # for i in range(16, 22):
+    # for i in range(22, 33):
 
     PROBLEM = 21
     ## Which model is the current focus of analysis
@@ -1437,7 +1438,7 @@ if __name__ == '__main__':
     PLOT_CURRENT_SIMULATION_GRAPHS_WITH_COPASI_PARAMETERS = False
 
     ## iterate over all models and plot comparison between model and simulation
-    PLOT_ALL_SIMULATION_GRAPHS = False
+    PLOT_ALL_SIMULATION_GRAPHS = True
 
     ## extract best RSS per model and compute AICc
     AICs = False
@@ -1483,7 +1484,7 @@ if __name__ == '__main__':
 
     C = CrossTalkModel(WORKING_DIRECTORY, fit=FIT,
                        method='particle_swarm',
-                       copy_number=3,
+                       copy_number=10,
                        run_mode=RUN_MODE,
                        iteration_limit=2500,
                        swarm_size=75,
@@ -1494,7 +1495,7 @@ if __name__ == '__main__':
 
     # print('fit_dir', C.fit_dir)
     print(len(C))
-    C[CURRENT_MODEL_ID].to_copasi().open()
+    # C[CURRENT_MODEL_ID].to_copasi().open()
 
     if GET_PARAMETERS_FROM_COPASI:
         mod = model.Model(C[CURRENT_MODEL_ID].copasi_file)
@@ -1524,7 +1525,6 @@ if __name__ == '__main__':
         mod = tasks.TimeCourse(mod, end=75, intervals=75*100, step_size=0.01, run=False).model
         mod = tasks.Scan(mod, variable='Everolimus', minimum=0, maximum=1, number_of_steps=1,
                          subtask='time_course').model
-
 
         mod.open()
 
