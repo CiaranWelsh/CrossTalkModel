@@ -678,9 +678,9 @@ class CrossTalkModel:
         best_rss = {}
         aic = {}
         for model_id in self:
+            data = C[model_id].get_param_df()
+            print(C[model_id])
             try:
-                print(C[model_id])
-                data = C[model_id].get_param_df()
                 best_rss[model_id] = data.iloc[0]['RSS']
                 aic[model_id] = C[model_id].aic(data.iloc[0]['RSS'])
             except ValueError:
@@ -697,7 +697,7 @@ class CrossTalkModel:
         df = df.sort_values(by='RSS')
         df['RSS Rank'] = range(df.shape[0])
         df = df.sort_index()
-        df['f'] = df['RSS Rank'] * df['AICc Rank']
+        df['#parameters'] = self._get_number_estimated_model_parameters()
         df.to_csv(fname)
 
         return df, fname
@@ -1438,10 +1438,10 @@ if __name__ == '__main__':
     PLOT_CURRENT_SIMULATION_GRAPHS_WITH_COPASI_PARAMETERS = False
 
     ## iterate over all models and plot comparison between model and simulation
-    PLOT_ALL_SIMULATION_GRAPHS = True
+    PLOT_ALL_SIMULATION_GRAPHS = False
 
     ## extract best RSS per model and compute AICc
-    AICs = False
+    AICs = True
 
     ## Plot likelihood ranks plots
     LIKELIHOOD_RANKS = False
