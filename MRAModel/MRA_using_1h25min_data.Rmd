@@ -1,0 +1,238 @@
+---
+title: "mra_on_cross_talk_model"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## prepare data
+
+```{r}
+## script to try MRA on cross talk dataset
+library(STASNet)
+
+working_directory = '/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/MRA'
+
+data_dir = '/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/data/MRA_data'
+
+##get datset
+dataset_filename = file.path(data_dir, '1.25_data.csv')
+errors_filename = file.path(data_dir, '1.25_err.csv')
+
+read_data = function(f){
+  data = read.csv(f, check.names = F)
+  return(data)
+}
+
+data = read_data(dataset_filename)
+errors = read_data(errors_filename)
+data
+errors
+
+```
+
+
+
+```{r}
+
+# c('Akt', 'TSC2')
+# c('TSC2', 'mTORC1')
+
+interactions = rbind(
+  c('TGFb', 'Smad2'),
+  c('TGFb', 'Akt'),
+  c('TGFb', 'Erk'),
+  #c('Akt', 'TSC2'),
+  #c('TSC2', 'mTORC1'),
+  c('Akt', 'mTORC1'),
+  c('mTORC1', 'S6K'),
+  c('mTORC1', '4EBP1'),
+  c('S6K', 'Akt'), ## negative reactions
+  c('Akt', 'PRAS40'),
+  c('PDK1', 'Akt')
+)
+interactions = data.frame(interactions)
+colnames(interactions) = c('FROM', 'TO')
+
+interactions
+## basal activity vecotr 
+basal = c('TGFb', 'Smad2', 'Akt', 'Erk', 'TSC2', 'mTORC1', 'S6K', '4EBP1', 'PRAS40')
+```
+
+## build model
+```{r}
+model = createModel(model_links = interactions,
+                    basal_file = basal,
+                    data.stimulation = data,
+                    data.variation = errors,
+                    inits = 100,
+                    model_name = "SDErrorModel", nb_cores=8)
+```
+
+
+## make some plots
+```{r}
+
+plotModelGraph(model)
+```
+
+## looks at parameters
+```{r}
+printParameters(model)
+```
+
+```{r}
+plotModelAccuracy(model)
+```
+
+## model scores
+```{r}
+plotModelScores(model)
+```
+
+```{r}
+simulation = plotModelSimulation(model, with_data= TRUE,log_axis = T)
+```
+
+```{r,fig.width =4.9}
+profiles = profileLikelihood(model, nb_points = 1000, nb_cores = 8)
+model = addPLinfos(model, profiles)
+niplotPL(profiles, file_plots = FALSE)
+```
+
+
+
+
+```{r}
+plotModelParameters(model, lim = 4)
+```
+
+
+
+
+
+```{r}
+simulation = plotModelSimulation(model, with_data= TRUE,log_axis = T)
+```
+
+
+```{r}
+red_model = selectMinimalModel(model)
+red_model
+```
+
+```{r}
+red_model = selectMinimalModel(model)
+```
+
+
+```{r}
+plotModelGraph(red_model)
+```
+
+```{r}
+ext_mat = suggestExtension(model)
+```
+
+
+
+```{r}
+ext_mat
+```
+
+
+
+```{r}
+trim_num <- function(x, non_zeros=2, behind_comma = 2){
+  if (non_zeros==0){
+    error("number should have a digits reconsider setting non_zeros larger 0!!")
+  }
+trim_it <- function(x, non_zeros, behind_comma){  
+  if (is.na(x)){ return(x) }
+
+  if (!is.numeric(x)){ oldx =x; x = as.numeric(as.character(x)) } 
+
+  if (is.na(x)){return(oldx)} # stop(paste("Number or NA expected '", oldx ,"' received as input!")) } 
+  
+  if (abs(x >= 1)){ 
+    newx = round(x*10^behind_comma)/10^behind_comma
+  } else{
+    newx =  signif(x,non_zeros)  
+  }
+
+  if (nchar(gsub("\\.|-","",as.character(newx))) > max(5,non_zeros+behind_comma)){
+    newx = format(newx, scientific = 0)  
+  }
+  return(newx)
+  }
+
+if (is.null(dim(x))){
+  return(as.data.frame(sapply(x,"trim_it",non_zeros,behind_comma)))
+}else{
+ newx=as.data.frame(sapply(1:ncol(x),function(y) sapply(x[,y],"trim_it",non_zeros,behind_comma)))
+ dimnames(newx) <- dimnames(x)
+ return(newx)
+}
+}
+
+# helper function to determine variable links
+not_duplicated <- function(x){
+  tmp = duplicated(x)
+  return(!all(tmp[-1]))
+}
+
+print(suppressWarnings(trim_num(ext_mat)))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

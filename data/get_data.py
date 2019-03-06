@@ -101,8 +101,41 @@ def add_v3_to_v2_data(v2, v3):
     v3 = v3.transpose()
     v2 = v2.transpose()
     for i in v3:
+        print('i', i)
         v2[i] = v3[i]
     return v2.transpose()
+
+def configure_for_mra(dataset):
+    which = ['D', 'T', 'E'] + [i for i in dataset.columns if '1.25' in i]
+    data = dataset[which].transpose()
+    data = data.drop(['TSC2', 'PRAS40-pS183'], axis=1)
+    data.columns = [i.split('-')[0] for i in data.columns]
+
+    new_names = {
+        '4E': '4EBP1',
+        '4EBP': '4EBP1',
+        'ERK': 'Erk',
+        'SMAD2': 'Smad2',
+        'mTOR': 'mTORC1',
+    }
+    data = data.rename(columns=new_names)
+
+    data.columns = ['DV:'+i for i in data.columns]
+    data['DA:ALL'] = 0
+
+    tr = ['TGFb', 'Everolimus', 'AZD', 'MK']
+    treatment_names = ['TGFb', 'mTORC1i', 'Meki', 'Akti']
+    treatment_names = ['TR:'+i for i in treatment_names]
+    treatments = {
+        'D':      [0, 0, 0, 0],
+        'T':      [1, 0, 0, 0],
+        'E':      [1, 1, 0, 0],
+        'EM1.25': [1, 1, 1, 0],
+        'EA1.25': [1, 1, 0, 1],
+    }
+    tr_df = pandas.DataFrame(treatments, index=treatment_names).transpose()
+    return pandas.concat([tr_df, data], sort=False, axis=1)
+
 
 
 if __name__ == '__main__':
@@ -143,15 +176,47 @@ if __name__ == '__main__':
     azd_sd_fname = os.path.join(mra_data_dir, 'azd_sd.csv')
     mk_sd_fname = os.path.join(mra_data_dir, 'mk_sd.csv')
 
-    #
+
 
     azd_stats = do_stats(azd)
     mk_stats = do_stats(mk)
 
-    azd_stats['mean'].to_csv(azd_means_fname)
-    azd_stats['sd'].to_csv(azd_sd_fname)
-    mk_stats['mean'].to_csv(mk_means_fname)
-    mk_stats['sd'].to_csv(mk_sd_fname)
+    dct = {}
+    azd_mra_data = configure_for_mra(azd_stats['mean'])
+    azd_mra_err = configure_for_mra(azd_stats['sd'])
+    mk_mra_data = configure_for_mra(mk_stats['mean'])
+    mk_mra_err = configure_for_mra(mk_stats['sd'])
+
+
+    azd_mra_data_fname = os.path.join(mra_data_dir, 'azd1_25_data.csv')
+    mk_mra_data_fname = os.path.join(mra_data_dir, 'mk1_25_data.csv')
+
+    azd_mra_err_fname = os.path.join(mra_data_dir, 'azd1_25_err.csv')
+    mk_mra_err_fname = os.path.join(mra_data_dir, 'mk1_25_err.csv')
+
+
+    # mra_data = azd_mra_data
+    # mra_err = azd_mra_err
+    # print(mk_mra_data)
+    # print(mra_data)
+
+    # mra_data = pandas.concat([azd_mra_data, mk_mra_data])
+    # mra_err= pandas.concat([azd_mra_err, mk_mra_err])
+
+    # print(mra_data)
+
+    azd_mra_data.to_csv(azd_mra_data_fname)
+    azd_mra_err.to_csv(azd_mra_err_fname)
+
+    mk_mra_data.to_csv(mk_mra_data_fname)
+    mk_mra_err.to_csv(mk_mra_err_fname)
+
+    # print(azd_mra_data)
+
+    # azd_stats['mean'].to_csv(azd_means_fname)
+    # azd_stats['sd'].to_csv(azd_sd_fname)
+    # mk_stats['mean'].to_csv(mk_means_fname)
+    # mk_stats['sd'].to_csv(mk_sd_fname)
 
 
 
