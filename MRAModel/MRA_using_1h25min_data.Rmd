@@ -1,0 +1,212 @@
+---
+title: "mra_on_cross_talk_model"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## prepare data
+
+```{r}
+## script to try MRA on cross talk dataset
+library(STASNet)
+
+working_directory = '/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/MRA'
+
+data_dir = '/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/data/MRA_data'
+
+##get datset
+dataset_filename = file.path(data_dir, 'mra_means1_25h.csv')
+errors_filename = file.path(data_dir, 'mra_sds_1_25h.csv')
+
+read_data = function(f){
+  data = read.csv(f, check.names = F)
+  rownames(data) = 1:dim(data)[1]
+  data = data[2:dim(data)[2]]
+  return(data)
+}
+
+data = read_data(dataset_filename)
+errors = read_data(errors_filename)
+data
+errors
+
+# data[2, 'DV:Mek'] = NA
+data
+```
+
+
+## Interactions
+
+| model | RSS |
+| ----  | ----|
+|Base | -0.91|
+|+ Erk->PDK1 | |
+
+```{r}
+
+# c('Akt', 'TSC2')
+# c('TSC2', 'mTORC1')
+
+interactions = rbind(
+  c('TGFb', 'Smad2'),
+  c('TGFb', 'Akt'),
+  c('TGFb', 'Raf'),
+  c('Raf', 'Mek'),
+  c('Akt', 'mTORC1'),
+  c('mTORC1', 'S6K'),
+  c('Mek', 'Erk'),
+  c('Erk', 'Raf'),
+  # extended reactions
+  c('S6K', 'Akt'),
+  c('Akt', 'Raf'),
+  c('Akt', 'Smad2')
+)
+interactions = data.frame(interactions)
+colnames(interactions) = c('FROM', 'TO')
+
+interactions
+## basal activity vecotr 
+basal = c('TGFb', 'Smad2', 'Akt', 'Erk', 'TSC2', 'mTORC1', 'S6K', '4EBP1', 'PRAS40', 'Raf', 'Mek')
+```
+
+## build model
+```{r}
+model = createModel(model_links = interactions,
+                    basal_file = basal,
+                    data.stimulation = data,
+                    data.variation = errors,
+                    inits = 1000,
+                    model_name = "SDErrorModel", nb_cores=8, precorrelate = F)
+?createModel
+```
+
+
+## make some plots
+```{r}
+
+plotModelGraph(model)
+?plotModelGraph
+```
+
+## looks at parameters
+```{r}
+printParameters(model)
+```
+
+```{r}
+plotModelAccuracy(red)
+```
+
+## model scores
+```{r}
+plotModelScores(model)
+```
+
+```{r}
+simulation = plotModelSimulation(model, with_data= TRUE,log_axis = T)
+?plotModelSimulation
+```
+
+```{r,fig.width =4.9}
+profiles = profileLikelihood(model, nb_points = 1000, nb_cores = 8)
+model = addPLinfos(model, profiles)
+niplotPL(profiles, file_plots = FALSE)
+```
+
+
+```{r}
+plotModelParameters(model, lim = 4)
+```
+
+
+```{r}
+simulation = plotModelSimulation(model, with_data= TRUE,log_axis = T)
+```
+
+
+```{r}
+red_model = selectMinimalModel(model)
+?selectMinimalModel
+```
+
+
+```{r}
+plotModelGraph(red_model)
+```
+
+
+
+```{r, results='hide', echo=F}
+ext_mat = suggestExtension(model, parallel=T)
+?suggestExtension
+```
+
+
+
+```{r}
+ext_mat
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

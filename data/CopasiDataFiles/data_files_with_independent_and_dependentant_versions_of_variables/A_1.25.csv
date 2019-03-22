@@ -1,0 +1,8 @@
+Time	pAkt	pSmad2	ppErk	pS6K	GrowthFactors_indep	TGFb_indep	Everolimus_indep	AZD_indep	MK2206_indep	GrowthFactors	TGFb	Everolimus	AZD	MK2206
+0.0					1	0	0	0	0	1	0	0	0	0
+24.0					1	0	0	0	0	1	0	0	0	0
+48.0					1	0	0	0	0	1	0	0	0	0
+70.25					0	0	0	0	0	0	0	0	0	0
+70.75					0	0	0	1	0	0	0	0	1	0
+71.25					0	1	0	1	0	0	1	0	1	0
+72.0	8.503551226	5.728755914	0.636935528	12.60119632	0	1	0	1	0	0	1	0	1	0

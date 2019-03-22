@@ -275,15 +275,17 @@ class CrossTalkModel:
         if not os.path.isdir(d):
             os.makedirs(d)
         return d
+    
     @property
     def old_results_directory(self):
         return os.path.join(self.fit_dir, 'MultipleParameterEstimationResults')
 
     @property
     def data_files(self):
-        files = glob.glob(os.path.join(self.data_dir, '*.csv'))
+        path = os.path.join(self.data_dir, '*.csv')
+        files = glob.glob(path)
         if files == []:
-            raise ValueError('No data files')
+            raise ValueError('No data files in {}'.format(path))
         return files
 
     def get_experimental_data(self):
@@ -1364,42 +1366,6 @@ class CrossTalkModel:
                 fig.savefig(fname, bbox_inches='tight', dpi=100)
                 print('saving "{}"'.format(fname))
 
-        # plt.show()
-            # fig = plt.figure(figsize=(5, 15))
-            #
-            #
-            #
-            # for i in range(len(conditions)):
-            #     condition = list(conditions)[i]
-            #     ax = fig.add_subplot(len(conditions), 1, i+1)
-            #     ax_count += 1
-            #     df_selection = df.loc[condition]
-            #     time = list(df_selection.index)
-            #
-            #     seaborn.set_context('talk')
-            #     ax_count += 1
-            #     # plt.setp(ax.get_xticklabels(), visible=False)
-            #     # box = sub_ax.get_position()
-            #     # sub_ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-            #
-            #     # seaborn.despine(ax=ax, top=True, right=True)
-            #     # plt.yticks(fontsize=12)
-            #     # # print(df_selection[selection[v]])
-            #     # plt.suptitle(condition)
-            #     plt.plot(time, df_selection[selection[v]], label=condition)
-                # plt.legend(loc=(0.75, 0.5), bbox_to_anchor=(1.0, 0.5), fontsize=10)
-                # plt.xticks(numpy.arange(0, 72, 5.0), fontsize=12, rotation=90)
-                #
-                # plt.subplots_adjust(bottom=0.2, left=0.2, right=0.7)
-                # if v == len(selection) - 1:
-                #     plt.xlabel('Time(h)')
-
-            # plt.setp(sub_ax.get_xticklabels(), visible=True)
-
-            # fig.text(0.05, 0.5, 'nmol L$^{-1}$', ha='center', va='center', rotation='vertical')
-            # plt.tight_layout()
-        # plt.show()
-        # return fig
 
 
 if __name__ == '__main__':
@@ -1430,7 +1396,7 @@ if __name__ == '__main__':
     RUN_PARAMETER_ESTIMATION_FROM_BEST_PARAMETERS = False
 
     ## plot comparison between model and simulation for the current model ID
-    PLOT_CURRENT_SIMULATION_GRAPHS = False
+    PLOT_CURRENT_SIMULATION_GRAPHS = True
 
     ## Plot current simulation graphs with the default parameter instead of best estimated
     PLOT_CURRENT_SIMULATION_GRAPHS_WITH_DEAULT_PARAMETERS = False
@@ -1441,7 +1407,7 @@ if __name__ == '__main__':
     PLOT_ALL_SIMULATION_GRAPHS = False
 
     ## extract best RSS per model and compute AICc
-    AICs = True
+    AICs = False
 
     ## Plot likelihood ranks plots
     LIKELIHOOD_RANKS = False
