@@ -44,9 +44,9 @@ class GetData:
 
     def get_data_from_sheet(self, sheet):
         sheet = self.workbook.sheet_by_name(sheet)
-        names = sheet.col_slice(0, 30, 40)
+        names = sheet.col_slice(0, 30, 41)
 
-        data = [sheet.col_slice(i, 30, 40) for i in self.col_indices]
+        data = [sheet.col_slice(i, 30, 41) for i in self.col_indices]
 
         df = pandas.DataFrame(data).transpose()
         df['condition'] = names
@@ -150,73 +150,82 @@ if __name__ == '__main__':
     azd_data_file_v3 = os.path.join(data_file, 'AZD_calculations - v3.xlsx')
     mk_data_file_v3 = os.path.join(data_file, 'MK2206_calculations - v3.xlsx')
 
-    azd_v2 = GetData(azd_data_file_v2).get_data()
-    mk_v2 = GetData(mk_data_file_v2).get_data()
+    # azd_v2 = GetData(azd_data_file_v2).get_data()
+    # mk_v2 = GetData(mk_data_file_v2).get_data()
     azd_v3 = GetData(azd_data_file_v3).get_data()
     mk_v3 = GetData(mk_data_file_v3).get_data()
 
-    azd = add_v3_to_v2_data(azd_v2, azd_v3)
-    ##tests
-    assert azd.loc['ERK-pT202', 'D'][2] == 2.3408405823934477
-    assert 'S6K-pT389' in azd.index.get_level_values(0)
-
-    mk = add_v3_to_v2_data(mk_v2, mk_v3)
-    ##tests
-    assert mk.loc['ERK-pT202', 'D'][2] == 0.45171227837786126, mk.loc['ERK-pT202', 'D'][2]
-    assert 'S6K-pT389' in mk.index.get_level_values(0)
-
-    azd_fname = os.path.join(mra_data_dir, 'azd_data_with_repeats.csv')
-    mk_fname = os.path.join(mra_data_dir, 'mk_data_with_repeats.csv')
-    azd.to_csv(azd_fname)
-    mk.to_csv(mk_fname)
-
-    azd_means_fname = os.path.join(mra_data_dir, 'azd_means.csv')
-    mk_means_fname = os.path.join(mra_data_dir, 'mk_means.csv')
-
-    azd_sd_fname = os.path.join(mra_data_dir, 'azd_sd.csv')
-    mk_sd_fname = os.path.join(mra_data_dir, 'mk_sd.csv')
-
-
-
-    azd_stats = do_stats(azd)
-    mk_stats = do_stats(mk)
-
-    dct = {}
-    azd_mra_data = configure_for_mra(azd_stats['mean'])
-    azd_mra_err = configure_for_mra(azd_stats['sd'])
-    mk_mra_data = configure_for_mra(mk_stats['mean'])
-    mk_mra_err = configure_for_mra(mk_stats['sd'])
-
-
-    azd_mra_data_fname = os.path.join(mra_data_dir, 'azd1_25_data.csv')
-    mk_mra_data_fname = os.path.join(mra_data_dir, 'mk1_25_data.csv')
-
-    azd_mra_err_fname = os.path.join(mra_data_dir, 'azd1_25_err.csv')
-    mk_mra_err_fname = os.path.join(mra_data_dir, 'mk1_25_err.csv')
-
-
-    # mra_data = azd_mra_data
-    # mra_err = azd_mra_err
-    # print(mk_mra_data)
-    # print(mra_data)
-
-    # mra_data = pandas.concat([azd_mra_data, mk_mra_data])
-    # mra_err= pandas.concat([azd_mra_err, mk_mra_err])
-
-    # print(mra_data)
-
-    azd_mra_data.to_csv(azd_mra_data_fname)
-    azd_mra_err.to_csv(azd_mra_err_fname)
-
-    mk_mra_data.to_csv(mk_mra_data_fname)
-    mk_mra_err.to_csv(mk_mra_err_fname)
-
-    # print(azd_mra_data)
-
+    # print(azd_v3)
+    #
+    # azd = add_v3_to_v2_data(azd_v2, azd_v3)
+    # ##tests
+    # assert azd.loc['ERK-pT202', 'D'][2] == 2.3408405823934477
+    # assert 'S6K-pT389' in azd.index.get_level_values(0)
+    #
+    # mk = add_v3_to_v2_data(mk_v2, mk_v3)
+    # ##tests
+    # assert mk.loc['ERK-pT202', 'D'][2] == 0.45171227837786126, mk.loc['ERK-pT202', 'D'][2]
+    # assert 'S6K-pT389' in mk.index.get_level_values(0)
+    # #
+    # azd_fname = os.path.join(mra_data_dir, 'azd_data_with_repeats.csv')
+    # mk_fname = os.path.join(mra_data_dir, 'mk_data_with_repeats.csv')
+    # azd.to_csv(azd_fname)
+    # mk.to_csv(mk_fname)
+    #
+    # azd_means_fname = os.path.join(mra_data_dir, 'azd_means.csv')
+    # mk_means_fname = os.path.join(mra_data_dir, 'mk_means.csv')
+    #
+    # azd_sd_fname = os.path.join(mra_data_dir, 'azd_sd.csv')
+    # mk_sd_fname = os.path.join(mra_data_dir, 'mk_sd.csv')
+    #
+    #
+    #
+    # azd_stats = do_stats(azd)
+    # mk_stats = do_stats(mk)
+    #
     # azd_stats['mean'].to_csv(azd_means_fname)
     # azd_stats['sd'].to_csv(azd_sd_fname)
     # mk_stats['mean'].to_csv(mk_means_fname)
     # mk_stats['sd'].to_csv(mk_sd_fname)
+    #
+    # #
+    # # dct = {}
+    # # azd_mra_data = configure_for_mra(azd_stats['mean'])
+    # # azd_mra_err = configure_for_mra(azd_stats['sd'])
+    # # mk_mra_data = configure_for_mra(mk_stats['mean'])
+    # # mk_mra_err = configure_for_mra(mk_stats['sd'])
+    # #
+    # #
+    # azd_mra_data_fname = os.path.join(mra_data_dir, 'azd1_25_data.csv')
+    # mk_mra_data_fname = os.path.join(mra_data_dir, 'mk1_25_data.csv')
+    #
+    # azd_mra_err_fname = os.path.join(mra_data_dir, 'azd1_25_err.csv')
+    # mk_mra_err_fname = os.path.join(mra_data_dir, 'mk1_25_err.csv')
+    #
+    # # azd_stats['mean'].to_csv(azd_means_fname)
+    # # azd_stats['sd'].to_csv(azd_sd_fname)
+    # # mk_stats['mean'].to_csv(mk_means_fname)
+    # # mk_stats['sd'].to_csv(mk_sd_fname)
+    # #
+    # #
+    # # mra_data = azd_mra_data
+    # # mra_err = azd_mra_err
+    # # print(mk_mra_data)
+    # # print(mra_data)
+    #
+    # # mra_data = pandas.concat([azd_mra_data, mk_mra_data])
+    # # mra_err= pandas.concat([azd_mra_err, mk_mra_err])
+    #
+    # # print(mra_data)
+    # #
+    # # azd_mra_data.to_csv(azd_mra_data_fname)
+    # # azd_mra_err.to_csv(azd_mra_err_fname)
+    # #
+    # # mk_mra_data.to_csv(mk_mra_data_fname)
+    # # mk_mra_err.to_csv(mk_mra_err_fname)
+    #
+    # # print(azd_mra_data)
+
 
 
 

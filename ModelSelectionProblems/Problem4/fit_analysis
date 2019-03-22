@@ -1,0 +1,74 @@
+Topology 1: Raf is phosphorylated by TGFbR
+- Akt
+  - fits well 
+- pS6
+  - fits well
+- ppErk
+  - TGFb can modulate ppErk
+  - Everolimus cannot modulate ppErk
+
+*
+Topology 2: PI3K is phos by TGFbR
+- Akt
+  - fits well 
+- pS6
+  - fits well
+- ppErk
+  - TGFb cannot modulate ppErk
+  - Everolimus cannot modulate ppErk
+
+
+Topology 3: Raf is phos by PI3K
+- Akt
+  - fits well 
+- pS6
+  - fits well
+- ppErk
+  - TGFb cannot modulate ppErk
+  - Everolimus can modulate ppErk
+
+
+
+Topology 4: PI3K is Dephos by ppErk
+- Akt
+  - TGFb cannot modulate pAkt
+  - Everolimus can modulate pAkt, but falls short of the mark
+- pS6
+  - fits well
+- ppErk
+  - TGFb cannot modulate ppErk
+  - Everolimus cannot modulate ppErk
+  - all simulations equal
+
+Topology 5: Mek is phos by PI3K
+- Akt
+  - fits well
+- pS6
+  - fits well
+- ppErk
+  - TGFb cannot modulate ppErk
+  - Everolimus can modulate ppErk and fits well
+
+*
+Topology 6: PI3K is phos by Mek
+- Akt
+  - TGF cannot modulate pAkt
+  - Everolimus can modulate pAkt, but falls short of the mark
+- pS6
+  - fits well
+- ppErk
+  - TGFb cannot modulate ppErk
+  - Everolimus cannot modulate ppErk and fits well
+  - All equal
+
+Topology 7: Mek dephos by Akt
+- Akt
+  - TGF cannot modulate pAkts
+  - Everolimus can modulate pAkt, and fits well
+- pS6
+  - fits well
+- ppErk
+  - TGFb cannot modulate ppErk
+  - Everolimus cannot modulate ppErk and fits well
+  - All equal
+
