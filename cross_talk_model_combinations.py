@@ -12,110 +12,13 @@ import matplotlib.pyplot as plt
 import seaborn
 
 
-class ParameterSet(dict):
-    def __init__(self, *args):
-        super().__init__(*args)
-
-
-parameter_set_rss_174_topology_7 = """
-		TGFbR = 45.0;
-		Smad2 = 45.0;
-		Mek = 40.0;
-		Erk = 40.0;
-		PI3K = 45.0;
-		Akt = 45.0;
-		mTORC1 = 45.0;
-		S6K = 45.0;
-		Raf = 45.0;
-		ppMek = 45.0;
-		TGFbR_a = 5.0;
-		pSmad2 = 5.0;
-		pMek = 5.0;
-		pErk = 5.0;
-		pPI3K = 5.0;
-		pAkt = 5.0;
-		pmTORC1 = 5.0;
-		pS6K = 5.0;
-		pRaf = 5.0;
-		ppErk = 5.0;
-		Cell = 1.0;
-		TGFb = 0.005;
-		GrowthFactors = 1.0;
-		ExperimentIndicator = 0.0;
-		AZD = 0.0;
-		MK2206 = 0.0;
-		Everolimus = 0.0;
-		kTGFbRAct_km = 10.0;
-		kTGFbRDephos_km = 100.0;
-		kSmad2Phos_km = 50.0;
-		kSmad2Dephos_km = 30.0;
-		kSmad2Dephos_Vmax = 20.0;
-		kRafPhos_km = 10.0;
-		kRafPhos_Vmax = 9000.0;
-		kRafPhos_n = 1.0;
-		kRafDephos_km = 8.0;
-		kRafDephosVmax = 3602.5;
-		kMekPhos_km1 = 15.0;
-		kMekDephos_km = 15.0;
-		kMekDephos_Vmax = 2700.0;
-		kErkPhos_km = 50.0;
-		kErkDephos_km = 15.0;
-		kErkDephos_Vmax = 1800.0;
-		kPI3KPhosByGF_km = 50.0;
-		kPI3KDephosByS6K_km = 50.0;
-		kAktPhos_km = 12.5;
-		kAktDephos_km = 15.0;
-		kAktDephos_Vmax = 30.0;
-		kmTORC1Phos_km = 50.0;
-		kmTORCPhosBasal_km = 25.0;
-		kmTORC1Dephos_km = 100.0;
-		kmTORC1Dephos_Vmax = 4.0;
-		kS6KPhosBymTORC1_km = 100.0;
-		kS6KDephos_km = 10.0;
-		kS6KDephos_Vmax = 50.0;
-		kRafPhosByTGFbR_km = 25.0;
-		kRafPhosByPI3K_km = 50.0;
-		kPI3KPhosByTGFbR_km = 10.0;
-		kPI3KDephosByErk_km = 10.0;
-		kSmad2PhosByAkt_km = 50.0;
-		kSmad2DephosByErk_km = 50.0;
-		kSmad2PhosByErk_km = 50.0;
-		kSmad2DehosByAkt_km = 50.0;
-		kSmad2DephosByAkt_km = 50.0;
-		kTGFbRAct_h = 2.0;
-		_kTGFbRAct_Vmax = 733.115;
-		kTGFbRDephos_Vmax = 999.999;
-		_kSmad2Phos_kcat = 0.30301500000000003;
-		_kRafPhos_ki = 853.3789999999998;
-		_kMekPhos_ki = 0.679746;
-		_kMekPhos_kcat = 317.451;
-		_kErkPhos_kcat = 200.957;
-		_kPI3KPhosByGF_kcat = 0.00117777;
-		_kPI3KDephosByS6K_kcat = 56.8181;
-		_kAktPhos_ki = 0.381168;
-		_kAktPhos_kcat = 0.435405;
-		_kmTORC1Phos_ki = 0.0203352;
-		_kmTORC1Phos_kcat = 0.00100084;
-		_kmTORCPhosBasal_Vmax = 46.4378;
-		_kS6KPhosBymTORC1_kcat = 1.97702;
-		_kRafPhosByTGFbR_kcat = 0.00262984;
-		_kRafPhosByPI3K_kcat = 77.1417;
-		_kPI3KPhosByTGFbR_kcat = 23.8593;
-		_kSmad2PhosByAkt_kcat = 0.950982;
-		_kSmad2DephosByErk_kcat = 0.00100003;
-		_kPI3KDephosByErk_kcat = 0.00100024;
-		_kSmad2PhosByErk_kcat = 0.1;
-		_kSmad2DephosByAkt_kcat = 0.1;
-"""
-
-
 class CrossTalkModel:
     """
     build a factory that churns out functions that return models and take as argument the
     antimony parameter strings
     """
 
-    def __init__(self, working_directory,
+    def __init__(self, problem_dir,
                  parameter_str=None,
                  fit='1_1',
                  run_mode='slurm',
@@ -137,7 +40,7 @@ class CrossTalkModel:
         """
         self.parameter_str = parameter_str
         self._topology = 0
-        self.working_directory = working_directory
+        self.working_directory = problem_dir
 
 
 
@@ -1437,18 +1340,18 @@ if __name__ == '__main__':
     ##===========================================================================================
 
     if CLUSTER == 'slurm':
-        WORKING_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(PROBLEM)
+        PROBLEM_DIR = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(PROBLEM)
 
     elif CLUSTER == 'sge':
-        WORKING_DIRECTORY = r'/sharedlustre/users/b3053674/2019/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(PROBLEM)
+        PROBLEM_DIR = r'/sharedlustre/users/b3053674/2019/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(PROBLEM)
 
     elif CLUSTER == False:
-        WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(PROBLEM)
+        PROBLEM_DIR = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(PROBLEM)
 
     else:
         raise ValueError
 
-    C = CrossTalkModel(WORKING_DIRECTORY, fit=FIT,
+    C = CrossTalkModel(PROBLEM_DIR, fit=FIT,
                        method='particle_swarm',
                        copy_number=10,
                        run_mode=RUN_MODE,
