@@ -10,10 +10,7 @@ from pycotools3 import model, tasks, viz
 from itertools import combinations
 import matplotlib.pyplot as plt
 import seaborn
-<<<<<<< HEAD
-=======
 import yaml
->>>>>>> cleaning_up
 
 
 class CrossTalkModel:
@@ -23,11 +20,7 @@ class CrossTalkModel:
     """
     _data_dir = os.path.join(WORKING_DIRECTORY, 'data/CopasiDataFiles/all_data')
 
-<<<<<<< HEAD
-    def __init__(self, problem_dir,
-=======
     def __init__(self, problem_directory,
->>>>>>> cleaning_up
                  parameter_str=None,
                  fit='1_1',
                  run_mode='slurm',
@@ -45,12 +38,7 @@ class CrossTalkModel:
                  ):
         self.parameter_str = parameter_str
         self._topology = 0
-<<<<<<< HEAD
-        self.working_directory = problem_dir
-
-=======
         self.problem_directory = problem_directory
->>>>>>> cleaning_up
 
         if not os.path.isdir(self.problem_directory):
             os.makedirs(self.problem_directory)
