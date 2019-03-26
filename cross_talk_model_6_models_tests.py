@@ -37,17 +37,17 @@ class TestModel1(unittest.TestCase):
 
     def test_model_selection_dir(self):
         ms = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelection'
-        C = CrossTalkModel(problem_dir=os.path.dirname(ms))
+        C = CrossTalkModel(problem_directory=os.path.dirname(ms))
         self.assertEqual(C.model_selection_dir, ms)
 
     def test_topology_dir(self):
         ms = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelection'
-        C = CrossTalkModel(problem_dir=os.path.dirname(ms))
+        C = CrossTalkModel(problem_directory=os.path.dirname(ms))
         self.assertEqual(C.topology_dir, r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelection/Topology0')
 
     def test_topology_dir_changes_correctly(self):
         ms = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelection'
-        C = CrossTalkModel(problem_dir=os.path.dirname(ms))
+        C = CrossTalkModel(problem_directory=os.path.dirname(ms))
         self.assertEqual(C[6].topology_dir, r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelection/Topology6')
 
     def test_number_of_data_files(self):
@@ -56,7 +56,7 @@ class TestModel1(unittest.TestCase):
 
     def test_insert_best_parameters_and_open_with_copasi(self):
         ms = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelection'
-        C = CrossTalkModel(problem_dir=os.path.dirname(ms))
+        C = CrossTalkModel(problem_directory=os.path.dirname(ms))
 
         print(C[2].insert_best_parameters_and_open_with_copasi())
 

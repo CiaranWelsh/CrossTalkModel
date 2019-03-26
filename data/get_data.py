@@ -155,8 +155,47 @@ if __name__ == '__main__':
     azd_v3 = GetData(azd_data_file_v3).get_data()
     mk_v3 = GetData(mk_data_file_v3).get_data()
 
-    # print(azd_v3)
-    #
+    azd_v3 = azd_v3.replace('', numpy.nan)
+    mk_v3 = mk_v3.replace('', numpy.nan)
+
+    azd_v3 = azd_v3*10
+    mk_v3 = mk_v3*10
+
+    azd_mean = {}
+    mk_mean = {}
+
+    azd_se = {}
+    mk_se= {}
+
+    for label, df in azd_v3.groupby(level=0):
+        azd_mean[label] = df.mean()
+        azd_se[label] = df.sem()
+
+    for label, df in mk_v3.groupby(level=0):
+        mk_mean[label] = df.mean()
+        mk_se[label] = df.sem()
+
+    azd_mean = pandas.DataFrame(azd_mean)
+    azd_se = pandas.DataFrame(azd_se)
+
+    mk_mean = pandas.DataFrame(mk_mean)
+    mk_se = pandas.DataFrame(mk_se)
+
+    print(mk_se)
+    dire = '/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/data'
+    azd_means_fname = os.path.join(dire, 'azd_means.csv')
+    mk_means_fname = os.path.join(dire, 'mk_means.csv')
+
+    azd_se_fname = os.path.join(dire, 'azd_se.csv')
+    mk_se_fname = os.path.join(dire, 'mk_se.csv')
+
+    azd_mean.to_csv(azd_means_fname)
+    azd_se.to_csv(azd_se_fname)
+    mk_mean.to_csv(mk_means_fname)
+    mk_se.to_csv(mk_se_fname)
+
+
+
     # azd = add_v3_to_v2_data(azd_v2, azd_v3)
     # ##tests
     # assert azd.loc['ERK-pT202', 'D'][2] == 2.3408405823934477
@@ -172,11 +211,6 @@ if __name__ == '__main__':
     # azd.to_csv(azd_fname)
     # mk.to_csv(mk_fname)
     #
-    # azd_means_fname = os.path.join(mra_data_dir, 'azd_means.csv')
-    # mk_means_fname = os.path.join(mra_data_dir, 'mk_means.csv')
-    #
-    # azd_sd_fname = os.path.join(mra_data_dir, 'azd_sd.csv')
-    # mk_sd_fname = os.path.join(mra_data_dir, 'mk_sd.csv')
     #
     #
     #

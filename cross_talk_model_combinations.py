@@ -10,6 +10,10 @@ from pycotools3 import model, tasks, viz
 from itertools import combinations
 import matplotlib.pyplot as plt
 import seaborn
+<<<<<<< HEAD
+=======
+import yaml
+>>>>>>> cleaning_up
 
 
 class CrossTalkModel:
@@ -17,8 +21,13 @@ class CrossTalkModel:
     build a factory that churns out functions that return models and take as argument the
     antimony parameter strings
     """
+    _data_dir = os.path.join(WORKING_DIRECTORY, 'data/CopasiDataFiles/all_data')
 
+<<<<<<< HEAD
     def __init__(self, problem_dir,
+=======
+    def __init__(self, problem_directory,
+>>>>>>> cleaning_up
                  parameter_str=None,
                  fit='1_1',
                  run_mode='slurm',
@@ -34,18 +43,17 @@ class CrossTalkModel:
                  upper_bound=10000,
                  use_best_parameters=False
                  ):
-        """
-        :param variant: int. 1 to 7. ID of topology
-        :param parameter_str: parameter set for the model as antimony string
-        """
         self.parameter_str = parameter_str
         self._topology = 0
+<<<<<<< HEAD
         self.working_directory = problem_dir
 
+=======
+        self.problem_directory = problem_directory
+>>>>>>> cleaning_up
 
-
-        if not os.path.isdir(self.working_directory):
-            os.makedirs(self.working_directory)
+        if not os.path.isdir(self.problem_directory):
+            os.makedirs(self.problem_directory)
 
         self.fit = fit
         self.run_mode = run_mode
@@ -114,12 +122,11 @@ class CrossTalkModel:
         Subtract 1 for 0 indexed python
         :return:
         """
-        # print('len', len(self._get_combinations()))
-        return len(list(self._get_combinations())) - 1
+        return len(list(self._get_combinations()))
 
     def __iter__(self):
 
-        while self.topology < len(self) + 1:
+        while self.topology < len(self):
             yield self.topology
             self.topology += 1
 
@@ -142,7 +149,7 @@ class CrossTalkModel:
 
     @property
     def model_selection_dir(self):
-        d = os.path.join(self.working_directory, 'ModelSelection')
+        d = os.path.join(self.problem_directory, 'ModelSelection')
         if not os.path.isdir(d):
             os.makedirs(d)
         return d
@@ -156,7 +163,13 @@ class CrossTalkModel:
 
     @property
     def data_dir(self):
-        return os.path.join(self.working_directory, 'data/CopasiDataFiles')
+        return self._data_dir
+
+    @data_dir.setter
+    def data_dir(self, dir):
+        if not os.path.isdir(dir):
+            raise ValueError(f'{dir} is not a directory')
+        self._data_dir = dir
 
     @property
     def fit_dir(self):
@@ -178,10 +191,6 @@ class CrossTalkModel:
         if not os.path.isdir(d):
             os.makedirs(d)
         return d
-    
-    @property
-    def old_results_directory(self):
-        return os.path.join(self.fit_dir, 'MultipleParameterEstimationResults')
 
     @property
     def data_files(self):
@@ -191,12 +200,61 @@ class CrossTalkModel:
             raise ValueError('No data files in {}'.format(path))
         return files
 
+    @property
+    def included_conditions(self):
+        fle = os.path.join(self.model_selection_dir, 'included_conditions.yaml')
+        if not os.path.isfile(fle):
+            raise ValueError(f'{fle} is not a file')
+        # Read YAML file
+        with open(fle, 'r') as stream:
+            cond = yaml.load(stream)
+        cond = cond[0]['included_conditions']
+        # print(cond)
+        return cond
+
     def get_experimental_data(self):
         df_dct = {}
         for i in self.data_files:
             dire, fle = os.path.split(i)
+            if os.path.splitext(fle)[0] not in self.included_conditions:
+                continue
             df_dct[fle[:-4]] = pandas.read_csv(i)
         return pandas.concat(df_dct)
+
+    def get_errors(self):
+        """
+        Keep AZD data for D, T and E
+        :return:
+        """
+        dirname = os.path.join(WORKING_DIRECTORY, 'CrossTalkModel/data')
+        mk_se = os.path.join(dirname, 'mk_se.csv')
+        azd_se = os.path.join(dirname, 'azd_se.csv')
+
+        assert os.path.isfile(mk_se)
+        assert os.path.isfile(azd_se)
+        mk = pandas.read_csv(mk_se, index_col=0)
+        azd = pandas.read_csv(azd_se, index_col=0)
+
+        exp_data = self.get_experimental_data()
+        exclude = ['Time', 'GrowthFactors_indep',
+                   'TGFb_indep', 'Everolimus_indep',
+                   'AZD_indep', 'MK2206_indep',
+                   'ExperimentIndicator_indep']
+        vars = list(set(exp_data.columns).difference(set(exclude)))
+
+        labels_dct = {
+            'pAkt': 'Akt-pT308',
+            'ppErk': 'ERK-pT202',
+            'pS6K': 'S6K-pT389',
+            'pSmad2': 'SMAD2-pS465-467'
+        }
+        keys = [labels_dct[i] for i in vars]
+        mk = mk[keys]
+        mk = mk.rename(columns={j: i for i, j in labels_dct.items()})
+        azd = azd.rename(columns={j: i for i, j in labels_dct.items()})
+        mk = mk.drop(['D', 'T', 'E'], axis=0)
+        df = pandas.concat([azd, mk], sort=False)
+        return df
 
     def get_experiment_names(self):
         return list(set(self.get_experimental_data().index.get_level_values(0)))
@@ -239,10 +297,9 @@ class CrossTalkModel:
 
     def plot_bargraphs(self, best_parameters=False, selections=['pAkt', 'pS6K', 'ppErk', 'pSmad2']):
         import matplotlib
-        matplotlib.use('tkagg')
+        matplotlib.use('Qt5Agg')
         seaborn.set_style('white')
         seaborn.set_context(context='talk')
-        # , 'pSmad2']
         sim_data = self.simulate_conditions(best_parameters=best_parameters)
         sim_data = sim_data.reset_index(level=1)
         sim_data = sim_data.rename(columns={'level_1': 'Time'})
@@ -253,76 +310,122 @@ class CrossTalkModel:
         exp_data.index = exp_data.index.droplevel(1)
 
         azd_conditions = ['D', 'T', 'E',
-                          'E_A_72', 'E_A_48', 'E_A_24', 'E_A_1.25',
-                          'A_72', 'A_48', 'A_24', 'A_1.25']
-        mk_conditions = ['D', 'T', 'E', 'E_M_72', 'E_M_48', 'E_M_24',
-                         'E_M_1.25', 'M_72', 'M_48', 'M_24', 'M_1.25']
-        both_conditions = ['D', 'T', 'E', 'E_A_M_72', 'E_A_M_48', 'E_A_M_24']
+                          'EA72', 'EA48', 'EA24', 'EA1.25',
+                          'A72', 'A48', 'A24', 'A1.25']
+        mk_conditions = ['D', 'T', 'E', 'EM72', 'EM48', 'EM24',
+                         'EM1.25', 'M72', 'M48', 'M24', 'M1.25']
+        both_conditions = ['D', 'T', 'E', 'EAM72', 'EAM48', 'EAM24']
 
-        azd_sim = sim_data.loc[azd_conditions].reset_index()
-        mk_sim = sim_data.loc[mk_conditions].reset_index()
-        both_sim = sim_data.loc[both_conditions].reset_index()
+        ## we reset index so that we can use seaborn style inputs to barplots
+        azd_order = ['D', 'T', 'E', 'EA72', 'EA48', 'EA24', 'EA1.25', 'A72', 'A48', 'A24', 'A1.25']
+        mk_order =  ['D', 'T', 'E', 'EM72', 'EM48', 'EM24', 'EM1.25', 'M72', 'M48', 'M24', 'M1.25']
+        both_order = ['D', 'T', 'E', 'EAM72', 'EAM48', 'EAM24']
 
-        azd_exp = exp_data.loc[azd_conditions].reset_index()
-        mk_exp = exp_data.loc[mk_conditions].reset_index()
-        both_exp = exp_data.loc[both_conditions].reset_index()
+        azd_sim = sim_data.reindex(azd_conditions)
+        mk_sim = sim_data.reindex(mk_conditions)
+        both_sim = sim_data.reindex(both_conditions)
 
-        print(sim_data)
+
+        azd_exp =  exp_data.reindex(azd_conditions)
+        mk_exp =   exp_data.reindex(mk_conditions)
+        both_exp = exp_data.reindex(both_conditions)
+
+        err =self.get_errors().reset_index()
+        azd_err = err[err['condition_code'].isin(list(azd_exp.index))]
+        mk_err = err[err['condition_code'].isin(list(mk_exp.index))]
+        both_err = err[err['condition_code'].isin(list(both_exp.index))]
+
+        azd_err =  azd_err.set_index('condition_code').reindex(azd_conditions).reset_index()
+        mk_err =   mk_err.set_index('condition_code').reindex(mk_conditions).reset_index()
+        both_err = both_err.set_index('condition_code').reindex(both_conditions).reset_index()
+
+        azd_sim =  azd_sim.dropna(how='all')
+        azd_exp =  azd_exp.dropna(how='all')
+        azd_err =  azd_err.dropna(how='all')
+        mk_sim =   mk_sim.dropna(how='all')
+        mk_exp =   mk_exp.dropna(how='all')
+        mk_err =   mk_err.dropna(how='all')
+        both_sim = both_sim.dropna(how='all')
+        both_exp = both_exp.dropna(how='all')
+        both_err = both_err.dropna(how='all')
+
+        azd_err = azd_err.set_index('condition_code').reindex(list(azd_exp.index)).reset_index()
+        mk_err =  mk_err.set_index('condition_code').reindex(list(mk_exp.index)).reset_index()
+        both_err = both_err.set_index('condition_code').reindex(list(both_exp.index)).reset_index()
+
+        # print('sim', mk_sim)
+        # print('exp', mk_exp)
+        # print('err', mk_err)
+
+        ## reduce the ordering variables
+        mk_order = [i for i in mk_order if i in mk_exp.index]
+        azd_order = [i for i in azd_order if i in azd_exp.index]
+        both_order = [i for i in both_order if i in both_exp.index]
 
         marker = '_'
-        markersize = 3
+        markersize = 10
         for sp in selections:
             fig, ax = plt.subplots()
-            seaborn.barplot(x='index', y=sp, data=azd_sim, ax=ax,
+            b = seaborn.barplot(x='index', y=sp, data=azd_sim.reset_index(), ax=ax, order=azd_order,
                             palette=['yellow'] * 2 + ['white'] + ['red'] * 4 + ['green'] * 4,
                             edgecolor='black', zorder=0)
 
-            seaborn.pointplot(x='index', y=sp, data=azd_exp, join=False,
-                              color='blue', zorder=1, markers=marker, ax=ax,
-                              markersize=markersize, legend=False,
-                              mec='black')
+            plt.errorbar(range(len(azd_exp[sp])), azd_exp[sp], yerr=azd_err[sp],
+                         marker=marker,  mec='blue', zorder=1, elinewidth=1, capsize=2, ecolor='blue',
+                         linestyle="None", markersize=markersize
+                         )
 
-            # for i in azd_exp
             plt.title(sp)
             plt.xlabel('')
 
-            plt.xticks(rotation=90)
+            # plt.xticks(rotation=90)
             seaborn.despine(fig=fig, top=True, right=True)
             fname = os.path.join(self.graphs_dir, 'AZD_' + sp + '.png')
             plt.savefig(fname, dpi=150, bbox_inches='tight')
+            print(f'saved image to "{fname}"')
+
 
             fig, ax = plt.subplots()
-            seaborn.barplot(x='index', y=sp, data=mk_sim,
+            b = seaborn.barplot(x='index', y=sp, data=mk_sim.reset_index(), order=mk_order,
                             palette=['yellow'] * 2 + ['white'] + ['red'] * 4 + ['green'] * 4,
                             edgecolor='black', ax=ax, zorder=0)
-            seaborn.pointplot(x='index', y=sp, data=mk_exp, join=False,
-                              color='blue', markers=marker,
-                              zorder=1, markersize=markersize, ax=ax,
-                              legend=False)
+
+            print('x', range(len(mk_exp[sp])), '\nexp\n', mk_exp[sp], '\nerr\n', mk_err[sp])
+
+            plt.errorbar(range(len(mk_exp[sp])), mk_exp[sp], yerr=mk_err[sp],
+                         marker=marker,  mec='blue', zorder=1, elinewidth=1, capsize=2, ecolor='blue',
+                         linestyle="None", markersize=markersize
+                         )
+
             plt.xlabel('')
-            plt.xticks(rotation=90)
+            # plt.xticks(rotation=90)
             seaborn.despine(fig=fig, top=True, right=True)
             plt.title(sp)
 
             fname = os.path.join(self.graphs_dir, 'MK_' + sp + '.png')
             plt.savefig(fname, dpi=150, bbox_inches='tight')
+            print(f'saved image to "{fname}"')
+
 
             fig, ax = plt.subplots()
-            seaborn.barplot(x='index', y=sp, data=both_sim,
+            b = seaborn.barplot(x='index', y=sp, data=both_sim.reset_index(), order=both_order,
                             palette=['yellow'] * 2 + ['white'] + ['red'] * 4 + ['green'] * 4,
                             edgecolor='black', ax=ax, zorder=0)
-            seaborn.pointplot(x='index', y=sp, data=both_exp, join=False,
-                              color='blue', markers=marker, ax=ax,
-                              zorder=1, markersize=markersize,
-                              legend=False)
+
+            plt.errorbar(range(len(both_exp[sp])), both_exp[sp], yerr=both_err[sp],
+                         marker=marker,  mec='blue', zorder=1, elinewidth=1, capsize=2, ecolor='blue',
+                         linestyle="None", markersize=markersize
+                         )
+
 
             plt.xlabel('')
-            plt.xticks(rotation=90)
+            # plt.xticks(rotation=90)
             seaborn.despine(fig=fig, top=True, right=True)
             plt.title(sp)
 
             fname = os.path.join(self.graphs_dir, 'MK_AZD_' + sp + '.png')
             plt.savefig(fname, dpi=150, bbox_inches='tight')
+            print(f'saved image to "{fname}"')
 
     @property
     def copasi_file(self):
@@ -411,7 +514,6 @@ class CrossTalkModel:
             else:
                 self.run_mode = run_mode
 
-
         if param_str is None:
             mod = self.to_copasi()
         else:
@@ -424,7 +526,7 @@ class CrossTalkModel:
             mod,
             self.data_files,
             separator=[','] * len(self.data_files),
-            weight_method=['value_scaling']*len(self.data_files),
+            weight_method=['value_scaling'] * len(self.data_files),
             metabolites=[],
             copy_number=self.copy_number,
             pe_number=1,
@@ -519,7 +621,6 @@ class CrossTalkModel:
     def insert_parameters(self, params):
         return self.to_copasi().insert_parameters(params)
 
-
     def get_best_model_parameters_as_antimony(self):
         parameters = self.get_param_df()
         best_params = parameters.iloc[0].to_dict()
@@ -527,12 +628,12 @@ class CrossTalkModel:
         current_params.update(best_params)
         all_reactions = self._reactions(self.model_specific_reactions)
         ## to include global variables not involved in reactions but needed for events
-        all_reactions_plus_events = all_reactions+'\n'+self._events()
+        all_reactions_plus_events = all_reactions + '\n' + self._events()
         s = ''
         for k, v in current_params.items():
             ## this is a mechanism for not including parameters that are not in the model
             ## in the antimony string
-            if k in all_reactions_plus_events :
+            if k in all_reactions_plus_events:
                 s += "\t\t{} = {};\n".format(k, v)
         return s
 
@@ -574,7 +675,6 @@ class CrossTalkModel:
         n = self._get_n()
         K = self._get_number_estimated_model_parameters()
         return n * numpy.log((RSS / n)) + 2 * K + (2 * K * (K + 1)) / (n - K - 1)
-
 
     def compute_all_aics(self, overwrite=False):
         fname = os.path.join(C.model_selection_dir, 'ModelSelectionDataFit{}.csv'.format(FIT))
@@ -847,7 +947,6 @@ class CrossTalkModel:
             except ValueError:
                 dct[k] = v
 
-
         return dct
 
     def _functions(self):
@@ -978,7 +1077,7 @@ class CrossTalkModel:
         {}
     """.format(additional_reactions)
 
-    def raf_phos_by_TGFbR(self):#mek_phos_by_akt
+    def raf_phos_by_TGFbR(self):  # mek_phos_by_akt
         raise NotImplementedError
 
     def pi3k_phos_by_TGFbR(self):
@@ -1087,7 +1186,6 @@ class CrossTalkModel:
 
     def plot_model_selection_criteria(self, model_selection_criteria_file=None):
         if model_selection_criteria_file is None:
-
             model_selection_criteria_file = self.aic()
 
     def get_best_parameters_from_last_fit(self, last_fit):
@@ -1119,7 +1217,6 @@ class CrossTalkModel:
         df.index = params.index
         rank = numpy.linalg.matrix_rank(df.values)
         return rank
-
 
     def analyse_fim(self, fim_file, param_file):
         """
@@ -1215,7 +1312,7 @@ class CrossTalkModel:
         :return:
         """
         import matplotlib
-        matplotlib.use('TkAgg')
+        matplotlib.use('Qt5Agg')
         seaborn.set_context('talk')
         df = self.simulate_conditions(selection=selection, best_parameters=True)
         # df = df.reset_index()
@@ -1256,7 +1353,7 @@ class CrossTalkModel:
 
                     ax = fig.add_subplot(spec[ax_num, 0])
                     seaborn.despine(ax=ax, top=True, right=True)
-                    ax_num +=1
+                    ax_num += 1
                     plt.plot(list(df_selection.index), df_selection[selection[v]], label=cond)
                     plt.setp(ax.get_xticklabels(), visible=False)
                     plt.title(cond)
@@ -1270,235 +1367,209 @@ class CrossTalkModel:
                 print('saving "{}"'.format(fname))
 
 
-
 if __name__ == '__main__':
+    WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT'
+    for i in range(23, 24):
 
-    # for i in range(22, 33):
+        PROBLEM = i
+        ## Which model is the current focus of analysis
+        CURRENT_MODEL_ID = 7
 
-    PROBLEM = 21
-    ## Which model is the current focus of analysis
-    CURRENT_MODEL_ID = 1
+        FIT = '1'
 
-    ## Label for previous fit. Used to take best parameters for another parameter estimation
-    ## and so must be the actual label for the previous fit
-    # LAST_FIT = '2_all_params'
+        CLUSTER = False
 
-    ## A label for the current fit directory
-    FIT = '1'
+        ## True, False, 'slurm' or 'sge'. Passed onto parameter estimation class
+        RUN_MODE = False
 
-    ## either False, 'slurm' or 'sge'. Determines the main working directory
-    ## for easy switching between environments
-    CLUSTER = False
+        ## Configure and run the parameter estimations
+        RUN_PARAMETER_ESTIMATION = False
 
-    ## True, False, 'slurm' or 'sge'. Passed onto parameter estimation class
-    RUN_MODE = False
+        RUN_PARAMETER_ESTIMATION_FROM_BEST_PARAMETERS = False
 
-    ## Configure and run the parameter estimations
-    RUN_PARAMETER_ESTIMATION = False
+        PLOT_CURRENT_SIMULATION_GRAPHS_WITH_COPASI_PARAMETERS = False
 
-    RUN_PARAMETER_ESTIMATION_FROM_BEST_PARAMETERS = False
+        ## iterate over all models and plot comparison between model and simulation
+        PLOT_ALL_SIMULATION_GRAPHS = False
 
-    ## plot comparison between model and simulation for the current model ID
-    PLOT_CURRENT_SIMULATION_GRAPHS = True
+        ## plot comparison between model and simulation for the current model ID
+        PLOT_CURRENT_SIMULATION_GRAPHS = True
 
-    ## Plot current simulation graphs with the default parameter instead of best estimated
-    PLOT_CURRENT_SIMULATION_GRAPHS_WITH_DEAULT_PARAMETERS = False
+        ## Plot current simulation graphs with the default parameter instead of best estimated
+        PLOT_CURRENT_SIMULATION_GRAPHS_WITH_DEAULT_PARAMETERS = False
 
-    PLOT_CURRENT_SIMULATION_GRAPHS_WITH_COPASI_PARAMETERS = False
 
-    ## iterate over all models and plot comparison between model and simulation
-    PLOT_ALL_SIMULATION_GRAPHS = False
+        ## extract best RSS per model and compute AICc
+        AICs = False
 
-    ## extract best RSS per model and compute AICc
-    AICs = False
+        ## Plot likelihood ranks plots
+        LIKELIHOOD_RANKS = False
 
-    ## Plot likelihood ranks plots
-    LIKELIHOOD_RANKS = False
+        ## get the best parameter set as a dict and antimony format from the model pointed to by CURRENT_MODEL_ID
+        GET_BEST_PARAMETERS = False
 
-    ## get the best parameter set as a dict and antimony format from the model pointed to by CURRENT_MODEL_ID
-    GET_BEST_PARAMETERS = False
+        ## open the model currently pointed to by CURRENT_MODEL_ID
+        OPEN_WITH_COPASI = False
 
-    ## open the model currently pointed to by CURRENT_MODEL_ID
-    OPEN_WITH_COPASI = False
+        ## open the model currently pointed to by CURRENT_MODEL_ID with the best estimated parameters from FIT
+        OPEN_WITH_COPASI_WITH_BEST_PARAMETERS = False
 
-    ## open the model currently pointed to by CURRENT_MODEL_ID with the best estimated parameters from FIT
-    OPEN_WITH_COPASI_WITH_BEST_PARAMETERS = False
+        ## Produce the parameters already present in the COPASI model pointed to by CURRENT_MODEL_ID in antimony format.
+        GET_PARAMETERS_FROM_COPASI = False
 
-    ## Produce the parameters already present in the COPASI model pointed to by CURRENT_MODEL_ID in antimony format.
-    GET_PARAMETERS_FROM_COPASI = False
+        ## insert the best parameters from current fit into the models
+        INSERT_BEST_PARAMETERS_INTO_ALL_COPASI_FILES = False
 
-    ## insert the best parameters from current fit into the models
-    INSERT_BEST_PARAMETERS_INTO_ALL_COPASI_FILES = False
+        INSERT_BEST_PARAMETERS_FROM_LAST_FIT_AND_PLOT = False
 
-    INSERT_BEST_PARAMETERS_FROM_LAST_FIT_AND_PLOT = False
+        ## analyse correlations
+        ANALYSE_CORRELATIONS = False
 
-    ## analyse correlations
-    ANALYSE_CORRELATIONS = False
+        PLOT_TIMESERIES_WITH_CURRENT_MODEL = False
 
-    PLOT_TIMESERIES_WITH_CURRENT_MODEL = False
+        ##===========================================================================================
 
-    ##===========================================================================================
+        if CLUSTER == 'slurm':
+            PROBLEM_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(
+                PROBLEM)
 
-    if CLUSTER == 'slurm':
-        PROBLEM_DIR = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(PROBLEM)
+        elif CLUSTER == 'sge':
+            PROBLEM_DIRECTORY = r'/sharedlustre/users/b3053674/2019/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(
+                PROBLEM)
 
-    elif CLUSTER == 'sge':
-        PROBLEM_DIR = r'/sharedlustre/users/b3053674/2019/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(PROBLEM)
+        elif CLUSTER == False:
+            PROBLEM_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(
+                PROBLEM)
 
-    elif CLUSTER == False:
-        PROBLEM_DIR = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(PROBLEM)
+        else:
+            raise ValueError
 
-    else:
-        raise ValueError
+        C = CrossTalkModel(PROBLEM_DIRECTORY, fit=FIT,
+                           method='particle_swarm',
+                           copy_number=10,
+                           run_mode=RUN_MODE,
+                           iteration_limit=2500,
+                           swarm_size=75,
+                           overwrite_config_file=True,
+                           lower_bound=0.001,
+                           upper_bound=10000,
+                           )
 
-    C = CrossTalkModel(PROBLEM_DIR, fit=FIT,
-                       method='particle_swarm',
-                       copy_number=10,
-                       run_mode=RUN_MODE,
-                       iteration_limit=2500,
-                       swarm_size=75,
-                       overwrite_config_file=True,
-                       lower_bound=0.001,
-                       upper_bound=10000,
-                       )
+        # print('fit_dir', C.fit_dir)
+        print(len(C))
+        # print(C.get_errors())
+        # print(C.get_experimental_data().loc['E']['pAkt'])
+        # C[CURRENT_MODEL_ID].to_copasi().open()
 
-    # print('fit_dir', C.fit_dir)
-    print(len(C))
-    # C[CURRENT_MODEL_ID].to_copasi().open()
-
-    if GET_PARAMETERS_FROM_COPASI:
-        mod = model.Model(C[CURRENT_MODEL_ID].copasi_file)
-        dct = {i.name: i.initial_value for i in mod.global_quantities}
-        metab = {i.name: i.concentration for i in mod.metabolites}
-        vol = {i.name: i.initial_value for i in mod.compartments}
-        s = ''
-        for k in sorted(metab):
-            s += "        {} = {};\n".format(k, metab[k])
-
-        for k in sorted(vol):
-            s += "        {} = {};\n".format(k, vol[k])
-
-        for k in sorted(dct):
-            s += "        {} = {};\n".format(k, dct[k])
-        print(dct)
-        print(s)
-
-    if OPEN_WITH_COPASI:
-        mod = C[CURRENT_MODEL_ID].to_copasi()
-        mod.open()
-
-    if OPEN_WITH_COPASI_WITH_BEST_PARAMETERS:
-        mod = C[CURRENT_MODEL_ID].insert_best_parameters()
-        print(C[CURRENT_MODEL_ID].get_best_model_parameters_as_antimony())
-
-        mod = tasks.TimeCourse(mod, end=75, intervals=75*100, step_size=0.01, run=False).model
-        mod = tasks.Scan(mod, variable='Everolimus', minimum=0, maximum=1, number_of_steps=1,
-                         subtask='time_course').model
-
-        mod.open()
-
-    if RUN_PARAMETER_ESTIMATION:
-        for model_id in C:
-            C[model_id].run_parameter_estimation()
-
-    if RUN_PARAMETER_ESTIMATION_FROM_BEST_PARAMETERS:
-        for model_id in C:
-            best_params = C[model_id].get_best_parameters_from_last_fit(LAST_FIT)
-            print('best parameters\n'.format(
-                best_params
-            ))
-            PE = C[model_id].run_parameter_estimation_from_parameter_set(best_params, run_mode=RUN_MODE)
-            # PE.model.open()
-
-    if PLOT_ALL_SIMULATION_GRAPHS:
-        for model_id in range(len(C)):
-            try:
-                C[model_id].plot_bargraphs(best_parameters=True)
-            except ValueError:
-                print("model '{}' skipped! No data to plot".format(model_id))
-                continue
-            except RuntimeError:
-                print("model '{}' skipped! RunTimeError".format(model_id))
-                continue
-
-
-    if PLOT_CURRENT_SIMULATION_GRAPHS:
-        print('fit dir', C[CURRENT_MODEL_ID].fit_dir)
-        C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=True)
-
-
-    if PLOT_CURRENT_SIMULATION_GRAPHS_WITH_DEAULT_PARAMETERS:
-        print('fit dir', C[CURRENT_MODEL_ID].fit_dir)
-        C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=False)
-
-    # if PLOT_CURRENT_SIMULATION_GRAPHS_WITH_COPASI_PARAMETERS:
-    #     copasi_file = '/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelectionProblems/Problem3/ModelSelection/Topology77/Fit1/topology77_for_playing_with.cps'
-    #     mod = model.Model(copasi_file)
-    #     # print(C[CURRENT_MODEL_ID].fit_dir)
-    #     dct, ant = C[CURRENT_MODEL_ID].get_parameters_from_copasi(mod)
-    #     # print(ant)
-    #     C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=ant)
-
-
-    if GET_BEST_PARAMETERS:
-        ant = C[CURRENT_MODEL_ID].get_best_model_parameters_as_antimony()
-        dct = C[CURRENT_MODEL_ID].get_param_df().iloc[0].to_dict()
-        print(ant)
-        print(dct)
-
-    # C[4].run_parameter_estimation_from_best_estimates()
-
-    # PE = C[4].run_parameter_estimation()
-    # PE.model.open()
-
-    # PE = C[2]._configure_PE_for_viz()
-    # PE.model.open()
-
-    if LIKELIHOOD_RANKS:
-        for model_id in C:
-            C[model_id].likelihood_ranks()
-
-    if AICs:
-        df, fname = C.compute_all_aics(overwrite=True)
-
-
-
-    if INSERT_BEST_PARAMETERS_INTO_ALL_COPASI_FILES:
-        for i in C:
-            print(C[i].insert_best_parameters())
-
-    if INSERT_BEST_PARAMETERS_FROM_LAST_FIT_AND_PLOT:
-        """
-        Used in Problem3 fit 3 because the second parameter estimation 
-        I ran was a subproblem of the first 
-        """
-        # for model_id in C:
-        prev_best_params = C[CURRENT_MODEL_ID].get_best_parameters_from_last_fit(LAST_FIT)
-        C[CURRENT_MODEL_ID].insert_parameters(prev_best_params)
-        current_best_params = C[CURRENT_MODEL_ID].get_best_model_parameters_as_antimony()
-        C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=current_best_params)
-
-    if ANALYSE_CORRELATIONS:
-        C[CURRENT_MODEL_ID].analyse_correlations()
-
-
-    if PLOT_TIMESERIES_WITH_CURRENT_MODEL:
-        C[CURRENT_MODEL_ID].plot_timecourse()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        if GET_PARAMETERS_FROM_COPASI:
+            mod = model.Model(C[CURRENT_MODEL_ID].copasi_file)
+            dct = {i.name: i.initial_value for i in mod.global_quantities}
+            metab = {i.name: i.concentration for i in mod.metabolites}
+            vol = {i.name: i.initial_value for i in mod.compartments}
+            s = ''
+            for k in sorted(metab):
+                s += "        {} = {};\n".format(k, metab[k])
+
+            for k in sorted(vol):
+                s += "        {} = {};\n".format(k, vol[k])
+
+            for k in sorted(dct):
+                s += "        {} = {};\n".format(k, dct[k])
+            print(dct)
+            print(s)
+
+        if OPEN_WITH_COPASI:
+            mod = C[CURRENT_MODEL_ID].to_copasi()
+            mod.open()
+
+        if OPEN_WITH_COPASI_WITH_BEST_PARAMETERS:
+            mod = C[CURRENT_MODEL_ID].insert_best_parameters()
+            print(C[CURRENT_MODEL_ID].get_best_model_parameters_as_antimony())
+
+            mod = tasks.TimeCourse(mod, end=75, intervals=75 * 100, step_size=0.01, run=False).model
+            mod = tasks.Scan(mod, variable='Everolimus', minimum=0, maximum=1, number_of_steps=1,
+                             subtask='time_course').model
+
+            mod.open()
+
+        if RUN_PARAMETER_ESTIMATION:
+            for model_id in C:
+                C[model_id].run_parameter_estimation()
+
+        if RUN_PARAMETER_ESTIMATION_FROM_BEST_PARAMETERS:
+            for model_id in C:
+                best_params = C[model_id].get_best_parameters_from_last_fit(LAST_FIT)
+                print('best parameters\n'.format(
+                    best_params
+                ))
+                PE = C[model_id].run_parameter_estimation_from_parameter_set(best_params, run_mode=RUN_MODE)
+                # PE.model.open()
+
+        if PLOT_ALL_SIMULATION_GRAPHS:
+            for model_id in range(len(C)):
+                try:
+                    C[model_id].plot_bargraphs(best_parameters=True)
+                except ValueError:
+                    print("model '{}' skipped! No data to plot".format(model_id))
+                    continue
+                except RuntimeError:
+                    print("model '{}' skipped! RunTimeError".format(model_id))
+                    continue
+
+        if PLOT_CURRENT_SIMULATION_GRAPHS:
+            print('fit dir', C[CURRENT_MODEL_ID].fit_dir)
+            C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=True)
+
+        if PLOT_CURRENT_SIMULATION_GRAPHS_WITH_DEAULT_PARAMETERS:
+            print('fit dir', C[CURRENT_MODEL_ID].fit_dir)
+            C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=False)
+
+        # if PLOT_CURRENT_SIMULATION_GRAPHS_WITH_COPASI_PARAMETERS:
+        #     copasi_file = '/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelectionProblems/Problem3/ModelSelection/Topology77/Fit1/topology77_for_playing_with.cps'
+        #     mod = model.Model(copasi_file)
+        #     # print(C[CURRENT_MODEL_ID].fit_dir)
+        #     dct, ant = C[CURRENT_MODEL_ID].get_parameters_from_copasi(mod)
+        #     # print(ant)
+        #     C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=ant)
+
+        if GET_BEST_PARAMETERS:
+            ant = C[CURRENT_MODEL_ID].get_best_model_parameters_as_antimony()
+            dct = C[CURRENT_MODEL_ID].get_param_df().iloc[0].to_dict()
+            print(ant)
+            print(dct)
+
+        # C[4].run_parameter_estimation_from_best_estimates()
+
+        # PE = C[4].run_parameter_estimation()
+        # PE.model.open()
+
+        # PE = C[2]._configure_PE_for_viz()
+        # PE.model.open()
+
+        if LIKELIHOOD_RANKS:
+            for model_id in C:
+                C[model_id].likelihood_ranks()
+
+        if AICs:
+            df, fname = C.compute_all_aics(overwrite=True)
+
+        if INSERT_BEST_PARAMETERS_INTO_ALL_COPASI_FILES:
+            for i in C:
+                print(C[i].insert_best_parameters())
+
+        if INSERT_BEST_PARAMETERS_FROM_LAST_FIT_AND_PLOT:
+            """
+            Used in Problem3 fit 3 because the second parameter estimation 
+            I ran was a subproblem of the first 
+            """
+            # for model_id in C:
+            prev_best_params = C[CURRENT_MODEL_ID].get_best_parameters_from_last_fit(LAST_FIT)
+            C[CURRENT_MODEL_ID].insert_parameters(prev_best_params)
+            current_best_params = C[CURRENT_MODEL_ID].get_best_model_parameters_as_antimony()
+            C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=current_best_params)
+
+        if ANALYSE_CORRELATIONS:
+            C[CURRENT_MODEL_ID].analyse_correlations()
+
+        if PLOT_TIMESERIES_WITH_CURRENT_MODEL:
+            C[CURRENT_MODEL_ID].plot_timecourse()
