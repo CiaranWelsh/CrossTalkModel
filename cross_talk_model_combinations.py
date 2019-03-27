@@ -11,7 +11,10 @@ from itertools import combinations
 import matplotlib.pyplot as plt
 import seaborn
 import yaml
+import logging
 
+logging.basicConfig(level=logging.INFO)
+LOG = logging.getLogger(__name__)
 
 class CrossTalkModel:
     """
@@ -79,10 +82,10 @@ class CrossTalkModel:
         # }
 
         self.smad_topology_names = {
-            1: 'AktActivate',
-            2: 'ErkActivate',
-            3: 'AktInhibit',
-            4: 'ErkInhibit',
+            1: 'AktActivateSmad2',
+            2: 'AktInhibitSmad2',
+            3: 'ErkActivateSmad2',
+            4: 'ErkInhibitSmad2',
         }
         # self.pi3k_erk_topology_names = {
         #     1: 'MekPhosByAkt',
@@ -186,7 +189,15 @@ class CrossTalkModel:
         files = glob.glob(path)
         if files == []:
             raise ValueError('No data files in {}'.format(path))
-        return files
+
+        lst = []
+        for i in files:
+            dire, fle = os.path.split(i)
+            if os.path.splitext(fle)[0] not in self.included_conditions:
+                continue
+            lst.append(i)
+
+        return lst
 
     @property
     def included_conditions(self):
@@ -197,7 +208,6 @@ class CrossTalkModel:
         with open(fle, 'r') as stream:
             cond = yaml.load(stream)
         cond = cond[0]['included_conditions']
-        # print(cond)
         return cond
 
     def get_experimental_data(self):
@@ -271,7 +281,6 @@ class CrossTalkModel:
     def simulate_conditions(self, selection=['pAkt', 'ppErk', 'pS6K', 'pSmad2'], best_parameters=False):
         mod = self.to_tellurium(best_parameters=best_parameters)
         conditions = self.get_experimental_conditions()
-        # print(conditions)
         simulation_data = {}
         for cond in conditions.index:
             for variable in conditions.columns:
@@ -284,6 +293,17 @@ class CrossTalkModel:
         return pandas.concat(simulation_data)
 
     def plot_bargraphs(self, best_parameters=False, selections=['pAkt', 'pS6K', 'ppErk', 'pSmad2']):
+        """
+        Plot simulation vs experimental datagraphs
+
+        Args:
+            best_parameters:
+            selections:
+
+        Returns:
+
+        """
+
         import matplotlib
         matplotlib.use('Qt5Agg')
         seaborn.set_style('white')
@@ -341,10 +361,6 @@ class CrossTalkModel:
         mk_err =  mk_err.set_index('condition_code').reindex(list(mk_exp.index)).reset_index()
         both_err = both_err.set_index('condition_code').reindex(list(both_exp.index)).reset_index()
 
-        # print('sim', mk_sim)
-        # print('exp', mk_exp)
-        # print('err', mk_err)
-
         ## reduce the ordering variables
         mk_order = [i for i in mk_order if i in mk_exp.index]
         azd_order = [i for i in azd_order if i in azd_exp.index]
@@ -370,7 +386,7 @@ class CrossTalkModel:
             seaborn.despine(fig=fig, top=True, right=True)
             fname = os.path.join(self.graphs_dir, 'AZD_' + sp + '.png')
             plt.savefig(fname, dpi=150, bbox_inches='tight')
-            print(f'saved image to "{fname}"')
+            LOG.info(f'saved image to "{fname}"')
 
 
             fig, ax = plt.subplots()
@@ -392,7 +408,7 @@ class CrossTalkModel:
 
             fname = os.path.join(self.graphs_dir, 'MK_' + sp + '.png')
             plt.savefig(fname, dpi=150, bbox_inches='tight')
-            print(f'saved image to "{fname}"')
+            LOG.info(f'saved image to "{fname}"')
 
 
             fig, ax = plt.subplots()
@@ -413,7 +429,7 @@ class CrossTalkModel:
 
             fname = os.path.join(self.graphs_dir, 'MK_AZD_' + sp + '.png')
             plt.savefig(fname, dpi=150, bbox_inches='tight')
-            print(f'saved image to "{fname}"')
+            LOG.info(f'saved image to "{fname}"')
 
     @property
     def copasi_file(self):
@@ -422,6 +438,20 @@ class CrossTalkModel:
     def list_topologies(self):
         topologies = OrderedDict()
         for i, tup in self._get_combinations():
+            if i == 0:
+                topologies[i] = 'Null'
+            else:
+                topologies[i] = '_'.join([self.smad_topology_names[x].strip() for x in tup])
+        df = pandas.DataFrame(topologies, index=['Topology']).transpose()
+        df.index.name = 'ModelID'
+        return df
+
+    def list_topologies2(self):
+        topologies = OrderedDict()
+        comb = self._get_combinations()
+        # for i in comb:
+        #     print(i)
+        for i, tup in comb:
             if i == 0:
                 topologies[i] = 'Null'
             else:
@@ -531,7 +561,7 @@ class CrossTalkModel:
             upper_bound=self.upper_bound,
         )
 
-        print('pe run mode', PE.run_mode)
+        LOG.info('pe run mode', PE.run_mode)
         PE.write_config_file()
         PE.setup()
         PE.run()
@@ -568,7 +598,7 @@ class CrossTalkModel:
         return PE
 
     def likelihood_ranks(self):
-        return viz.LikelihoodRanks(self._configure_PE_for_viz(), savefig=True).fig
+        return viz.LikelihoodRanks(self._configure_PE_for_viz(), savefig=True)
 
     def get_param_df(self):
         """
@@ -583,7 +613,7 @@ class CrossTalkModel:
 
         if not os.path.isdir(PE.results_directory):
             raise ValueError('"{}" is not a file'.format(PE.results_directory))
-        print('pe results directory', PE.results_directory)
+        LOG.info('pe results directory {}'.format(PE.results_directory))
         return parse.data
 
     def insert_best_parameters_and_open_with_copasi(self):
@@ -598,10 +628,11 @@ class CrossTalkModel:
             parameters = self.get_param_df()
             mod = self._configure_PE_for_viz().model
         except ValueError:
+            LOG.warning('ValueError was raised. Cannot get parameters')
             mod = self._configure_PE_for_viz().model
             return mod
-        print(parameters.iloc[0])
-        print(parameters.iloc[0].shape)
+        LOG.debug(f'best parameters are \n{parameters.iloc[0]}')
+        LOG.debug(f'best parameters shape\n{parameters.iloc[0].shape}')
         mod.insert_parameters(df=parameters, index=0, inplace=True)
         mod.save()
         return mod
@@ -626,13 +657,11 @@ class CrossTalkModel:
         return s
 
     def _get_number_estimated_model_parameters(self):
-        return len(self._configure_PE_for_viz().model.fit_item_order)
+        mod = self.to_copasi()
+        lst = [i for i in mod.parameters.columns if i.startswith('_')]
+        return len(lst)
 
     def _get_n(self):
-        '''
-        get number of observed data points for AIC calculation
-        '''
-        # print('WARNING. REMEMBER TO ADD SMAD2 BACK INTO THE AICC CALCULATION')
         n = 0
         for exp in self.data_files:
             data = pandas.read_csv(exp, sep=',')
@@ -670,34 +699,34 @@ class CrossTalkModel:
             return pandas.read_csv(fname, index_col=0), fname
         best_rss = {}
         aic = {}
+        num_est_params = {}
         for model_id in self:
             data = C[model_id].get_param_df()
-            print(C[model_id])
             try:
                 best_rss[model_id] = data.iloc[0]['RSS']
                 aic[model_id] = C[model_id].aic(data.iloc[0]['RSS'])
+                num_est_params[model_id] = C[model_id]._get_number_estimated_model_parameters()
             except ValueError:
                 best_rss[model_id] = data.iloc[0]['RSS']
+                num_est_params[model_id] = C[model_id]._get_number_estimated_model_parameters()
                 aic[model_id] = None
             except ZeroDivisionError:
+                num_est_params[model_id] = C[model_id]._get_number_estimated_model_parameters()
                 best_rss[model_id] = data.iloc[0]['RSS']
                 aic[model_id] = None
-        df = pandas.DataFrame({'RSS': best_rss, 'AICc': aic})
-
+        df = pandas.DataFrame({'RSS': best_rss, 'AICc': aic, '# Estimated Parameters': num_est_params})
         df = pandas.concat([C.list_topologies(), df], axis=1)
         df = df.sort_values(by='AICc')
         df['AICc Rank'] = range(df.shape[0])
         df = df.sort_values(by='RSS')
         df['RSS Rank'] = range(df.shape[0])
         df = df.sort_index()
-        df['#parameters'] = self._get_number_estimated_model_parameters()
         df.to_csv(fname)
 
         return df, fname
 
     def _get_combinations(self):
         perm_list = [()]
-        # print(range(1, len(self.model_variant_reactions)))
         for i in range(1, len(self.smad2_model_variant_reactions) + 1):
             perm_list += [j for j in combinations(range(1, len(self.smad2_model_variant_reactions) + 1), i)]
 
@@ -712,7 +741,6 @@ class CrossTalkModel:
         model_specific_reactions = {}
         for i, tup in self._get_combinations():
             model_specific_reactions[i] = '\n'.join([self.smad2_model_variant_reactions[x].strip() for x in tup])
-            # print(i, tup, '\n\n', model_specific_reactions[i])
         return model_specific_reactions
 
     def _build_antimony(self, best_parameters=False):
@@ -729,17 +757,14 @@ class CrossTalkModel:
         s += self._compartments()
         s += self._reactions(self.model_specific_reactions)
         if best_parameters is False:
-            print('best_parameters is False')
+            LOG.debug('best_parameters is False')
             s += self._default_parameter_str()
         elif best_parameters is True:
-            print('best_parameters is True')
+            LOG.debug('best_parameters is True')
             s += self.get_best_model_parameters_as_antimony()
-            print('The best parameters are \n{}'.format(self.get_best_model_parameters_as_antimony()))
-        # elif best_parameters == 'current_model_parameters':
-        #     print('Building model with the parameters already in the copasi model')
-        #     s += self.get_parameters_from_copasi()[1] ## returns (dct, antimony)
+            LOG.debug('The best parameters are \n{}'.format(self.get_best_model_parameters_as_antimony()))
         elif isinstance(best_parameters, str):
-            print('best_parameters is a string:\n{}'.format(best_parameters))
+            LOG.debug('best_parameters is a string:\n{}'.format(best_parameters))
 
             s += best_parameters
         else:
@@ -916,9 +941,7 @@ class CrossTalkModel:
 
     def _default_parameter_set_as_dict(self):
         string = self._default_parameter_str()
-        # print(string)
         strings = string.split('\n')
-        # print(strings)
         dct = OrderedDict()
         for s in strings:
             if s.strip() == '':
@@ -1219,10 +1242,7 @@ class CrossTalkModel:
         df.index = params.index
         import sympy
         sym_mat = sympy.Matrix(df.values)
-        print(sym_mat)
-        print(sym_mat.rref(simplify=False))
 
-        # print(df)
 
     def get_parameters_from_copasi(self, mod):
         """
@@ -1274,11 +1294,8 @@ class CrossTalkModel:
         params = self._configure_PE_for_viz().model.fit_item_order
         df.columns = params
         df.index = params
-        print(df)
         import itertools
         comb = itertools.combinations(list(df.columns), 2)
-        print(comb)
-        # # print(len(comb))
         l = []
         for i, j in comb:
             if df.loc[i, j] > gl:
@@ -1288,11 +1305,10 @@ class CrossTalkModel:
 
         df = pandas.DataFrame(l)
         df.columns = ['param1', 'param2', 'correlation']
-        print(df.shape)
         df.sort_values(by='correlation', inplace=True)
         fname = os.path.join(os.path.dirname(corr_file), 'filtered_correlation_matrix_gl_0.7.csv')
         df.to_csv(fname)
-        print('filtered correlations now in "{}"'.format(fname))
+        LOG.info('filtered correlations now in "{}"'.format(fname))
 
     def plot_timecourse(self, selection=['pAkt', 'ppErk', 'pS6K', 'pSmad2']):
         """
@@ -1303,12 +1319,8 @@ class CrossTalkModel:
         matplotlib.use('Qt5Agg')
         seaborn.set_context('talk')
         df = self.simulate_conditions(selection=selection, best_parameters=True)
-        # df = df.reset_index()
-        # df = df.rename(columns={'level_0': 'Condition', 'level_1': 'Time'})
 
         conditions = set(list(df.index.get_level_values(0)))
-
-        print(len(conditions))
 
         mk_cond = ['D', 'T', 'E', 'E_M_72', 'E_M_48', 'E_M_24',
                    'E_M_1.25', 'M_72', 'M_48', 'M_24', 'M_1.25']
@@ -1326,8 +1338,6 @@ class CrossTalkModel:
         cols = iter(cols)
 
         from matplotlib import gridspec
-
-        print(len(conditions))
 
         for v in range(len(selection)):
             for cond in cond_dct:
@@ -1352,16 +1362,16 @@ class CrossTalkModel:
                 plt.ylabel('Conc.')
                 fname = os.path.join(self.time_course_graphs, "{}_{}.png".format(cond, selection[v]))
                 fig.savefig(fname, bbox_inches='tight', dpi=100)
-                print('saving "{}"'.format(fname))
+                LOG.info('saving "{}"'.format(fname))
 
 
 if __name__ == '__main__':
     WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT'
-    for i in range(23, 24):
+    for i in range(34, 35):
 
         PROBLEM = i
         ## Which model is the current focus of analysis
-        CURRENT_MODEL_ID = 7
+        CURRENT_MODEL_ID = 2
 
         FIT = '1'
 
@@ -1381,17 +1391,16 @@ if __name__ == '__main__':
         PLOT_ALL_SIMULATION_GRAPHS = False
 
         ## plot comparison between model and simulation for the current model ID
-        PLOT_CURRENT_SIMULATION_GRAPHS = True
+        PLOT_CURRENT_SIMULATION_GRAPHS = False
 
         ## Plot current simulation graphs with the default parameter instead of best estimated
         PLOT_CURRENT_SIMULATION_GRAPHS_WITH_DEAULT_PARAMETERS = False
 
-
         ## extract best RSS per model and compute AICc
-        AICs = False
+        AICs = True
 
         ## Plot likelihood ranks plots
-        LIKELIHOOD_RANKS = False
+        LIKELIHOOD_RANKS = True
 
         ## get the best parameter set as a dict and antimony format from the model pointed to by CURRENT_MODEL_ID
         GET_BEST_PARAMETERS = False
@@ -1436,18 +1445,15 @@ if __name__ == '__main__':
                            method='particle_swarm',
                            copy_number=10,
                            run_mode=RUN_MODE,
-                           iteration_limit=2500,
+                           iteration_limit=3000,
                            swarm_size=75,
                            overwrite_config_file=True,
                            lower_bound=0.001,
                            upper_bound=10000,
                            )
 
-        # print('fit_dir', C.fit_dir)
-        print(len(C))
-        # print(C.get_errors())
-        # print(C.get_experimental_data().loc['E']['pAkt'])
-        # C[CURRENT_MODEL_ID].to_copasi().open()
+        LOG.info(f'the size of your model selection problem is {len(C)}')
+        LOG.info('num of estimated parameters={}'.format(C._get_number_estimated_model_parameters()))
 
         if GET_PARAMETERS_FROM_COPASI:
             mod = model.Model(C[CURRENT_MODEL_ID].copasi_file)
@@ -1472,7 +1478,7 @@ if __name__ == '__main__':
 
         if OPEN_WITH_COPASI_WITH_BEST_PARAMETERS:
             mod = C[CURRENT_MODEL_ID].insert_best_parameters()
-            print(C[CURRENT_MODEL_ID].get_best_model_parameters_as_antimony())
+            LOG.debug(C[CURRENT_MODEL_ID].get_best_model_parameters_as_antimony())
 
             mod = tasks.TimeCourse(mod, end=75, intervals=75 * 100, step_size=0.01, run=False).model
             mod = tasks.Scan(mod, variable='Everolimus', minimum=0, maximum=1, number_of_steps=1,

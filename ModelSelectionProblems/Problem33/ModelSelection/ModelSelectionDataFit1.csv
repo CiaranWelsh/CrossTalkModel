@@ -1,17 +1,17 @@
-ModelID,Topology,AICc,RSS,AICc Rank,RSS Rank,f
-0,Null,,,0,0,0
-1,AktActivate,,,1,1,1
-2,ErkActivate,,,2,2,4
-3,AktInhibit,,,3,3,9
-4,ErkInhibit,,,4,4,16
-5,AktActivate_ErkActivate,,,5,5,25
-6,AktActivate_AktInhibit,,,6,6,36
-7,AktActivate_ErkInhibit,,,7,7,49
-8,ErkActivate_AktInhibit,,,8,8,64
-9,ErkActivate_ErkInhibit,,,9,9,81
-10,AktInhibit_ErkInhibit,,,10,10,100
-11,AktActivate_ErkActivate_AktInhibit,,,11,11,121
-12,AktActivate_ErkActivate_ErkInhibit,,,12,12,144
-13,AktActivate_AktInhibit_ErkInhibit,,,13,13,169
-14,ErkActivate_AktInhibit_ErkInhibit,,,14,14,196
-15,AktActivate_ErkActivate_AktInhibit_ErkInhibit,,,15,15,225
+ModelID,Topology,RSS,AICc,# Estimated Parameters,AICc Rank,RSS Rank
+0,Null,0.646012,-81.06212619170405,23,13,13
+1,AktActivateSmad2,0.134926,-98.16291769290801,24,4,7
+2,AktInhibitSmad2,0.646296,-79.36454421485296,24,14,14
+3,ErkActivateSmad2,0.015761700000000003,-123.92864009334154,24,0,0
+4,ErkInhibitSmad2,0.216577,-92.48428174401667,24,10,10
+5,AktActivateSmad2_AktInhibitSmad2,0.111636,-98.98616305949145,25,3,3
+6,AktActivateSmad2_ErkActivateSmad2,0.06993350000000001,-104.59854851622416,25,1,1
+7,AktActivateSmad2_ErkInhibitSmad2,0.13031900000000002,-97.12926251224363,25,5,6
+8,AktInhibitSmad2_ErkActivateSmad2,0.105925,-99.61631044423304,25,2,2
+9,AktInhibitSmad2_ErkInhibitSmad2,0.6474300000000001,-77.89295784692672,25,15,15
+10,ErkActivateSmad2_ErkInhibitSmad2,0.16187,-94.52756347503407,25,8,9
+11,AktActivateSmad2_AktInhibitSmad2_ErkActivateSmad2,0.123319,-96.53464921723784,26,7,5
+12,AktActivateSmad2_AktInhibitSmad2_ErkInhibitSmad2,0.12085,-96.77734185944774,26,6,4
+13,AktActivateSmad2_ErkActivateSmad2_ErkInhibitSmad2,0.31066900000000003,-85.44720670461496,26,11,12
+14,AktInhibitSmad2_ErkActivateSmad2_ErkInhibitSmad2,0.154321,-93.84352496182623,26,9,8
+15,AktActivateSmad2_AktInhibitSmad2_ErkActivateSmad2_ErkInhibitSmad2,0.310634,-84.34855870195103,27,12,11
