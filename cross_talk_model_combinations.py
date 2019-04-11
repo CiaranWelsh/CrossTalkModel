@@ -1451,21 +1451,21 @@ class CrossTalkModel:
 
 if __name__ == '__main__':
     WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT'
-    for i in range(36, 37):
+    for i in range(37, 38):
 
         PROBLEM = i
         ## Which model is the current focus of analysis
         CURRENT_MODEL_ID = 2
 
-        FIT = '2'
+        FIT = '1'
 
-        CLUSTER = False
+        CLUSTER = 'slurm'
 
         ## True, False, 'slurm' or 'sge'. Passed onto parameter estimation class
-        RUN_MODE = False
+        RUN_MODE = 'slurm'
 
         ## Configure and run the parameter estimations
-        RUN_PARAMETER_ESTIMATION = False
+        RUN_PARAMETER_ESTIMATION = True
 
         RUN_PARAMETER_ESTIMATION_FROM_BEST_PARAMETERS = False
 
@@ -1487,7 +1487,7 @@ if __name__ == '__main__':
         AICs = False
 
         ## Plot likelihood ranks plots
-        LIKELIHOOD_RANKS = True
+        LIKELIHOOD_RANKS = False
 
         ## get the best parameter set as a dict and antimony format from the model pointed to by CURRENT_MODEL_ID
         GET_BEST_PARAMETERS = False
@@ -1532,13 +1532,13 @@ if __name__ == '__main__':
 
         C = CrossTalkModel(PROBLEM_DIRECTORY, fit=FIT,
                            method='particle_swarm',
-                           copy_number=1,
+                           copy_number=44,
                            run_mode=RUN_MODE,
                            iteration_limit=4000,
                            swarm_size=150,
                            overwrite_config_file=True,
-                           lower_bound=0.001,
-                           upper_bound=10000,
+                           lower_bound=0.000001,
+                           upper_bound=1000000,
                            )
 
         LOG.info(f'the size of your model selection problem is {len(C)}')
