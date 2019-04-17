@@ -16,6 +16,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 LOG = logging.getLogger(__name__)
 
+
 class CrossTalkModel:
     """
     build a factory that churns out functions that return models and take as argument the
@@ -62,48 +63,31 @@ class CrossTalkModel:
 
         self.cps_file = os.path.join(self.topology_dir, 'Topology{}'.format(self.topology))
 
-        self.smad2_model_variant_reactions = {
-            1: self._akt_activate_smad2(),
-            # 2: self._akt_inhibits_smad2(),
-            2: self._erk_activates_smad2(),
-            # 4: self._erk_inhibits_smad2()
+        self.model_variant_reactions = {
+            1: self.pi3k_phos_by_TGFbR(),
+            2: self.raf_phos_by_PI3K(),
+            3: self.pi3k_dephos_by_erk(),
+            4: self.mek_phos_by_pi3k(),
+            5: self.pi3k_phos_by_mek(),
+            # 7: self.mek_phos_by_akt(),
+            6: self.raf_dephos_by_akt(),
+            7: self.akt_activate_smad2(),
+            8: self.erk_activates_smad2(),
         }
 
-        ## These reactions were varied when only fitting pAkt, pErk and pS6K Datasets
-        # self.pi3k_model_variant_reactions = {
-        #     1: self.mek_phos_by_akt(),
-        #     2: self.pi3k_phos_by_TGFbR(),
-        #     3: self.erk_phos_by_akt(),
-        #     4: self.pi3k_dephos_by_erk(),
-        #     5: self.mek_phos_by_pi3k(),
-        #     6: self.pi3k_phos_by_mek(),
-        #     7: self.mek_dephos_by_akt(),
-        #     8: self.raf_dephos_by_akt()
-        # }
-
-        self.smad_topology_names = {
-            1: 'AktActivateSmad2',
-            # 2: 'AktInhibitSmad2',
-            2: 'ErkActivateSmad2',
-            # 4: 'ErkInhibitSmad2',
+        self.topology_names = {
+            1: 'PI3KPhosByTGFbR',
+            2: 'RafPhosByPI3k',
+            3: 'PI3KDephosByErk',
+            4: 'MekPhosByPI3K',
+            5: 'PI3KPhosByMek',
+            # 7: self.mek_phos_by_akt(),
+            6: 'RafDehosByAkt',
+            7: 'ActActivateSmad2ErkInhibit',
+            8: 'ErkActivateSmad2AktInhibit',
         }
-        # self.pi3k_erk_topology_names = {
-        #     1: 'MekPhosByAkt',
-        #     2: 'PI3KPhosByTGFbR',
-        #     3: 'ErkPhosByAkt',
-        #     4: 'PI3KDephosByErk',
-        #     5: 'MekPhosByPI3K',
-        #     6: 'PI3KPhosByMek',
-        #     7: 'MekDephosByAkt',
-        #     8: 'RafDephosByAkt',
-        # }
 
-        # print(self.topology)
         self.model_specific_reactions = self._assembel_model_reactions()[self.topology]
-        ## run 33 models per model
-
-        # for i in self._get_combinations():
-        #     print(i)
 
     def __str__(self):
         return "CrossTalkModel(topology={})".format(self.topology)
@@ -210,7 +194,7 @@ class CrossTalkModel:
         cond = cond[0]['included_conditions']
         return cond
 
-    def get_experimental_data(self):
+    def get_experimental_data(self, include_validation=False):
         df_dct = {}
         for i in self.data_files:
             dire, fle = os.path.split(i)
@@ -219,7 +203,16 @@ class CrossTalkModel:
             df_dct[fle[:-4]] = pandas.read_csv(i)
         return pandas.concat(df_dct)
 
-    def get_errors(self):
+    def get_validation_data(self, include_validation=False):
+        df_dct = {}
+        for i in self.data_files:
+            dire, fle = os.path.split(i)
+            if os.path.splitext(fle)[0] not in ['EAM72']:
+                continue
+            df_dct[fle[:-4]] = pandas.read_csv(i)
+        return pandas.concat(df_dct)
+
+    def get_errors2(self):
         """
         Keep AZD data for D, T and E
         :return:
@@ -252,6 +245,23 @@ class CrossTalkModel:
         azd = azd.rename(columns={j: i for i, j in labels_dct.items()})
         mk = mk.drop(['D', 'T', 'E'], axis=0)
         df = pandas.concat([azd, mk], sort=False)
+        return df
+
+    def get_errors(self):
+        """
+        Keep AZD data for D, T and E
+        :return:
+        """
+        dirname = os.path.join(WORKING_DIRECTORY, 'CrossTalkModel/data')
+        se = os.path.join(dirname, 'se.csv')
+        df = pandas.read_csv(se).set_index('condition_code')
+        labels_dct = {
+            'pAkt': 'Akt-pT308',
+            'ppErk': 'ERK-pT202',
+            'pS6K': 'S6K-pT389',
+            'pSmad2': 'SMAD2-pS465-467'
+        }
+        df = df.rename(columns={v: k for k, v in labels_dct.items()})
         return df
 
     def get_experiment_names(self):
@@ -326,39 +336,38 @@ class CrossTalkModel:
 
         ## we reset index so that we can use seaborn style inputs to barplots
         azd_order = ['D', 'T', 'E', 'EA72', 'EA48', 'EA24', 'EA1.25', 'A72', 'A48', 'A24', 'A1.25']
-        mk_order =  ['D', 'T', 'E', 'EM72', 'EM48', 'EM24', 'EM1.25', 'M72', 'M48', 'M24', 'M1.25']
+        mk_order = ['D', 'T', 'E', 'EM72', 'EM48', 'EM24', 'EM1.25', 'M72', 'M48', 'M24', 'M1.25']
         both_order = ['D', 'T', 'E', 'EAM72', 'EAM48', 'EAM24']
 
         azd_sim = sim_data.reindex(azd_conditions)
         mk_sim = sim_data.reindex(mk_conditions)
         both_sim = sim_data.reindex(both_conditions)
 
-
-        azd_exp =  exp_data.reindex(azd_conditions)
-        mk_exp =   exp_data.reindex(mk_conditions)
+        azd_exp = exp_data.reindex(azd_conditions)
+        mk_exp = exp_data.reindex(mk_conditions)
         both_exp = exp_data.reindex(both_conditions)
 
-        err =self.get_errors().reset_index()
+        err = self.get_errors().reset_index()
         azd_err = err[err['condition_code'].isin(list(azd_exp.index))]
         mk_err = err[err['condition_code'].isin(list(mk_exp.index))]
         both_err = err[err['condition_code'].isin(list(both_exp.index))]
 
-        azd_err =  azd_err.set_index('condition_code').reindex(azd_conditions).reset_index()
-        mk_err =   mk_err.set_index('condition_code').reindex(mk_conditions).reset_index()
+        azd_err = azd_err.set_index('condition_code').reindex(azd_conditions).reset_index()
+        mk_err = mk_err.set_index('condition_code').reindex(mk_conditions).reset_index()
         both_err = both_err.set_index('condition_code').reindex(both_conditions).reset_index()
 
-        azd_sim =  azd_sim.dropna(how='all')
-        azd_exp =  azd_exp.dropna(how='all')
-        azd_err =  azd_err.dropna(how='all')
-        mk_sim =   mk_sim.dropna(how='all')
-        mk_exp =   mk_exp.dropna(how='all')
-        mk_err =   mk_err.dropna(how='all')
+        azd_sim = azd_sim.dropna(how='all')
+        azd_exp = azd_exp.dropna(how='all')
+        azd_err = azd_err.dropna(how='all')
+        mk_sim = mk_sim.dropna(how='all')
+        mk_exp = mk_exp.dropna(how='all')
+        mk_err = mk_err.dropna(how='all')
         both_sim = both_sim.dropna(how='all')
         both_exp = both_exp.dropna(how='all')
         both_err = both_err.dropna(how='all')
 
         azd_err = azd_err.set_index('condition_code').reindex(list(azd_exp.index)).reset_index()
-        mk_err =  mk_err.set_index('condition_code').reindex(list(mk_exp.index)).reset_index()
+        mk_err = mk_err.set_index('condition_code').reindex(list(mk_exp.index)).reset_index()
         both_err = both_err.set_index('condition_code').reindex(list(both_exp.index)).reset_index()
 
         ## reduce the ordering variables
@@ -375,7 +384,7 @@ class CrossTalkModel:
                                 edgecolor='black', zorder=0)
 
             plt.errorbar(range(len(azd_exp[sp])), azd_exp[sp], yerr=azd_err[sp],
-                         marker=marker,  mec='blue', zorder=1, elinewidth=1, capsize=2, ecolor='blue',
+                         marker=marker, mec='blue', zorder=1, elinewidth=1, capsize=2, ecolor='blue',
                          linestyle="None", markersize=markersize
                          )
 
@@ -388,16 +397,15 @@ class CrossTalkModel:
             plt.savefig(fname, dpi=150, bbox_inches='tight')
             LOG.info(f'saved image to "{fname}"')
 
-
             fig, ax = plt.subplots()
             b = seaborn.barplot(x='index', y=sp, data=mk_sim.reset_index(), order=mk_order,
                                 palette=['yellow'] * 2 + ['white'] + ['red'] * 4 + ['green'] * 4,
                                 edgecolor='black', ax=ax, zorder=0)
 
-            print('x', range(len(mk_exp[sp])), '\nexp\n', mk_exp[sp], '\nerr\n', mk_err[sp])
+            # print('x', range(len(mk_exp[sp])), '\nexp\n', mk_exp[sp], '\nerr\n', mk_err[sp])
 
             plt.errorbar(range(len(mk_exp[sp])), mk_exp[sp], yerr=mk_err[sp],
-                         marker=marker,  mec='blue', zorder=1, elinewidth=1, capsize=2, ecolor='blue',
+                         marker=marker, mec='blue', zorder=1, elinewidth=1, capsize=2, ecolor='blue',
                          linestyle="None", markersize=markersize
                          )
 
@@ -410,17 +418,15 @@ class CrossTalkModel:
             plt.savefig(fname, dpi=150, bbox_inches='tight')
             LOG.info(f'saved image to "{fname}"')
 
-
             fig, ax = plt.subplots()
             b = seaborn.barplot(x='index', y=sp, data=both_sim.reset_index(), order=both_order,
                                 palette=['yellow'] * 2 + ['white'] + ['red'] * 4 + ['green'] * 4,
                                 edgecolor='black', ax=ax, zorder=0)
 
             plt.errorbar(range(len(both_exp[sp])), both_exp[sp], yerr=both_err[sp],
-                         marker=marker,  mec='blue', zorder=1, elinewidth=1, capsize=2, ecolor='blue',
+                         marker=marker, mec='blue', zorder=1, elinewidth=1, capsize=2, ecolor='blue',
                          linestyle="None", markersize=markersize
                          )
-
 
             plt.xlabel('')
             # plt.xticks(rotation=90)
@@ -430,6 +436,77 @@ class CrossTalkModel:
             fname = os.path.join(self.graphs_dir, 'MK_AZD_' + sp + '.png')
             plt.savefig(fname, dpi=150, bbox_inches='tight')
             LOG.info(f'saved image to "{fname}"')
+
+    def plot_bargraphs2(self, best_parameters=False, selections=['pAkt', 'pS6K', 'ppErk', 'pSmad2']):
+        """
+        Plot simulation vs experimental datagraphs
+
+        Args:
+            best_parameters:
+            selections:
+
+        Returns:
+
+        """
+        marker = '_'
+        markersize = 10
+        import matplotlib
+        matplotlib.use('Qt5Agg')
+        seaborn.set_style('white')
+        seaborn.set_context(context='talk')
+        sim_data = self.simulate_conditions(best_parameters=best_parameters)
+        sim_data = sim_data.reset_index(level=1)
+        sim_data = sim_data.rename(columns={'level_1': 'Time'})
+        sim_data = sim_data[sim_data['Time'] == 72]
+        del sim_data['Time']
+        sim_data.index = [i.replace('72', '') for i in sim_data.index]
+
+        err_data = self.get_errors()
+        err_data.index = [i.replace('72', '') for i in err_data.index]
+        err_data = pandas.DataFrame(err_data.loc[list(sim_data.index)])
+
+        exp_data = self.get_experimental_data()[selections]
+        exp_data.index = exp_data.index.droplevel(1)
+        exp_data.index = [i.replace('72', '') for i in exp_data.index]
+        sim_data = pandas.DataFrame(sim_data.stack())
+        exp_data = pandas.DataFrame(exp_data.stack())
+        err_data = pandas.DataFrame(err_data.stack())
+        sim_data.columns = ['Sim']
+        exp_data.columns = ['Exp']
+        err_data.columns = ['Err']
+        df = pandas.concat([exp_data, err_data, sim_data], axis=1)
+
+        df = df.reset_index()
+        df.columns = ['Condition', 'Protein', 'Exp', 'Err', 'Sim']
+        order = ['D', 'T', 'A', 'M', 'E', 'EA', 'EM']
+        conds = list(set(df['Condition']))
+        order = [i for i in order if i in conds]
+        df['Condition'] = df['Condition'].astype('category')
+        df['Condition'].cat.set_categories(order, inplace=True)
+        df.sort_values('Condition', inplace=True)
+
+        print(df)
+
+        fig = plt.figure(figsize=(10, 5))
+        b = seaborn.barplot(data=df, x='Protein', y='Sim', hue='Condition', zorder=0)
+        plt.legend(loc=(1, 0.5))
+        x_list = []
+        for patch in b.patches:
+            x_list.append(patch.get_xy()[0] + (patch._width / 2))
+        #
+        plt.errorbar(x_list, df['Exp'], yerr=df['Err'],
+                     marker='_', mec='blue', zorder=1, elinewidth=1, capsize=2, ecolor='blue',
+                     linestyle="None", markersize=10
+                     )
+        seaborn.despine(ax=b, top=True, right=True)
+        plt.ylabel('AU')
+
+        fname = os.path.join(self.graphs_dir, 'simulations.png')
+        plt.savefig(fname, dpi=150, bbox_inches='tight')
+        LOG.info(f'saved image to "{fname}"')
+
+        # plt.show()
+
 
     @property
     def copasi_file(self):
@@ -441,7 +518,7 @@ class CrossTalkModel:
             if i == 0:
                 topologies[i] = 'Null'
             else:
-                topologies[i] = '_'.join([self.smad_topology_names[x].strip() for x in tup])
+                topologies[i] = '_'.join([self.topology_names[x].strip() for x in tup])
         df = pandas.DataFrame(topologies, index=['Topology']).transpose()
         df.index.name = 'ModelID'
         return df
@@ -455,7 +532,7 @@ class CrossTalkModel:
             if i == 0:
                 topologies[i] = 'Null'
             else:
-                topologies[i] = '_'.join([self.smad_topology_names[x].strip() for x in tup])
+                topologies[i] = '_'.join([self.topology_names[x].strip() for x in tup])
         df = pandas.DataFrame(topologies, index=['Topology']).transpose()
         df.index.name = 'ModelID'
         return df
@@ -727,8 +804,8 @@ class CrossTalkModel:
 
     def _get_combinations(self):
         perm_list = [()]
-        for i in range(1, len(self.smad2_model_variant_reactions) + 1):
-            perm_list += [j for j in combinations(range(1, len(self.smad2_model_variant_reactions) + 1), i)]
+        for i in range(1, len(self.model_variant_reactions) + 1):
+            perm_list += [j for j in combinations(range(1, len(self.model_variant_reactions) + 1), i)]
 
         ## plus the full set
         return enumerate(perm_list)  # + [tuple(range(1, len(self.model_variant_reactions)+1))])
@@ -740,7 +817,7 @@ class CrossTalkModel:
         """
         model_specific_reactions = {}
         for i, tup in self._get_combinations():
-            model_specific_reactions[i] = '\n'.join([self.smad2_model_variant_reactions[x].strip() for x in tup])
+            model_specific_reactions[i] = '\n'.join([self.model_variant_reactions[x].strip() for x in tup])
         return model_specific_reactions
 
     def _build_antimony(self, best_parameters=False):
@@ -757,10 +834,8 @@ class CrossTalkModel:
         s += self._compartments()
         s += self._reactions(self.model_specific_reactions)
         if best_parameters is False:
-            LOG.debug('best_parameters is False')
             s += self._default_parameter_str()
         elif best_parameters is True:
-            LOG.debug('best_parameters is True')
             s += self.get_best_model_parameters_as_antimony()
             LOG.debug('The best parameters are \n{}'.format(self.get_best_model_parameters_as_antimony()))
         elif isinstance(best_parameters, str):
@@ -791,38 +866,36 @@ class CrossTalkModel:
         :return:
         """
         return [
-            'kSmad2PhosByAkt_km',
-            'kSmad2DephosByErk_km',
-            'kSmad2PhosByAkt_km',
-            'kSmad2PhosByErk_km',
-            'kSmad2DephosByErk_km',
-            'kSmad2DehosByAkt_km',
-            'kSmad2DephosByAkt_km',
-            '_kSmad2PhosByAkt_kcat',
-            '_kSmad2PhosByErk_kcat',
-            '_kSmad2DephosByErk_kcat',
-            '_kSmad2DephosByAkt_kcat',
-            '_kSmad2DephosByAkt_kcat',
-
             'kPI3KPhosByTGFbR_km',
             '_kPI3KPhosByTGFbR_kcat',
+            'kRafPhosByPI3K_km',
+            '_kRafPhosByPI3K_kcat',
             'kPI3KDephosByErk_km',
             '_kPI3KDephosByErk_kcat',
             'kMekPhosByPI3K_km',
             '_kMekPhosByPI3K_kcat',
+            'kMekPhosByPI3K_km',
+            '_kMekPhosByPI3K_kcat',
             'kPI3KPhosByMek_km',
             '_kPI3KPhosByMek_kcat',
-            'kMekDephosByAkt_km',
-            '_kMekDephosByAkt_kcat',
-
-            'kMekDephosByAkt_km',
-            '_kMekDephosByAkt_kcat',
             'kMekPhosByAkt_km',
             '_kMekPhosByAkt_kcat',
-            'kErkPhosByAkt_km',
-            '_kErkPhosByAkt_kcat',
+            'kMekPhosByAkt_km',
+            '_kMekPhosByAkt_kcat',
             'kRafDephosByAkt_km',
             '_kRafDephosByAkt_kcat',
+            'kSmad2PhosByAkt_km',
+            '_kSmad2PhosByAkt_kcat',
+            '_kSmad2PhosByAkt_kcat',
+            'kSmad2PhosByAkt_km',
+            'kSmad2PhosByAkt_km',
+            '_kSmad2PhosByAkt_ki',
+            'kSmad2PhosByErk_km',
+            '_kSmad2PhosByErk_kcat',
+            '_kSmad2PhosByErk_kcat',
+            'kSmad2PhosByErk_km',
+            'kSmad2PhosByErk_km',
+            '_kSmad2PhosByErk_ki',
         ]
 
     def _default_parameter_str(self):
@@ -1078,15 +1151,7 @@ class CrossTalkModel:
 
         // Cross talk reactions
         CrossTalkR1  :  Raf  =>  pRaf   ; Cell * MMWithKcat(kRafPhosByTGFbR_km, _kRafPhosByTGFbR_kcat, Raf, TGFbR_a)    ;
-        CrossTalkR3  :  Raf  =>  pRaf   ; Cell * MMWithKcat(kRafPhosByPI3K_km,  _kRafPhosByPI3K_kcat, Raf, pPI3K)           ;
-        CrossTalkR2  :  PI3K =>  pPI3K  ; Cell * MMWithKcat(kPI3KPhosByTGFbR_km, _kPI3KPhosByTGFbR_kcat, PI3K, TGFbR_a) ;
-        CrossTalkR9_1:  Erk  =>  pErk   ; Cell * MMWithKcat(kErkPhosByAkt_km, _kErkPhosByAkt_kcat, Erk, pAkt);
-        CrossTalkR9_2:  pErk =>  ppErk  ; Cell * MMWithKcat(kErkPhosByAkt_km, _kErkPhosByAkt_kcat, pErk, pAkt);
-        CrossTalkR6 :   PI3K =>  pPI3K  ; Cell * MMWithKcat(kPI3KPhosByMek_km, _kPI3KPhosByMek_kcat, PI3K, ppMek);
-        CrossTalkR7_1:  ppMek=>  pMek   ; Cell * MMWithKcat(kMekDephosByAkt_km, _kMekDephosByAkt_kcat, ppMek, pAkt);
-        CrossTalkR7_2:  pMek =>  Mek    ; Cell * MMWithKcat(kMekDephosByAkt_km, _kMekDephosByAkt_kcat, pMek, pAkt);
-        CrossTalkR10:   pRaf =>  Raf    ; Cell * MMWithKcat(kRafDephosByAkt_km, _kRafDephosByAkt_kcat, pRaf, pAkt);
-
+        
         {}
     """.format(additional_reactions)
 
@@ -1094,10 +1159,10 @@ class CrossTalkModel:
         raise NotImplementedError
 
     def pi3k_phos_by_TGFbR(self):
-        raise NotImplementedError
+        return "CrossTalkR2  :  PI3K =>  pPI3K  ; Cell * MMWithKcat(kPI3KPhosByTGFbR_km, _kPI3KPhosByTGFbR_kcat, PI3K, TGFbR_a) ;"
 
     def raf_phos_by_PI3K(self):
-        raise NotImplementedError
+        return "CrossTalkR3  :  Raf  =>  pRaf   ; Cell * MMWithKcat(kRafPhosByPI3K_km,  _kRafPhosByPI3K_kcat, Raf, pPI3K)           ;"
 
     def pi3k_dephos_by_erk(self):
         return """
@@ -1111,10 +1176,14 @@ class CrossTalkModel:
         """
 
     def pi3k_phos_by_mek(self):
-        raise NotImplementedError
+        return "CrossTalkR6 :   PI3K =>  pPI3K  ; Cell * MMWithKcat(kPI3KPhosByMek_km, _kPI3KPhosByMek_kcat, PI3K, ppMek);"
 
     def mek_dephos_by_akt(self):
-        raise NotImplementedError
+        raise NotImplemented
+        return """
+        CrossTalkR7_1:  ppMek=>  pMek   ; Cell * MMWithKcat(kMekDephosByAkt_km, _kMekDephosByAkt_kcat, ppMek, pAkt);
+        CrossTalkR7_2:  pMek =>  Mek    ; Cell * MMWithKcat(kMekDephosByAkt_km, _kMekDephosByAkt_kcat, pMek, pAkt);
+        """
 
     def mek_phos_by_akt(self):
         return """
@@ -1123,10 +1192,30 @@ class CrossTalkModel:
         """
 
     def erk_phos_by_akt(self):
-        raise NotImplementedError
+        raise NotImplemented
+        return """
+        CrossTalkR9_1:  Erk  =>  pErk   ; Cell * MMWithKcat(kErkPhosByAkt_km, _kErkPhosByAkt_kcat, Erk, pAkt);
+        CrossTalkR9_2:  pErk =>  ppErk  ; Cell * MMWithKcat(kErkPhosByAkt_km, _kErkPhosByAkt_kcat, pErk, pAkt);
+        """
 
     def raf_dephos_by_akt(self):
-        raise NotImplementedError
+        return """CrossTalkR10:   pRaf =>  Raf    ; Cell * MMWithKcat(kRafDephosByAkt_km, _kRafDephosByAkt_kcat, pRaf, pAkt);"""
+
+    def akt_activate_smad2(self):
+        """
+        CompetitiveInhibitionWithKcat(km, ki, kcat, E, I, S)
+        :return:
+        """
+        return """
+        //CrossTalkR11  :    Smad2     => pSmad2    ;   Cell *  MMWithKcat(kSmad2PhosByAkt_km, _kSmad2PhosByAkt_kcat, Smad2, pAkt)       ;
+        CrossTalkR11  :    Smad2     => pSmad2    ;   Cell *  _kSmad2PhosByAkt_kcat*pAkt*Smad2 / (kSmad2PhosByAkt_km + Smad2 + (kSmad2PhosByAkt_km*ppErk / _kSmad2PhosByAkt_ki))       ;
+        """
+
+    def erk_activates_smad2(self):
+        return """
+        // CrossTalkR12  :    Smad2     => pSmad2    ;   Cell *  MMWithKcat(kSmad2PhosByErk_km, _kSmad2PhosByErk_kcat, Smad2, ppErk)       ;
+        CrossTalkR12  :    Smad2     => pSmad2    ;   Cell *  _kSmad2PhosByErk_kcat*ppErk*Smad2 / (kSmad2PhosByErk_km + Smad2 + (kSmad2PhosByErk_km*pAkt / _kSmad2PhosByErk_ki))       ;
+        """
 
     def _events(self):
         """
@@ -1171,23 +1260,6 @@ class CrossTalkModel:
         unit volume = 1 litre;
         unit time_unit = 3600 second;
         unit substance = 1e-9 mole;
-        """
-
-    def _akt_activate_smad2(self):
-        """
-        CompetitiveInhibitionWithKcat(km, ki, kcat, E, I, S)
-        :return:
-        """
-        return """
-        //CrossTalkR11  :    Smad2     => pSmad2    ;   Cell *  MMWithKcat(kSmad2PhosByAkt_km, _kSmad2PhosByAkt_kcat, Smad2, pAkt)       ;
-        CrossTalkR11  :    Smad2     => pSmad2    ;   Cell *  _kSmad2PhosByAkt_kcat*pAkt*Smad2 / (kSmad2PhosByAkt_km + Smad2 + (kSmad2PhosByAkt_km*ppErk / _kSmad2PhosByAkt_ki))       ;
-        """
-
-    def _erk_activates_smad2(self):
-        return """
-        // CrossTalkR12  :    Smad2     => pSmad2    ;   Cell *  MMWithKcat(kSmad2PhosByErk_km, _kSmad2PhosByErk_kcat, Smad2, ppErk)       ;
-        CrossTalkR12  :    Smad2     => pSmad2    ;   Cell *  _kSmad2PhosByErk_kcat*ppErk*Smad2 / (kSmad2PhosByErk_km + Smad2 + (kSmad2PhosByErk_km*pAkt / _kSmad2PhosByErk_ki))       ;
-
         """
 
     # def _akt_inhibits_smad2(self):
@@ -1247,7 +1319,6 @@ class CrossTalkModel:
         df.index = params.index
         import sympy
         sym_mat = sympy.Matrix(df.values)
-
 
     def get_parameters_from_copasi(self, mod):
         """
@@ -1380,7 +1451,7 @@ class CrossTalkModel:
         sim_data = sim_data[sim_data['Time'] == 72]
         del sim_data['Time']
 
-        return (exp - sim_data )**2
+        return (exp - sim_data) ** 2
 
     def plot_performance_matrix(self, cmap):
         import matplotlib
@@ -1390,7 +1461,7 @@ class CrossTalkModel:
 
         eucl = self.get_euclidean()
         eucl.index = [i.replace('72', '') for i in eucl.index]
-        print(eucl)
+        # print(eucl)
 
         fig = plt.figure()
         seaborn.heatmap(numpy.log10(eucl), cmap=cmap, annot=True,
@@ -1401,10 +1472,10 @@ class CrossTalkModel:
         # heatmap_dir = os.path.join(self.model_selection_dir, 'PerformanceMatrix')
         # if not os.path.isdir(heatmap_dir):
         #     os.makedirs(heatmap_dir)
-        fname = os.path.join(self.graphs_dir, f'topology{self.topology}.png' )
+        fname = os.path.join(self.graphs_dir, f'topology{self.topology}.png')
         fig.savefig(fname, dpi=300, bbox_inches='tight')
-        print(fname)
-        print(self.list_topologies())
+        LOG.info(fname)
+        LOG.info(self.list_topologies())
 
     @staticmethod
     def plot_competitive_inhibition_rate_law():
@@ -1418,7 +1489,6 @@ class CrossTalkModel:
         matplotlib.use('Qt5Agg')
         seaborn.set_context(context='talk')
 
-
         kcat = 300
         km = 75
         ki = 5
@@ -1431,7 +1501,7 @@ class CrossTalkModel:
         ax = fig.add_subplot(111, projection='3d')
         x = y = numpy.arange(0.001, 50, 0.05)
         X, Y = numpy.meshgrid(x, y)
-        zs = numpy.array(eq(kcat, numpy.ravel(X),s, km, numpy.ravel(Y), ki))
+        zs = numpy.array(eq(kcat, numpy.ravel(X), s, km, numpy.ravel(Y), ki))
         Z = zs.reshape(X.shape)
 
         ax.plot_surface(X, Y, Z)
@@ -1442,30 +1512,51 @@ class CrossTalkModel:
 
         plt.show()
 
+    def extract_graphs(self, to=None):
+        dest = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelectionProblems/graphs'
+        dest = os.path.join(self.problem_directory, 'graphs_extraction')
+        if not os.path.isdir(dest):
+            os.makedirs(dest)
 
+        # problem_to_include = [40, 41, 42, 43, 44, 45]
+        # conds = ['all', 'DTE', 'PlusA', 'PlusM', 'PlusEA', 'PlusEM']
+        # l = ['{}{}'.format(problem_to_include[i], conds[i]) for i in range(problem_to_include)]
+        # problem_dirs = [os.path.join(dest, 'Problem{}'.format(i)) for i in problem_to_include]
 
+        graphs_f = glob.glob(os.path.join(self.graphs_dir, '*.png'))[0]
+        topology_name = self.list_topologies().loc[self.topology, 'Topology']
 
+        fname = os.path.join(dest, '{}{}.png'.format(self.topology, topology_name))
 
+        import shutil
+        shutil.copy(graphs_f, fname)
 
+        # print(self.graphs_dir)
+
+        # print(graphs_f)
+
+        # new_name =
+
+        # print(topology_name)
 
 
 if __name__ == '__main__':
     WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT'
-    for i in range(37, 38):
+    for i in range(40, 46):
 
         PROBLEM = i
         ## Which model is the current focus of analysis
-        CURRENT_MODEL_ID = 2
+        CURRENT_MODEL_ID = 3
 
         FIT = '1'
 
-        CLUSTER = 'slurm'
+        CLUSTER = False
 
         ## True, False, 'slurm' or 'sge'. Passed onto parameter estimation class
-        RUN_MODE = 'slurm'
+        RUN_MODE = False
 
         ## Configure and run the parameter estimations
-        RUN_PARAMETER_ESTIMATION = True
+        RUN_PARAMETER_ESTIMATION = False
 
         RUN_PARAMETER_ESTIMATION_FROM_BEST_PARAMETERS = False
 
@@ -1513,6 +1604,8 @@ if __name__ == '__main__':
 
         PLOT_COMPETITIVE_INHIBITION_RATE_LAW = False
 
+        EXTRACT_GRAPHS = True
+
         ##===========================================================================================
 
         if CLUSTER == 'slurm':
@@ -1531,11 +1624,13 @@ if __name__ == '__main__':
             raise ValueError
 
         C = CrossTalkModel(PROBLEM_DIRECTORY, fit=FIT,
-                           method='particle_swarm',
-                           copy_number=44,
+                           method='genetic_algorithm_sr',
+                           copy_number=4,
                            run_mode=RUN_MODE,
-                           iteration_limit=4000,
-                           swarm_size=150,
+                           iteration_limit=3000,
+                           swarm_size=75,
+                           population_size=200,
+                           number_of_generations=600,
                            overwrite_config_file=True,
                            lower_bound=0.000001,
                            upper_bound=1000000,
@@ -1543,9 +1638,15 @@ if __name__ == '__main__':
 
         LOG.info(f'the size of your model selection problem is {len(C)}')
         LOG.info('num of estimated parameters={}'.format(C._get_number_estimated_model_parameters()))
+        # C[CURRENT_MODEL_ID].plot_bargraphs2(best_parameters=True)
+        # plt.show()
+        # C[CURRENT_MODEL_ID].get_errors2()
 
+        if EXTRACT_GRAPHS:
+            for i in C:
+                C[i].extract_graphs()
 
-        if PLOT_COMPETITIVE_INHIBITION_RATE_LAW :
+        if PLOT_COMPETITIVE_INHIBITION_RATE_LAW:
             CrossTalkModel.plot_competitive_inhibition_rate_law()
 
         if PLOT_PERFORMANCE_MATRIX:
@@ -1567,8 +1668,8 @@ if __name__ == '__main__':
 
             for k in sorted(dct):
                 s += "        {} = {};\n".format(k, dct[k])
-            print(dct)
-            print(s)
+            LOG.info(dct)
+            LOG.info(s)
 
         if OPEN_WITH_COPASI:
             mod = C[CURRENT_MODEL_ID].to_copasi()
@@ -1591,7 +1692,7 @@ if __name__ == '__main__':
         if RUN_PARAMETER_ESTIMATION_FROM_BEST_PARAMETERS:
             for model_id in C:
                 best_params = C[model_id].get_best_parameters_from_last_fit(LAST_FIT)
-                print('best parameters\n'.format(
+                LOG.info('best parameters\n'.format(
                     best_params
                 ))
                 PE = C[model_id].run_parameter_estimation_from_parameter_set(best_params, run_mode=RUN_MODE)
@@ -1599,36 +1700,37 @@ if __name__ == '__main__':
 
         if PLOT_ALL_SIMULATION_GRAPHS:
             for model_id in range(len(C)):
-                try:
-                    C[model_id].plot_bargraphs(best_parameters=True)
-                except ValueError:
-                    print("model '{}' skipped! No data to plot".format(model_id))
-                    continue
-                except RuntimeError:
-                    print("model '{}' skipped! RunTimeError".format(model_id))
-                    continue
+                LOG.info('plotting model {}'.format(model_id))
+                # try:
+                C[model_id].plot_bargraphs2(best_parameters=True)
+                # except ValueError:
+                #     LOG.info("model '{}' skipped! No data to plot".format(model_id))
+                #     continue
+                # except RuntimeError:
+                #     LOG.info("model '{}' skipped! RunTimeError".format(model_id))
+                #     continue
 
         if PLOT_CURRENT_SIMULATION_GRAPHS:
-            print('fit dir', C[CURRENT_MODEL_ID].fit_dir)
-            C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=True)
+            LOG.info('fit dir: {}'.format(C[CURRENT_MODEL_ID].fit_dir))
+            C[CURRENT_MODEL_ID].plot_bargraphs2(best_parameters=True)
 
         if PLOT_CURRENT_SIMULATION_GRAPHS_WITH_DEAULT_PARAMETERS:
-            print('fit dir', C[CURRENT_MODEL_ID].fit_dir)
-            C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=False)
+            LOG.info('fit dir', C[CURRENT_MODEL_ID].fit_dir)
+            C[CURRENT_MODEL_ID].plot_bargraphs2(best_parameters=False)
 
         # if PLOT_CURRENT_SIMULATION_GRAPHS_WITH_COPASI_PARAMETERS:
         #     copasi_file = '/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelectionProblems/Problem3/ModelSelection/Topology77/Fit1/topology77_for_playing_with.cps'
         #     mod = model.Model(copasi_file)
-        #     # print(C[CURRENT_MODEL_ID].fit_dir)
+        #     # LOG.info(C[CURRENT_MODEL_ID].fit_dir)
         #     dct, ant = C[CURRENT_MODEL_ID].get_parameters_from_copasi(mod)
-        #     # print(ant)
+        #     # LOG.info(ant)
         #     C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=ant)
 
         if GET_BEST_PARAMETERS:
             ant = C[CURRENT_MODEL_ID].get_best_model_parameters_as_antimony()
             dct = C[CURRENT_MODEL_ID].get_param_df().iloc[0].to_dict()
-            print(ant)
-            print(dct)
+            LOG.info(ant)
+            LOG.info(dct)
 
         # C[4].run_parameter_estimation_from_best_estimates()
 
@@ -1647,7 +1749,7 @@ if __name__ == '__main__':
 
         if INSERT_BEST_PARAMETERS_INTO_ALL_COPASI_FILES:
             for i in C:
-                print(C[i].insert_best_parameters())
+                LOG.info(C[i].insert_best_parameters())
 
         if INSERT_BEST_PARAMETERS_FROM_LAST_FIT_AND_PLOT:
             """
@@ -1658,7 +1760,7 @@ if __name__ == '__main__':
             prev_best_params = C[CURRENT_MODEL_ID].get_best_parameters_from_last_fit(LAST_FIT)
             C[CURRENT_MODEL_ID].insert_parameters(prev_best_params)
             current_best_params = C[CURRENT_MODEL_ID].get_best_model_parameters_as_antimony()
-            C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=current_best_params)
+            C[CURRENT_MODEL_ID].plot_bargraphs2(best_parameters=current_best_params)
 
         if ANALYSE_CORRELATIONS:
             C[CURRENT_MODEL_ID].analyse_correlations()
