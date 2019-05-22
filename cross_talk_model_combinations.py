@@ -17,6 +17,26 @@ logging.basicConfig(level=logging.INFO)
 LOG = logging.getLogger(__name__)
 
 
+class HypothesisExtension:
+
+    def __init__(self, name, reaction, rate_law, mode='additive', replacement=None):
+        self.name = name
+        self.reaction = reaction
+        self.rate_law = rate_law
+        self.mode = mode
+        self.replacement = replacement
+
+        for i in [self.name, self.reaction, self.rate_law, self.type]:
+            if not isinstance(i, str):
+                raise ValueError('attribute "{}" should be a string, not {}'.format(i, type(i)))
+
+    def __str__(self):
+        return f'{self.name}: {self.reaction}; {self.rate_law}'
+
+    def __repr__(self):
+        return self.__str__()
+
+
 class CrossTalkModel:
     """
     build a factory that churns out functions that return models and take as argument the
@@ -63,31 +83,34 @@ class CrossTalkModel:
 
         self.cps_file = os.path.join(self.topology_dir, 'Topology{}'.format(self.topology))
 
-        self.model_variant_reactions = {
-            1: self.pi3k_phos_by_TGFbR(),
-            2: self.raf_phos_by_PI3K(),
-            3: self.pi3k_dephos_by_erk(),
-            4: self.mek_phos_by_pi3k(),
-            5: self.pi3k_phos_by_mek(),
-            # 7: self.mek_phos_by_akt(),
-            6: self.raf_dephos_by_akt(),
-            7: self.akt_activate_smad2(),
-            8: self.erk_activates_smad2(),
-        }
-
-        self.topology_names = {
-            1: 'PI3KPhosByTGFbR',
-            2: 'RafPhosByPI3k',
-            3: 'PI3KDephosByErk',
-            4: 'MekPhosByPI3K',
-            5: 'PI3KPhosByMek',
-            # 7: self.mek_phos_by_akt(),
-            6: 'RafDehosByAkt',
-            7: 'ActActivateSmad2ErkInhibit',
-            8: 'ErkActivateSmad2AktInhibit',
-        }
+        # dict of reactions that vary with topologies and another dict with corresponding hypothesis names
+        self.model_variant_reactions, self.topology_names = self._model_variant_reactions()
 
         self.model_specific_reactions = self._assembel_model_reactions()[self.topology]
+
+    def _model_variant_reactions(self):
+        """
+        Get all methods that begin with 'extension_hypothesis' and return their values in a dict[number] = reaction_string
+
+        This assembles the reactions that are not in every model and will later be combinatorially combined with the
+        core model.
+
+        Returns:
+
+        """
+        hypothesis_reactions = []
+        hypothesis_reaction_names = []
+        for i in dir(self):
+            if i.startswith('extension_hypothesis'):
+                hypothesis_reactions.append(getattr(self, i)())
+                hypothesis_reaction_names.append(i.replace('extension_hypothesis_', ''))
+
+        dct = OrderedDict()
+        names = OrderedDict()
+        for i in range(len(hypothesis_reactions)):
+            dct[i] = hypothesis_reactions[i]
+            names = hypothesis_reaction_names[i]
+        return hypothesis_reactions, hypothesis_reaction_names
 
     def __str__(self):
         return "CrossTalkModel(topology={})".format(self.topology)
@@ -507,7 +530,6 @@ class CrossTalkModel:
 
         # plt.show()
 
-
     @property
     def copasi_file(self):
         return os.path.join(self.fit_dir, 'topology{}.cps'.format(self.topology))
@@ -855,71 +877,16 @@ class CrossTalkModel:
 
         return s
 
-    @property
-    def _model_specific_parameter_list(self):
-        """
-        returns a list of parameters that do not appear in every version
-        of the model - i.e. the smad topology module
-
-        You could get these parameters automatically by
-        looking at the combinatorial reactions
-        :return:
-        """
-        return [
-            'kPI3KPhosByTGFbR_km',
-            '_kPI3KPhosByTGFbR_kcat',
-            'kRafPhosByPI3K_km',
-            '_kRafPhosByPI3K_kcat',
-            'kPI3KDephosByErk_km',
-            '_kPI3KDephosByErk_kcat',
-            'kMekPhosByPI3K_km',
-            '_kMekPhosByPI3K_kcat',
-            'kMekPhosByPI3K_km',
-            '_kMekPhosByPI3K_kcat',
-            'kPI3KPhosByMek_km',
-            '_kPI3KPhosByMek_kcat',
-            'kMekPhosByAkt_km',
-            '_kMekPhosByAkt_kcat',
-            'kMekPhosByAkt_km',
-            '_kMekPhosByAkt_kcat',
-            'kRafDephosByAkt_km',
-            '_kRafDephosByAkt_kcat',
-            'kSmad2PhosByAkt_km',
-            '_kSmad2PhosByAkt_kcat',
-            '_kSmad2PhosByAkt_kcat',
-            'kSmad2PhosByAkt_km',
-            'kSmad2PhosByAkt_km',
-            '_kSmad2PhosByAkt_ki',
-            'kSmad2PhosByErk_km',
-            '_kSmad2PhosByErk_kcat',
-            '_kSmad2PhosByErk_kcat',
-            'kSmad2PhosByErk_km',
-            'kSmad2PhosByErk_km',
-            '_kSmad2PhosByErk_ki',
-        ]
-
     def _default_parameter_str(self):
         return """        
         Akt = 45.000013943547444;
 		Erk = 80.0000247885287;
-		Mek = 80.00001239426435;
-		PI3K = 45.000013943547444;
-		Raf = 90.00001394354744;
 		S6K = 45.000013943547444;
 		Smad2 = 45.000013943547444;
-		TGFbR = 45.000013943547444;
-		TGFbR_a = 5.000001549283042;
-		mTORC1 = 45.000013943547444;
 		pAkt = 5.000001549283042;
 		pErk = 10.000003098566063;
-		pMek = 10.000001549283041;
-		pPI3K = 5.000001549283042;
-		pRaf = 10.0;
 		pS6K = 5.000001549283042;
 		pSmad2 = 5.000001549283042;
-		pmTORC1 = 5.000001549283042;
-		ppErk = 10.000003098566063;
-		ppMek = 10.000013943547444;
 		Cell = 1.0;
 		AZD = 0.0;
 		Everolimus = 0.0;
@@ -927,90 +894,30 @@ class CrossTalkModel:
 		GrowthFactors = 1.0;
 		MK2206 = 0.0;
 		TGFb = 0.005;
-		kAktDephos_Vmax = 30.0;
-		kAktDephos_km = 15.0;
-		kAktPhos_km = 12.5;
-		kErkDephos_Vmax = 1800.0;
-		kErkDephos_km = 15.0;
-		kErkPhos_km1 = 50.0;
-		kErkPhos_km2 =   kErkPhos_km1;
-		kMekDephos_Vmax = 2700.0;
-		kMekDephos_km = 15.0;
-		kMekPhos_km1 = 15.0;
-		kMekPhos_km2 =   kMekPhos_km1;
-		kPI3KDephosByS6K_km = 50.0;
-		kPI3KPhosByGF_km = 50.0;
-		kRafDephosVmax = 3602.5;
-		kRafDephos_km = 8.0;
-		kRafPhosByTGFbR_km = 25.0;
-		kRafPhos_Vmax = 9000.0;
-		kRafPhos_km = 10.0;
-		kRafPhos_n = 1.0;
-		kS6KDephos_Vmax = 50.0;
-		kS6KDephos_km = 10.0;
-		kS6KPhosBymTORC1_km = 100.0;
-		kSmad2Dephos_Vmax = 20.0;
-		kSmad2Dephos_km = 30.0;
-		kSmad2Phos_km = 50.0;
-		kTGFbRAct_h = 2.0;
-		kTGFbRAct_km = 10.0;
-		kTGFbRDephos_Vmax = 15.0;
-		kTGFbRDephos_km = 100.0;
-		kmTORC1Dephos_Vmax = 15.0;
-		kmTORC1Dephos_km = 100.0;
-		kmTORC1Phos_km = 50.0;
-		kmTORCPhosBasal_km = 25.0;
-		kPI3KPhosByMek_km = 50.0;
-		kPI3KPhosByTGFbR_km = 50;
-		kRafPhosByPI3K_km = 50;
-		kPI3KDephosByErk_km = 50;
-		kMekPhosByPI3K_km = 50;
-		kMekDephosByAkt_km = 50;
-		kMekDephosByAkt_km = 50;
-        kMekPhosByAkt_km = 50;
-        kErkPhosByAkt_km = 50;
-        kRafDephosByAkt_km = 50;
-        
-		_kPI3KDephosByErk_kcat = 0.5;
-        _kMekPhosByAkt_kcat = 0.1;
-        _kAktPhos_kcat = 0.59788;
-		_kAktPhos_ki = 0.222091;
-		_kMekPhos_ki = 0.0324159;
-		_kPI3KDephosByS6K_kcat = 6207.03;
-		_kPI3KPhosByGF_kcat = 0.00211852;
-		_kRafPhosByTGFbR_kcat = 0.001;
-		_kRafPhos_ki = 0.00100013;
-		_kS6KPhosBymTORC1_kcat = 2.28906;
-		_kSmad2Phos_kcat = 10.9338;
-		_kTGFbRAct_Vmax = 140.494;
-		_kmTORC1Phos_kcat = 0.00256716;
-		_kmTORC1Phos_ki = 0.001;
-		_kmTORCPhosBasal_Vmax = 2936.63;
-		_kMekPhos_kcat1 = 402.062;
-		_kMekPhos_kcat2 = 9999.77;
-		_kErkPhos_kcat1 = 85.32700000000001;
-		_kErkPhos_kcat2 = 12.1603;
-		_kPI3KPhosByMek_kcat = 206.865;
-		_kRafPhosByPI3K_kcat = 1545.65;
-		_kMekDephosByAkt_kcat = 935.046;
-		_kErkPhosByAkt_kcat = 90.9855;
-		_kRafDephosByAkt_kcat = 9998.43;
-		_kPI3KPhosByTGFbR_kcat = 1233.66;
-                
-        kSmad2PhosByAkt_km = 50;
-        kSmad2DephosByErk_km = 50;
-        kSmad2PhosByAkt_km = 50;
-        kSmad2PhosByErk_km = 50;
-        kSmad2DephosByErk_km = 50;
-        kSmad2DehosByAkt_km = 50;
-        kSmad2DephosByAkt_km = 50;
-        _kSmad2PhosByAkt_kcat = 50;
-        _kSmad2PhosByErk_kcat = 50;
-        _kSmad2DephosByErk_kcat = 50;
-        _kSmad2DephosByAkt_kcat = 50;
-        _kSmad2DephosByAkt_kcat = 50;
-        _kSmad2PhosByAkt_ki = 1;
-        _kSmad2PhosByErk_ki = 1;
+		
+        kErkPhosByGF           = 0.1;
+        kAktPhosByGF           = 0.1;
+		_kSmad2PhosByTGFb      = 0.1;
+        _kSmad2Dephos          = 0.1;
+        _kErkPhosByTGFb_km     = 0.1;
+        _kErkPhosByTGFb_ki     = 0.1;
+        _kErkPhosByTGFb_kcat   = 0.1;
+        _kErkDephos            = 0.1;
+        _kAktPhosByTGFb_km     = 0.1;
+        _kAktPhosByTGFb_km     = 0.1;
+        _kAktPhosByTGFb_kcat   = 0.1;
+        _kAktDephos            = 0.1;
+        _kS6KPhosByAkt_km      = 0.1;
+        _kS6KPhosByAkt_ki      = 0.1;
+        _kS6KPhosByAkt_kcat    = 0.1;
+        _kS6KDephos            = 0.1;
+        _kAktPhosSmad2_km      = 0.1;
+        _kAktPhosSmad2_ki      = 0.1;
+        _kAktPhosSmad2_kcat    = 0.1;
+        _kErkPhosSmad2_km      = 0.1;
+        _kErkPhosSmad2_ki      = 0.1;
+        _kErkPhosSmad2_kcat    = 0.1;
+        _kS6KActivateErk       = 0.1;
 		
 		"""
 
@@ -1049,6 +956,15 @@ class CrossTalkModel:
             function NonCompetitiveInhibition(km, ki, Vmax, n, I, S)
                 Vmax * S / ( (km + S) * (1 + (I / ki)^n ) )
             end
+            
+            function NonCompetitiveInhibitionWithKcat(km, ki, kcat, E, n, I, S)
+                kcat * E * S / ( (km + S) * (1 + (I / ki)^n ) )
+            end
+            
+            function NonCompetitiveInhibitionWithKcatAndExtraActivator(km, ki, kcat, E1, E2, n, I, S)
+                kcat * E1 * E2 * S / ( (km + S) * (1 + (I / ki)^n ) )
+            end
+
 
             function MA1(k, S)
                 k * S
@@ -1087,29 +1003,14 @@ class CrossTalkModel:
         return """
         compartment Cell = 1.0
 
-        var TGFbR           in Cell  
-        var TGFbR_a         in Cell  
         var Smad2           in Cell  
         var pSmad2          in Cell  
-        var Mek             in Cell
-        var pMek            in Cell  
         var Erk             in Cell
         var pErk            in Cell  
-        var PI3K            in Cell  
-        var pPI3K           in Cell  
         var Akt             in Cell
         var pAkt            in Cell  
-        var mTORC1          in Cell  
-        var pmTORC1         in Cell  
         var S6K             in Cell
         var pS6K            in Cell  
-        var Raf             in Cell
-        var pRaf            in Cell
-        var pMek            in Cell
-        var ppMek           in Cell
-        var pMek            in Cell
-        var pErk            in Cell
-        var ppErk           in Cell
 
         const TGFb             in Cell
         const AZD              in Cell
@@ -1120,102 +1021,71 @@ class CrossTalkModel:
     def _reactions(self, additional_reactions):
         return """
         //TGFb module
-        TGF_R1 : TGFbR       => TGFbR_a    ; Cell * Hill(kTGFbRAct_km, _kTGFbRAct_Vmax, TGFb, TGFbR, kTGFbRAct_h)      ;
-        TGF_R2 : TGFbR_a     => TGFbR      ; Cell * MM(kTGFbRDephos_km, kTGFbRDephos_Vmax, TGFbR_a)               ;
-        TGF_R3 : Smad2       => pSmad2     ; Cell * MMWithKcat( kSmad2Phos_km,  _kSmad2Phos_kcat, Smad2, TGFbR_a );
-        TGF_R4 : pSmad2      => Smad2      ; Cell * MM(         kSmad2Dephos_km, kSmad2Dephos_Vmax, pSmad2 )
+        TGFbR1: Smad2 => pSmad2 ; _kSmad2PhosByTGFb*Smad2*TGFb;
+        TGFbR2: pSmad2 => Smad2 ; _kSmad2Dephos*pSmad2;
 
         //MAPK module
-        MAPK_R0  : Raf     => pRaf      ; Cell*GrowthFactors*NonCompetitiveInhibition(kRafPhos_km,  _kRafPhos_ki, kRafPhos_Vmax, kRafPhos_n, ppErk, Raf);
-        MAPK_R1  : pRaf    => Raf       ; Cell*MM(            kRafDephos_km ,   kRafDephosVmax,      pRaf           );
-        MAPK_R2  : Mek     => pMek      ; Cell*CompetitiveInhibitionWithKcat(    kMekPhos_km1 , _kMekPhos_ki, _kMekPhos_kcat1, pRaf, AZD, Mek       );
-        MAPK_R3  : pMek    => ppMek     ; Cell*CompetitiveInhibitionWithKcat(    kMekPhos_km2 , _kMekPhos_ki, _kMekPhos_kcat2, pRaf, AZD, pMek     );
-        MAPK_R4  : ppMek   => pMek      ; Cell*MM(            kMekDephos_km,   kMekDephos_Vmax,     ppMek         );
-        MAPK_R5  : pMek    => Mek       ; Cell*MM(            kMekDephos_km,   kMekDephos_Vmax,     pMek          );
-        MAPK_R6  : Erk     => pErk      ; Cell*MMWithKcat(    kErkPhos_km2,     _kErkPhos_kcat1, Erk,  ppMek         );
-        MAPK_R7  : pErk    => ppErk     ; Cell*MMWithKcat(    kErkPhos_km1,     _kErkPhos_kcat2, pErk, ppMek         );
-        MAPK_R8  : ppErk   => pErk      ; Cell*MM(            kErkDephos_km,   kErkDephos_Vmax,     ppErk         );
-        MAPK_R9  : pErk    => Erk       ; Cell*MM(            kErkDephos_km,   kErkDephos_Vmax,     pErk          );
+        MAPKR1: Erk => pErk ; kErkPhosByGF*GrowthFactors;
+        MAPKR2: Erk => pErk ; CompetitiveInhibitionWithKcat(_kErkPhosByTGFb_km, _kErkPhosByTGFb_ki, _kErkPhosByTGFb_kcat, TGFb, AZD, Erk);     //(km, ki, kcat, E, I, S)
+        MAPKR3: pErk => Erk ; _kErkDephos*pErk;
 
-
-        //PI3K Module
-        PI3K_R1 :   PI3K    => pPI3K        ; Cell *  MMWithKcat(kPI3KPhosByGF_km, _kPI3KPhosByGF_kcat,  PI3K, GrowthFactors) ;
-        PI3K_R2 :   pPI3K   => PI3K         ; Cell *  MMWithKcat(kPI3KDephosByS6K_km, _kPI3KDephosByS6K_kcat, pPI3K, pS6K)        ;
-        PI3K_R3 :   Akt    => pAkt          ; Cell *  CompetitiveInhibitionWithKcat(kAktPhos_km, _kAktPhos_ki, _kAktPhos_kcat, pPI3K, MK2206, Akt)              ;
-        PI3K_R4 :   pAkt    => Akt          ; Cell *  MM(kAktDephos_km, kAktDephos_Vmax, pAkt)         ;
-        PI3K_R5_1 :   mTORC1 => pmTORC1     ; Cell *  CompetitiveInhibitionWithKcat(kmTORC1Phos_km, _kmTORC1Phos_ki, _kmTORC1Phos_kcat, pAkt, Everolimus, mTORC1)  ;
-        PI3K_R5_2 :   mTORC1 => pmTORC1     ; Cell *  CompetitiveInhibition(_kmTORCPhosBasal_Vmax, kmTORCPhosBasal_km, _kmTORC1Phos_ki, Everolimus, mTORC1);
-        PI3K_R6 :   pmTORC1 => mTORC1       ; Cell *  MM(kmTORC1Dephos_km, kmTORC1Dephos_Vmax, pmTORC1);
-        PI3K_R7 :   S6K     => pS6K         ; Cell *  MMWithKcat(kS6KPhosBymTORC1_km, _kS6KPhosBymTORC1_kcat, S6K, pmTORC1) ;
-        PI3K_R8 :   pS6K    => S6K          ; Cell *  MM(kS6KDephos_km, kS6KDephos_Vmax, pS6K)                    ;
+        //Akt Module
+        PI3KR1: Akt => pAkt ; kAktPhosByGF*GrowthFactors; 
+        PI3KR2: Akt => pAkt ; NonCompetitiveInhibitionWithKcat(_kAktPhosByTGFb_km, _kAktPhosByTGFb_km, _kAktPhosByTGFb_kcat, TGFb, 1, MK2206, Akt);  //(km, ki, kcat, E, n, I, S)
+        PI3KR3: pkt => Akt  ; _kAktDephos*Akt*pS6K;
+        PI3KR4: S6K => pS6K ; CompetitiveInhibitionWithKcat(_kS6KPhosByAkt_km, _kS6KPhosByAkt_ki, _kS6KPhosByAkt_kcat, pAkt, Everolimus, S6K); //(km, ki, kcat, E, I, S)
+        PI3KR5: pS6K => S6K ; _kS6KDephos*pS6K;
 
         // Cross talk reactions
-        CrossTalkR1  :  Raf  =>  pRaf   ; Cell * MMWithKcat(kRafPhosByTGFbR_km, _kRafPhosByTGFbR_kcat, Raf, TGFbR_a)    ;
         
         {}
     """.format(additional_reactions)
 
-    def raf_phos_by_TGFbR(self):  # mek_phos_by_akt
-        raise NotImplementedError
-
-    def pi3k_phos_by_TGFbR(self):
-        return "CrossTalkR2  :  PI3K =>  pPI3K  ; Cell * MMWithKcat(kPI3KPhosByTGFbR_km, _kPI3KPhosByTGFbR_kcat, PI3K, TGFbR_a) ;"
-
-    def raf_phos_by_PI3K(self):
-        return "CrossTalkR3  :  Raf  =>  pRaf   ; Cell * MMWithKcat(kRafPhosByPI3K_km,  _kRafPhosByPI3K_kcat, Raf, pPI3K)           ;"
-
-    def pi3k_dephos_by_erk(self):
-        return """
-        CrossTalkR4  :    pPI3K     => PI3K      ;   Cell *  MMWithKcat(kPI3KDephosByErk_km, _kPI3KDephosByErk_kcat, pPI3K, ppErk  ) ;
+    def hypothesis_extension_AktActivateSmad2ErkInhibit(self):
         """
+        This reaction must replace:
+            TGFbR1: Smad2 => pSmad2 ; _kSmad2PhosByTGFb*Smad2*TGFb;
+        Args:
+            type:
+            replacement_reaction:
 
-    def mek_phos_by_pi3k(self):
-        return """
-        CrossTalkR5_1 :     Mek => pMek       ; Cell * MMWithKcat(kMekPhosByPI3K_km, _kMekPhosByPI3K_kcat, Mek, pPI3K);
-        CrossTalkR5_2 :     pMek => ppMek       ; Cell * MMWithKcat(kMekPhosByPI3K_km, _kMekPhosByPI3K_kcat, pMek, pPI3K);
-        """
+        Returns:
 
-    def pi3k_phos_by_mek(self):
-        return "CrossTalkR6 :   PI3K =>  pPI3K  ; Cell * MMWithKcat(kPI3KPhosByMek_km, _kPI3KPhosByMek_kcat, PI3K, ppMek);"
+        """
+        return HypothesisExtension(
+            name='CrossTalkR1',
+            reaction='Smad2 => pSmad2',
+            rate_law='NonCompetitiveInhibitionWithKcatAndExtraActivator(_kAktPhosSmad2_km, _kAktPhosSmad2_ki, _kAktPhosSmad2_kcat, TGFb, pAkt, 1, pErk, Smad2)',
+            mode='replace',
+            replacement='TGFbR1'
+        )
 
-    def mek_dephos_by_akt(self):
-        raise NotImplemented
-        return """
-        CrossTalkR7_1:  ppMek=>  pMek   ; Cell * MMWithKcat(kMekDephosByAkt_km, _kMekDephosByAkt_kcat, ppMek, pAkt);
-        CrossTalkR7_2:  pMek =>  Mek    ; Cell * MMWithKcat(kMekDephosByAkt_km, _kMekDephosByAkt_kcat, pMek, pAkt);
-        """
+    def hypothesis_extension_ErkActivateSmad2AktInhibit(self):
+        return HypothesisExtension(
+            name='CrossTalkR2',
+            reaction='Smad2 => pSmad2',
+            rate_law='NonCompetitiveInhibitionWithKcatAndExtraActivator(_kErkPhosSmad2_km, _kErkPhosSmad2_ki, _kErkPhosSmad2_kcat, TGFb, pErk, 1, pAkt, Smad2);  //(km, ki, kcat, E, n, I, S)',
+            mode='replace',
+            replacement='TGFbR1'
+        )
 
-    def mek_phos_by_akt(self):
-        return """
-        CrossTalkR8_1: Mek => pMek      ; Cell * MMWithKcat(kMekPhosByAkt_km, _kMekPhosByAkt_kcat, Mek, pAkt);
-        CrossTalkR8_2: pMek => ppMek      ; Cell * MMWithKcat(kMekPhosByAkt_km, _kMekPhosByAkt_kcat, pMek, pAkt);
-        """
+    def hypothesis_extension_AktActivateErk(self):
+        return HypothesisExtension(
+            name='CrossTalkR3',
+            reaction='Erk => pErk',
+            rate_law='_kAktActivateErk*Erk*pAkt',
+            mode='additive',
+            replacement=None
+        )
 
-    def erk_phos_by_akt(self):
-        raise NotImplemented
-        return """
-        CrossTalkR9_1:  Erk  =>  pErk   ; Cell * MMWithKcat(kErkPhosByAkt_km, _kErkPhosByAkt_kcat, Erk, pAkt);
-        CrossTalkR9_2:  pErk =>  ppErk  ; Cell * MMWithKcat(kErkPhosByAkt_km, _kErkPhosByAkt_kcat, pErk, pAkt);
-        """
-
-    def raf_dephos_by_akt(self):
-        return """CrossTalkR10:   pRaf =>  Raf    ; Cell * MMWithKcat(kRafDephosByAkt_km, _kRafDephosByAkt_kcat, pRaf, pAkt);"""
-
-    def akt_activate_smad2(self):
-        """
-        CompetitiveInhibitionWithKcat(km, ki, kcat, E, I, S)
-        :return:
-        """
-        return """
-        //CrossTalkR11  :    Smad2     => pSmad2    ;   Cell *  MMWithKcat(kSmad2PhosByAkt_km, _kSmad2PhosByAkt_kcat, Smad2, pAkt)       ;
-        CrossTalkR11  :    Smad2     => pSmad2    ;   Cell *  _kSmad2PhosByAkt_kcat*pAkt*Smad2 / (kSmad2PhosByAkt_km + Smad2 + (kSmad2PhosByAkt_km*ppErk / _kSmad2PhosByAkt_ki))       ;
-        """
-
-    def erk_activates_smad2(self):
-        return """
-        // CrossTalkR12  :    Smad2     => pSmad2    ;   Cell *  MMWithKcat(kSmad2PhosByErk_km, _kSmad2PhosByErk_kcat, Smad2, ppErk)       ;
-        CrossTalkR12  :    Smad2     => pSmad2    ;   Cell *  _kSmad2PhosByErk_kcat*ppErk*Smad2 / (kSmad2PhosByErk_km + Smad2 + (kSmad2PhosByErk_km*pAkt / _kSmad2PhosByErk_ki))       ;
-        """
+    def hypothesis_extension_AktActivateS6K(self):
+        return HypothesisExtension(
+            name='CrossTalkR4',
+            reaction='Erk => pErk',
+            rate_law='_kS6KActivateErk*Erk*pS6K',
+            mode='additive',
+            replacement=None
+        )
 
     def _events(self):
         """
@@ -1261,20 +1131,6 @@ class CrossTalkModel:
         unit time_unit = 3600 second;
         unit substance = 1e-9 mole;
         """
-
-    # def _akt_inhibits_smad2(self):
-    #     return """
-    #     CrossTalkR13  :    pSmad2     => Smad2    ;   Cell *  MMWithKcat(kSmad2DehosByAkt_km, _kSmad2DephosByAkt_kcat, pSmad2, pAkt)       ;
-    #     """
-    #
-    # def _erk_inhibits_smad2(self):
-    #     return """
-    #     CrossTalkR14  :    pSmad2     => Smad2    ;   Cell *  MMWithKcat(kSmad2DephosByErk_km, _kSmad2DephosByErk_kcat, pSmad2, ppErk)       ;
-    #     """
-
-    def plot_model_selection_criteria(self, model_selection_criteria_file=None):
-        if model_selection_criteria_file is None:
-            model_selection_criteria_file = self.aic()
 
     def get_best_parameters_from_last_fit(self, last_fit):
         from copy import deepcopy
@@ -1542,7 +1398,9 @@ class CrossTalkModel:
 
 if __name__ == '__main__':
     WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT'
-    for i in range(40, 46):
+
+    # problem 61 is the model selection problem where we reduced the network
+    for i in range(61, 62):
 
         PROBLEM = i
         ## Which model is the current focus of analysis
@@ -1604,7 +1462,7 @@ if __name__ == '__main__':
 
         PLOT_COMPETITIVE_INHIBITION_RATE_LAW = False
 
-        EXTRACT_GRAPHS = True
+        EXTRACT_GRAPHS = False
 
         ##===========================================================================================
 
@@ -1635,6 +1493,7 @@ if __name__ == '__main__':
                            lower_bound=0.000001,
                            upper_bound=1000000,
                            )
+        print(C[0].to_antimony(False))
 
         LOG.info(f'the size of your model selection problem is {len(C)}')
         LOG.info('num of estimated parameters={}'.format(C._get_number_estimated_model_parameters()))
@@ -1767,3 +1626,5 @@ if __name__ == '__main__':
 
         if PLOT_TIMESERIES_WITH_CURRENT_MODEL:
             C[CURRENT_MODEL_ID].plot_timecourse()
+
+# make sure you are simulating from start condition. add reset to appriopriate plate .
