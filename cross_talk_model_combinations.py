@@ -1,4 +1,3 @@
-from constants import *
 import site, os, glob
 import pandas, numpy
 import re
@@ -8,25 +7,29 @@ import tellurium as te
 # site.addsitedir(r'D:\pycotools3')
 from pycotools3 import model, tasks, viz
 from itertools import combinations
+from collections import OrderedDict
 import matplotlib.pyplot as plt
 import seaborn
 import yaml
 import logging
 
+
 logging.basicConfig(level=logging.INFO)
 LOG = logging.getLogger(__name__)
+
+WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel'
 
 
 class HypothesisExtension:
 
-    def __init__(self, name, reaction, rate_law, mode='additive', replacement=None):
+    def __init__(self, name, reaction, rate_law, mode='additive', to_repalce=None):
         self.name = name
         self.reaction = reaction
         self.rate_law = rate_law
         self.mode = mode
-        self.replacement = replacement
+        self.to_replace = to_repalce
 
-        for i in [self.name, self.reaction, self.rate_law, self.type]:
+        for i in [self.name, self.reaction, self.rate_law, self.mode]:
             if not isinstance(i, str):
                 raise ValueError('attribute "{}" should be a string, not {}'.format(i, type(i)))
 
@@ -45,6 +48,7 @@ class CrossTalkModel:
     _data_dir = os.path.join(WORKING_DIRECTORY, 'data/CopasiDataFiles/all_data')
 
     def __init__(self, problem_directory,
+                 mutually_exclusive_reactions=[],
                  parameter_str=None,
                  fit='1_1',
                  run_mode='slurm',
@@ -60,6 +64,14 @@ class CrossTalkModel:
                  upper_bound=10000,
                  use_best_parameters=False
                  ):
+        self.mutually_exclusive_reactions = mutually_exclusive_reactions
+        if self.mutually_exclusive_reactions is not None:
+            if not isinstance(self.mutually_exclusive_reactions, list):
+                raise TypeError('expecting list but got {}'.format(type(self.mutually_exclusive_reactions)))
+            for i in self.mutually_exclusive_reactions:
+                if not isinstance(i, tuple):
+                    raise TypeError('expecting tuple but got {}'.format(type(self.mutually_exclusive_reactions)))
+
         self.parameter_str = parameter_str
         self._topology = 0
         self.problem_directory = problem_directory
@@ -86,7 +98,7 @@ class CrossTalkModel:
         # dict of reactions that vary with topologies and another dict with corresponding hypothesis names
         self.model_variant_reactions, self.topology_names = self._model_variant_reactions()
 
-        self.model_specific_reactions = self._assembel_model_reactions()[self.topology]
+        # self.model_specific_reactions = self._assembel_model_reactions()[self.topology]
 
     def _model_variant_reactions(self):
         """
@@ -109,8 +121,8 @@ class CrossTalkModel:
         names = OrderedDict()
         for i in range(len(hypothesis_reactions)):
             dct[i] = hypothesis_reactions[i]
-            names = hypothesis_reaction_names[i]
-        return hypothesis_reactions, hypothesis_reaction_names
+            names[i] = hypothesis_reaction_names[i]
+        return dct, names
 
     def __str__(self):
         return "CrossTalkModel(topology={})".format(self.topology)
@@ -133,7 +145,7 @@ class CrossTalkModel:
             raise TypeError('"item" should be of type int. Got "{}" instead'.format(type(item)))
 
         self.topology = item
-        self.model_specific_reactions = self._assembel_model_reactions()[item]
+        # self.model_specific_reactions = self._assembel_model_reactions()[item]
         return self
 
     @property
@@ -192,6 +204,8 @@ class CrossTalkModel:
 
     @property
     def data_files(self):
+        # /home/ncw135/Documents/MesiSTRAT/CrossTalkModel/data/CopasiDataFiles/all_data
+        #
         path = os.path.join(self.data_dir, '*.csv')
         files = glob.glob(path)
         if files == []:
@@ -213,7 +227,7 @@ class CrossTalkModel:
             raise ValueError(f'{fle} is not a file')
         # Read YAML file
         with open(fle, 'r') as stream:
-            cond = yaml.load(stream)
+            cond = yaml.load(stream, Loader=yaml.SafeLoader)
         cond = cond[0]['included_conditions']
         return cond
 
@@ -258,7 +272,7 @@ class CrossTalkModel:
 
         labels_dct = {
             'pAkt': 'Akt-pT308',
-            'ppErk': 'ERK-pT202',
+            'pErk': 'ERK-pT202',
             'pS6K': 'S6K-pT389',
             'pSmad2': 'SMAD2-pS465-467'
         }
@@ -280,7 +294,7 @@ class CrossTalkModel:
         df = pandas.read_csv(se).set_index('condition_code')
         labels_dct = {
             'pAkt': 'Akt-pT308',
-            'ppErk': 'ERK-pT202',
+            'pErk': 'ERK-pT202',
             'pS6K': 'S6K-pT389',
             'pSmad2': 'SMAD2-pS465-467'
         }
@@ -311,7 +325,7 @@ class CrossTalkModel:
         df = pandas.DataFrame(cond).transpose()
         return df
 
-    def simulate_conditions(self, selection=['pAkt', 'ppErk', 'pS6K', 'pSmad2'], best_parameters=False):
+    def simulate_conditions(self, selection=['pAkt', 'pErk', 'pS6K', 'pSmad2'], best_parameters=False):
         mod = self.to_tellurium(best_parameters=best_parameters)
         conditions = self.get_experimental_conditions()
         simulation_data = {}
@@ -319,13 +333,15 @@ class CrossTalkModel:
             for variable in conditions.columns:
                 value = conditions.loc[cond, variable]
                 setattr(mod, variable, value)
+            # ensure we are starting at the initial conditions every time
+            mod.reset()
             df = pandas.DataFrame(mod.simulate(0, 72, 73, selection))
             df.columns = selection
             simulation_data[cond] = df
 
         return pandas.concat(simulation_data)
 
-    def plot_bargraphs(self, best_parameters=False, selections=['pAkt', 'pS6K', 'ppErk', 'pSmad2']):
+    def plot_bargraphs(self, best_parameters=False, selections=['pAkt', 'pS6K', 'pErk', 'pSmad2']):
         """
         Plot simulation vs experimental datagraphs
 
@@ -460,7 +476,7 @@ class CrossTalkModel:
             plt.savefig(fname, dpi=150, bbox_inches='tight')
             LOG.info(f'saved image to "{fname}"')
 
-    def plot_bargraphs2(self, best_parameters=False, selections=['pAkt', 'pS6K', 'ppErk', 'pSmad2']):
+    def plot_bargraphs2(self, best_parameters=False, selections=['pAkt', 'pS6K', 'pErk', 'pSmad2']):
         """
         Plot simulation vs experimental datagraphs
 
@@ -536,26 +552,15 @@ class CrossTalkModel:
 
     def list_topologies(self):
         topologies = OrderedDict()
-        for i, tup in self._get_combinations():
-            if i == 0:
-                topologies[i] = 'Null'
-            else:
-                topologies[i] = '_'.join([self.topology_names[x].strip() for x in tup])
-        df = pandas.DataFrame(topologies, index=['Topology']).transpose()
-        df.index.name = 'ModelID'
-        return df
-
-    def list_topologies2(self):
-        topologies = OrderedDict()
         comb = self._get_combinations()
-        # for i in comb:
-        #     print(i)
-        for i, tup in comb:
-            if i == 0:
+
+        for i in comb:
+            if i == ():
                 topologies[i] = 'Null'
             else:
-                topologies[i] = '_'.join([self.topology_names[x].strip() for x in tup])
-        df = pandas.DataFrame(topologies, index=['Topology']).transpose()
+                topologies[i] = '_'.join([self.topology_names[x].strip() for x in i])
+        # print(topologies)
+        df = pandas.DataFrame(topologies, index=['Topology']).transpose().reset_index(drop=True)
         df.index.name = 'ModelID'
         return df
 
@@ -744,7 +749,7 @@ class CrossTalkModel:
         best_params = parameters.iloc[0].to_dict()
         current_params = self._default_parameter_set_as_dict()
         current_params.update(best_params)
-        all_reactions = self._reactions(self.model_specific_reactions)
+        all_reactions = self._build_reactions()
         ## to include global variables not involved in reactions but needed for events
         all_reactions_plus_events = all_reactions + '\n' + self._events()
         s = ''
@@ -764,7 +769,7 @@ class CrossTalkModel:
         n = 0
         for exp in self.data_files:
             data = pandas.read_csv(exp, sep=',')
-            data = data[['pAkt', 'ppErk', 'pS6K', 'pSmad2']]
+            data = data[['pAkt', 'pErk', 'pS6K', 'pSmad2']]
             data = data.iloc[0]
             n += len(data)
         return n
@@ -825,22 +830,89 @@ class CrossTalkModel:
         return df, fname
 
     def _get_combinations(self):
+        #convert mutually exclusive reactions to numerical value
+        l = []
+        for mi1, mi2 in self.mutually_exclusive_reactions:
+            l2 = []
+            for k, v in self.model_variant_reactions.items():
+                # print(mi1, mi2, k, v)
+                mi1_match = re.findall(mi1, str(v))
+                mi2_match = re.findall(mi2, str(v))
+
+                if mi1_match != []:
+                    l2.append(k)
+
+                if mi2_match != []:
+                    l2.append(k)
+
+            l.append(l2)
+
+
         perm_list = [()]
-        for i in range(1, len(self.model_variant_reactions) + 1):
-            perm_list += [j for j in combinations(range(1, len(self.model_variant_reactions) + 1), i)]
+        for i in range(len(self.model_variant_reactions)):
 
+            perm_list += [j for j in combinations(range(len(self.model_variant_reactions)), i)]
+
+        perm_list2 = [()]
+        for i in perm_list:
+            if i == ():
+                continue
+            for j, k in l:
+                if j in i and k in i:
+                    continue
+                else:
+                    perm_list2.append(i)
         ## plus the full set
-        return enumerate(perm_list)  # + [tuple(range(1, len(self.model_variant_reactions)+1))])
+        return perm_list2  # + [tuple(range(1, len(self.model_variant_reactions)+1))])
 
-    def _assembel_model_reactions(self):
+    def _build_reactions(self):
         """
-        assember the model specific reactions
-        :return:
+        Build reactions using two mechanisms. 1) additive. When a HypothesisExtension class is marked as
+        additive we can simply add the reaction to the bottom of the list of reactions. 2) replace. Alternatively
+        we can replace an existing reaction with the hypothesis
+        Returns:
+
         """
-        model_specific_reactions = {}
-        for i, tup in self._get_combinations():
-            model_specific_reactions[i] = '\n'.join([self.model_variant_reactions[x].strip() for x in tup])
-        return model_specific_reactions
+        reactions = self._reactions().split('\n')
+        reactions = [i.strip() for i in reactions]
+        # print(reactions)
+        # get additional reactions for current topology
+
+        hypotheses_needed = self._get_combinations()[self._topology]
+        hypotheses_needed = [self.model_variant_reactions[i] for i in hypotheses_needed]
+        replacements = [i.to_replace for i in hypotheses_needed]
+        s = ''
+        for reaction in reactions:
+            ## reaction name is always the first word, without the colon
+            reaction_name = re.findall('^\w+', reaction)
+
+            if reaction_name == []:
+                s += '\t\t' + reaction +'\n'
+                # continue
+
+            elif reaction_name[0] in replacements:
+                # get index of the reaction we want to replace
+                idx = replacements.index(reaction_name[0])
+                replacement_reaction = hypotheses_needed[idx]
+                s += '\t\t', str(replacement_reaction) + '\n'
+            elif reaction_name[0] not in replacements:
+                s += '\t\t' + reaction +'\n'
+            else:
+                raise ValueError('This should not happen')
+
+        # now add the additional extention hypotheses marked as additive
+        for i in hypotheses_needed:
+            if i.mode == 'additive':
+                s += str(i) +'\n'
+        return s
+
+    def get_all_parameters_as_list(self):
+        all_parameters = self._default_parameter_str().split('\n')
+        all_parameters = [i.strip() for i in all_parameters]
+        all_parameters = [re.findall('^\w+', i) for i in all_parameters]
+        all_parameters = [i for i in all_parameters if i != []]
+        all_parameters = [i[0] for i in all_parameters]
+        return all_parameters
 
     def _build_antimony(self, best_parameters=False):
         """
@@ -854,16 +926,18 @@ class CrossTalkModel:
         s += self._functions()
         s += 'model CrossTalkModelTopology{}'.format(self.topology)
         s += self._compartments()
-        s += self._reactions(self.model_specific_reactions)
+        s += self._build_reactions()
+
         if best_parameters is False:
+            print('best parameters is False')
             s += self._default_parameter_str()
         elif best_parameters is True:
+            print('best parameters is True')
             s += self.get_best_model_parameters_as_antimony()
-            LOG.debug('The best parameters are \n{}'.format(self.get_best_model_parameters_as_antimony()))
-        elif isinstance(best_parameters, str):
-            LOG.debug('best_parameters is a string:\n{}'.format(best_parameters))
+            # LOG.debug('The best parameters are \n{}'.format(self.get_best_model_parameters_as_antimony()))
+            # elif isinstance(best_parameters, str):
+            #     LOG.debug('best_parameters is a string:\n{}'.format(best_parameters))
 
-            s += best_parameters
         else:
             raise ValueError
         s += self._events()
@@ -871,55 +945,17 @@ class CrossTalkModel:
         s += "\nend"
 
         ## now remove any parameters that belong to other models
-        for useless_parameter in self._model_specific_parameter_list:
-            if useless_parameter not in self._reactions(self.model_specific_reactions):
+        all_parameters = self._default_parameter_str().split('\n')
+        all_parameters = [i.strip() for i in all_parameters]
+        all_parameters = [re.findall('^\w+', i) for i in all_parameters]
+        all_parameters = [i for i in all_parameters if i != []]
+        all_parameters = [i[0] for i in all_parameters]
+        # print(all_parameters)
+        for useless_parameter in self.get_all_parameters_as_list():
+            if useless_parameter not in self._build_reactions():
                 s = re.sub(".*{}.*".format(useless_parameter), "", s)
 
         return s
-
-    def _default_parameter_str(self):
-        return """        
-        Akt = 45.000013943547444;
-		Erk = 80.0000247885287;
-		S6K = 45.000013943547444;
-		Smad2 = 45.000013943547444;
-		pAkt = 5.000001549283042;
-		pErk = 10.000003098566063;
-		pS6K = 5.000001549283042;
-		pSmad2 = 5.000001549283042;
-		Cell = 1.0;
-		AZD = 0.0;
-		Everolimus = 0.0;
-		ExperimentIndicator = 0.0;
-		GrowthFactors = 1.0;
-		MK2206 = 0.0;
-		TGFb = 0.005;
-		
-        kErkPhosByGF           = 0.1;
-        kAktPhosByGF           = 0.1;
-		_kSmad2PhosByTGFb      = 0.1;
-        _kSmad2Dephos          = 0.1;
-        _kErkPhosByTGFb_km     = 0.1;
-        _kErkPhosByTGFb_ki     = 0.1;
-        _kErkPhosByTGFb_kcat   = 0.1;
-        _kErkDephos            = 0.1;
-        _kAktPhosByTGFb_km     = 0.1;
-        _kAktPhosByTGFb_km     = 0.1;
-        _kAktPhosByTGFb_kcat   = 0.1;
-        _kAktDephos            = 0.1;
-        _kS6KPhosByAkt_km      = 0.1;
-        _kS6KPhosByAkt_ki      = 0.1;
-        _kS6KPhosByAkt_kcat    = 0.1;
-        _kS6KDephos            = 0.1;
-        _kAktPhosSmad2_km      = 0.1;
-        _kAktPhosSmad2_ki      = 0.1;
-        _kAktPhosSmad2_kcat    = 0.1;
-        _kErkPhosSmad2_km      = 0.1;
-        _kErkPhosSmad2_ki      = 0.1;
-        _kErkPhosSmad2_kcat    = 0.1;
-        _kS6KActivateErk       = 0.1;
-		
-		"""
 
     def _default_parameter_set_as_dict(self):
         string = self._default_parameter_str()
@@ -1018,7 +1054,7 @@ class CrossTalkModel:
         const MK2206           in Cell
         const Everolimus       in Cell"""
 
-    def _reactions(self, additional_reactions):
+    def _reactions(self):
         return """
         //TGFb module
         TGFbR1: Smad2 => pSmad2 ; _kSmad2PhosByTGFb*Smad2*TGFb;
@@ -1032,16 +1068,59 @@ class CrossTalkModel:
         //Akt Module
         PI3KR1: Akt => pAkt ; kAktPhosByGF*GrowthFactors; 
         PI3KR2: Akt => pAkt ; NonCompetitiveInhibitionWithKcat(_kAktPhosByTGFb_km, _kAktPhosByTGFb_km, _kAktPhosByTGFb_kcat, TGFb, 1, MK2206, Akt);  //(km, ki, kcat, E, n, I, S)
-        PI3KR3: pkt => Akt  ; _kAktDephos*Akt*pS6K;
+        PI3KR3: pAkt => Akt  ; _kAktDephos*Akt*pS6K;
         PI3KR4: S6K => pS6K ; CompetitiveInhibitionWithKcat(_kS6KPhosByAkt_km, _kS6KPhosByAkt_ki, _kS6KPhosByAkt_kcat, pAkt, Everolimus, S6K); //(km, ki, kcat, E, I, S)
         PI3KR5: pS6K => S6K ; _kS6KDephos*pS6K;
 
         // Cross talk reactions
-        
-        {}
-    """.format(additional_reactions)
+    """
 
-    def hypothesis_extension_AktActivateSmad2ErkInhibit(self):
+    def _default_parameter_str(self):
+        return """        
+        Akt = 45.000013943547444;
+		Erk = 80.0000247885287;
+		S6K = 45.000013943547444;
+		Smad2 = 45.000013943547444;
+		pAkt = 5.000001549283042;
+		pErk = 10.000003098566063;
+		pS6K = 5.000001549283042;
+		pSmad2 = 5.000001549283042;
+		Cell = 1.0;
+		AZD = 0.0;
+		Everolimus = 0.0;
+		ExperimentIndicator = 0.0;
+		GrowthFactors = 1.0;
+		MK2206 = 0.0;
+		TGFb = 0.005;
+		
+        kErkPhosByGF           = 0.1;
+        kAktPhosByGF           = 0.1;
+		_kSmad2PhosByTGFb      = 0.1;
+        _kSmad2Dephos          = 0.1;
+        _kErkPhosByTGFb_km     = 0.1;
+        _kErkPhosByTGFb_ki     = 0.1;
+        _kErkPhosByTGFb_kcat   = 0.1;
+        _kErkDephos            = 0.1;
+        _kAktPhosByTGFb_km     = 0.1;
+        _kAktPhosByTGFb_km     = 0.1;
+        _kAktPhosByTGFb_kcat   = 0.1;
+        _kAktDephos            = 0.1;
+        _kS6KPhosByAkt_km      = 0.1;
+        _kS6KPhosByAkt_ki      = 0.1;
+        _kS6KPhosByAkt_kcat    = 0.1;
+        _kS6KDephos            = 0.1;
+        _kAktPhosSmad2_km      = 0.1;
+        _kAktPhosSmad2_ki      = 0.1;
+        _kAktPhosSmad2_kcat    = 0.1;
+        _kErkPhosSmad2_km      = 0.1;
+        _kErkPhosSmad2_ki      = 0.1;
+        _kErkPhosSmad2_kcat    = 0.1;
+        _kAktActivateErk       = 0.1;
+        _kS6KActivateErk       = 0.1;
+		
+		"""
+
+    def extension_hypothesis_AktActivateSmad2ErkInhibit(self):
         """
         This reaction must replace:
             TGFbR1: Smad2 => pSmad2 ; _kSmad2PhosByTGFb*Smad2*TGFb;
@@ -1057,34 +1136,34 @@ class CrossTalkModel:
             reaction='Smad2 => pSmad2',
             rate_law='NonCompetitiveInhibitionWithKcatAndExtraActivator(_kAktPhosSmad2_km, _kAktPhosSmad2_ki, _kAktPhosSmad2_kcat, TGFb, pAkt, 1, pErk, Smad2)',
             mode='replace',
-            replacement='TGFbR1'
+            to_repalce='TGFbR1'
         )
 
-    def hypothesis_extension_ErkActivateSmad2AktInhibit(self):
+    def extension_hypothesis_ErkActivateSmad2AktInhibit(self):
         return HypothesisExtension(
             name='CrossTalkR2',
             reaction='Smad2 => pSmad2',
             rate_law='NonCompetitiveInhibitionWithKcatAndExtraActivator(_kErkPhosSmad2_km, _kErkPhosSmad2_ki, _kErkPhosSmad2_kcat, TGFb, pErk, 1, pAkt, Smad2);  //(km, ki, kcat, E, n, I, S)',
             mode='replace',
-            replacement='TGFbR1'
+            to_repalce='TGFbR1'
         )
 
-    def hypothesis_extension_AktActivateErk(self):
+    def extension_hypothesis_AktActivateErk(self):
         return HypothesisExtension(
             name='CrossTalkR3',
             reaction='Erk => pErk',
             rate_law='_kAktActivateErk*Erk*pAkt',
             mode='additive',
-            replacement=None
+            to_repalce=None
         )
 
-    def hypothesis_extension_AktActivateS6K(self):
+    def extension_hypothesis_AktActivateS6K(self):
         return HypothesisExtension(
             name='CrossTalkR4',
             reaction='Erk => pErk',
             rate_law='_kS6KActivateErk*Erk*pS6K',
             mode='additive',
-            replacement=None
+            to_repalce=None
         )
 
     def _events(self):
@@ -1242,7 +1321,7 @@ class CrossTalkModel:
         df.to_csv(fname)
         LOG.info('filtered correlations now in "{}"'.format(fname))
 
-    def plot_timecourse(self, selection=['pAkt', 'ppErk', 'pS6K', 'pSmad2']):
+    def plot_timecourse(self, selection=['pAkt', 'pErk', 'pS6K', 'pSmad2']):
         """
 
         :return:
@@ -1298,7 +1377,7 @@ class CrossTalkModel:
 
     def get_euclidean(self, best_parameters=True):
         exp = self.get_experimental_data()
-        exp = exp[['pAkt', 'pSmad2', 'ppErk', 'pS6K']]
+        exp = exp[['pAkt', 'pSmad2', 'pErk', 'pS6K']]
         exp.index = exp.index.droplevel(1)
 
         sim_data = self.simulate_conditions(best_parameters=best_parameters)
@@ -1397,7 +1476,6 @@ class CrossTalkModel:
 
 
 if __name__ == '__main__':
-    WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT'
 
     # problem 61 is the model selection problem where we reduced the network
     for i in range(61, 62):
@@ -1467,6 +1545,7 @@ if __name__ == '__main__':
         ##===========================================================================================
 
         if CLUSTER == 'slurm':
+            WORKING_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel'
             PROBLEM_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(
                 PROBLEM)
 
@@ -1475,6 +1554,7 @@ if __name__ == '__main__':
                 PROBLEM)
 
         elif CLUSTER == False:
+            WORKING_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel'
             PROBLEM_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(
                 PROBLEM)
 
@@ -1482,6 +1562,7 @@ if __name__ == '__main__':
             raise ValueError
 
         C = CrossTalkModel(PROBLEM_DIRECTORY, fit=FIT,
+                           mutually_exclusive_reactions=[('CrossTalkR1', 'CrossTalkR2')],
                            method='genetic_algorithm_sr',
                            copy_number=4,
                            run_mode=RUN_MODE,
@@ -1493,7 +1574,7 @@ if __name__ == '__main__':
                            lower_bound=0.000001,
                            upper_bound=1000000,
                            )
-        print(C[0].to_antimony(False))
+        # print(C[0]._build_antimony())
 
         LOG.info(f'the size of your model selection problem is {len(C)}')
         LOG.info('num of estimated parameters={}'.format(C._get_number_estimated_model_parameters()))

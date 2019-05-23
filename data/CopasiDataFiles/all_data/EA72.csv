@@ -1,2 +1,2 @@
-Time,pAkt,pSmad2,ppErk,pS6K,GrowthFactors_indep,TGFb_indep,Everolimus_indep,AZD_indep,MK2206_indep,ExperimentIndicator_indep
-72,0.79038003,1.066092206,0.052508547,0.676972968,1,0.005,1,1,0,5
+,Time,pAkt,pSmad2,pErk,pS6K,GrowthFactors_indep,TGFb_indep,Everolimus_indep,AZD_indep,MK2206_indep,ExperimentIndicator_indep
+0,72,0.79038003,1.066092206,0.052508547,0.676972968,1,0.005,1,1,0,5
