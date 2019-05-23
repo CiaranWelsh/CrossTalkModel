@@ -13,11 +13,12 @@ import seaborn
 import yaml
 import logging
 
+mpl_logger = logging.getLogger('matplotlib')
+mpl_logger.setLevel(logging.WARNING)
 
 logging.basicConfig(level=logging.INFO)
 LOG = logging.getLogger(__name__)
 
-WORKING_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel'
 
 
 class HypothesisExtension:
@@ -45,9 +46,8 @@ class CrossTalkModel:
     build a factory that churns out functions that return models and take as argument the
     antimony parameter strings
     """
-    _data_dir = os.path.join(WORKING_DIRECTORY, 'data/CopasiDataFiles/all_data')
 
-    def __init__(self, problem_directory,
+    def __init__(self, problem_directory, data_directory,
                  mutually_exclusive_reactions=[],
                  parameter_str=None,
                  fit='1_1',
@@ -75,9 +75,11 @@ class CrossTalkModel:
         self.parameter_str = parameter_str
         self._topology = 0
         self.problem_directory = problem_directory
-
         if not os.path.isdir(self.problem_directory):
             os.makedirs(self.problem_directory)
+        self.data_dir = data_directory
+        if not os.path.isdir(self.data_dir):
+            raise ValueError(f'{self.data_dir} is not a directory')
 
         self.fit = fit
         self.run_mode = run_mode
@@ -172,16 +174,6 @@ class CrossTalkModel:
         return d
 
     @property
-    def data_dir(self):
-        return self._data_dir
-
-    @data_dir.setter
-    def data_dir(self, dir):
-        if not os.path.isdir(dir):
-            raise ValueError(f'{dir} is not a directory')
-        self._data_dir = dir
-
-    @property
     def fit_dir(self):
         d = os.path.join(self.topology_dir, 'Fit{}'.format(self.fit))
         if not os.path.isdir(d):
@@ -231,23 +223,17 @@ class CrossTalkModel:
         cond = cond[0]['included_conditions']
         return cond
 
-    def get_experimental_data(self, include_validation=False):
+    def get_experimental_data(self):
         df_dct = {}
         for i in self.data_files:
             dire, fle = os.path.split(i)
             if os.path.splitext(fle)[0] not in self.included_conditions:
                 continue
             df_dct[fle[:-4]] = pandas.read_csv(i)
-        return pandas.concat(df_dct)
-
-    def get_validation_data(self, include_validation=False):
-        df_dct = {}
-        for i in self.data_files:
-            dire, fle = os.path.split(i)
-            if os.path.splitext(fle)[0] not in ['EAM72']:
-                continue
-            df_dct[fle[:-4]] = pandas.read_csv(i)
-        return pandas.concat(df_dct)
+        df = pandas.concat(df_dct)
+        df.index = df.index.droplevel(1)
+        df = df.drop('Time', axis=1)
+        return df
 
     def get_errors2(self):
         """
@@ -289,8 +275,7 @@ class CrossTalkModel:
         Keep AZD data for D, T and E
         :return:
         """
-        dirname = os.path.join(WORKING_DIRECTORY, 'CrossTalkModel/data')
-        se = os.path.join(dirname, 'se.csv')
+        se = os.path.join(os.path.dirname(os.path.dirname(self.data_dir)), 'se.csv')
         df = pandas.read_csv(se).set_index('condition_code')
         labels_dct = {
             'pAkt': 'Akt-pT308',
@@ -314,12 +299,12 @@ class CrossTalkModel:
         for name in self.get_experiment_names():
             data = experimental_data.loc[name]
             iconds = {}
-            iconds['AZD'] = data.loc[0, 'AZD_indep']
-            iconds['Everolimus'] = data.loc[0, 'Everolimus_indep']
-            iconds['GrowthFactors'] = data.loc[0, 'GrowthFactors_indep']
-            iconds['MK2206'] = data.loc[0, 'MK2206_indep']
-            iconds['TGFb'] = data.loc[0, 'TGFb_indep']
-            iconds['ExperimentIndicator'] = data.loc[0, 'ExperimentIndicator_indep']
+            iconds['AZD'] = data.loc['AZD_indep']
+            iconds['Everolimus'] = data.loc['Everolimus_indep']
+            iconds['GrowthFactors'] = data.loc['GrowthFactors_indep']
+            iconds['MK2206'] = data.loc['MK2206_indep']
+            iconds['TGFb'] = data.loc['TGFb_indep']
+            iconds['ExperimentIndicator'] = data.loc['ExperimentIndicator_indep']
             cond[name] = iconds
 
         df = pandas.DataFrame(cond).transpose()
@@ -352,141 +337,6 @@ class CrossTalkModel:
         Returns:
 
         """
-
-        import matplotlib
-        matplotlib.use('Qt5Agg')
-        seaborn.set_style('white')
-        seaborn.set_context(context='talk')
-        sim_data = self.simulate_conditions(best_parameters=best_parameters)
-        sim_data = sim_data.reset_index(level=1)
-        sim_data = sim_data.rename(columns={'level_1': 'Time'})
-        sim_data = sim_data[sim_data['Time'] == 72]
-        del sim_data['Time']
-
-        exp_data = self.get_experimental_data()[selections]
-        exp_data.index = exp_data.index.droplevel(1)
-
-        azd_conditions = ['D', 'T', 'E',
-                          'EA72', 'EA48', 'EA24', 'EA1.25',
-                          'A72', 'A48', 'A24', 'A1.25']
-        mk_conditions = ['D', 'T', 'E', 'EM72', 'EM48', 'EM24',
-                         'EM1.25', 'M72', 'M48', 'M24', 'M1.25']
-        both_conditions = ['D', 'T', 'E', 'EAM72', 'EAM48', 'EAM24']
-
-        ## we reset index so that we can use seaborn style inputs to barplots
-        azd_order = ['D', 'T', 'E', 'EA72', 'EA48', 'EA24', 'EA1.25', 'A72', 'A48', 'A24', 'A1.25']
-        mk_order = ['D', 'T', 'E', 'EM72', 'EM48', 'EM24', 'EM1.25', 'M72', 'M48', 'M24', 'M1.25']
-        both_order = ['D', 'T', 'E', 'EAM72', 'EAM48', 'EAM24']
-
-        azd_sim = sim_data.reindex(azd_conditions)
-        mk_sim = sim_data.reindex(mk_conditions)
-        both_sim = sim_data.reindex(both_conditions)
-
-        azd_exp = exp_data.reindex(azd_conditions)
-        mk_exp = exp_data.reindex(mk_conditions)
-        both_exp = exp_data.reindex(both_conditions)
-
-        err = self.get_errors().reset_index()
-        azd_err = err[err['condition_code'].isin(list(azd_exp.index))]
-        mk_err = err[err['condition_code'].isin(list(mk_exp.index))]
-        both_err = err[err['condition_code'].isin(list(both_exp.index))]
-
-        azd_err = azd_err.set_index('condition_code').reindex(azd_conditions).reset_index()
-        mk_err = mk_err.set_index('condition_code').reindex(mk_conditions).reset_index()
-        both_err = both_err.set_index('condition_code').reindex(both_conditions).reset_index()
-
-        azd_sim = azd_sim.dropna(how='all')
-        azd_exp = azd_exp.dropna(how='all')
-        azd_err = azd_err.dropna(how='all')
-        mk_sim = mk_sim.dropna(how='all')
-        mk_exp = mk_exp.dropna(how='all')
-        mk_err = mk_err.dropna(how='all')
-        both_sim = both_sim.dropna(how='all')
-        both_exp = both_exp.dropna(how='all')
-        both_err = both_err.dropna(how='all')
-
-        azd_err = azd_err.set_index('condition_code').reindex(list(azd_exp.index)).reset_index()
-        mk_err = mk_err.set_index('condition_code').reindex(list(mk_exp.index)).reset_index()
-        both_err = both_err.set_index('condition_code').reindex(list(both_exp.index)).reset_index()
-
-        ## reduce the ordering variables
-        mk_order = [i for i in mk_order if i in mk_exp.index]
-        azd_order = [i for i in azd_order if i in azd_exp.index]
-        both_order = [i for i in both_order if i in both_exp.index]
-
-        marker = '_'
-        markersize = 10
-        for sp in selections:
-            fig, ax = plt.subplots()
-            b = seaborn.barplot(x='index', y=sp, data=azd_sim.reset_index(), ax=ax, order=azd_order,
-                                palette=['yellow'] * 2 + ['white'] + ['red'] * 4 + ['green'] * 4,
-                                edgecolor='black', zorder=0)
-
-            plt.errorbar(range(len(azd_exp[sp])), azd_exp[sp], yerr=azd_err[sp],
-                         marker=marker, mec='blue', zorder=1, elinewidth=1, capsize=2, ecolor='blue',
-                         linestyle="None", markersize=markersize
-                         )
-
-            plt.title(sp)
-            plt.xlabel('')
-
-            # plt.xticks(rotation=90)
-            seaborn.despine(fig=fig, top=True, right=True)
-            fname = os.path.join(self.graphs_dir, 'AZD_' + sp + '.png')
-            plt.savefig(fname, dpi=150, bbox_inches='tight')
-            LOG.info(f'saved image to "{fname}"')
-
-            fig, ax = plt.subplots()
-            b = seaborn.barplot(x='index', y=sp, data=mk_sim.reset_index(), order=mk_order,
-                                palette=['yellow'] * 2 + ['white'] + ['red'] * 4 + ['green'] * 4,
-                                edgecolor='black', ax=ax, zorder=0)
-
-            # print('x', range(len(mk_exp[sp])), '\nexp\n', mk_exp[sp], '\nerr\n', mk_err[sp])
-
-            plt.errorbar(range(len(mk_exp[sp])), mk_exp[sp], yerr=mk_err[sp],
-                         marker=marker, mec='blue', zorder=1, elinewidth=1, capsize=2, ecolor='blue',
-                         linestyle="None", markersize=markersize
-                         )
-
-            plt.xlabel('')
-            # plt.xticks(rotation=90)
-            seaborn.despine(fig=fig, top=True, right=True)
-            plt.title(sp)
-
-            fname = os.path.join(self.graphs_dir, 'MK_' + sp + '.png')
-            plt.savefig(fname, dpi=150, bbox_inches='tight')
-            LOG.info(f'saved image to "{fname}"')
-
-            fig, ax = plt.subplots()
-            b = seaborn.barplot(x='index', y=sp, data=both_sim.reset_index(), order=both_order,
-                                palette=['yellow'] * 2 + ['white'] + ['red'] * 4 + ['green'] * 4,
-                                edgecolor='black', ax=ax, zorder=0)
-
-            plt.errorbar(range(len(both_exp[sp])), both_exp[sp], yerr=both_err[sp],
-                         marker=marker, mec='blue', zorder=1, elinewidth=1, capsize=2, ecolor='blue',
-                         linestyle="None", markersize=markersize
-                         )
-
-            plt.xlabel('')
-            # plt.xticks(rotation=90)
-            seaborn.despine(fig=fig, top=True, right=True)
-            plt.title(sp)
-
-            fname = os.path.join(self.graphs_dir, 'MK_AZD_' + sp + '.png')
-            plt.savefig(fname, dpi=150, bbox_inches='tight')
-            LOG.info(f'saved image to "{fname}"')
-
-    def plot_bargraphs2(self, best_parameters=False, selections=['pAkt', 'pS6K', 'pErk', 'pSmad2']):
-        """
-        Plot simulation vs experimental datagraphs
-
-        Args:
-            best_parameters:
-            selections:
-
-        Returns:
-
-        """
         marker = '_'
         markersize = 10
         import matplotlib
@@ -505,7 +355,6 @@ class CrossTalkModel:
         err_data = pandas.DataFrame(err_data.loc[list(sim_data.index)])
 
         exp_data = self.get_experimental_data()[selections]
-        exp_data.index = exp_data.index.droplevel(1)
         exp_data.index = [i.replace('72', '') for i in exp_data.index]
         sim_data = pandas.DataFrame(sim_data.stack())
         exp_data = pandas.DataFrame(exp_data.stack())
@@ -524,8 +373,6 @@ class CrossTalkModel:
         df['Condition'].cat.set_categories(order, inplace=True)
         df.sort_values('Condition', inplace=True)
 
-        print(df)
-
         fig = plt.figure(figsize=(10, 5))
         b = seaborn.barplot(data=df, x='Protein', y='Sim', hue='Condition', zorder=0)
         plt.legend(loc=(1, 0.5))
@@ -543,8 +390,7 @@ class CrossTalkModel:
         fname = os.path.join(self.graphs_dir, 'simulations.png')
         plt.savefig(fname, dpi=150, bbox_inches='tight')
         LOG.info(f'saved image to "{fname}"')
-
-        # plt.show()
+        #
 
     @property
     def copasi_file(self):
@@ -830,7 +676,7 @@ class CrossTalkModel:
         return df, fname
 
     def _get_combinations(self):
-        #convert mutually exclusive reactions to numerical value
+        # convert mutually exclusive reactions to numerical value
         l = []
         for mi1, mi2 in self.mutually_exclusive_reactions:
             l2 = []
@@ -847,10 +693,8 @@ class CrossTalkModel:
 
             l.append(l2)
 
-
         perm_list = [()]
         for i in range(len(self.model_variant_reactions)):
-
             perm_list += [j for j in combinations(range(len(self.model_variant_reactions)), i)]
 
         perm_list2 = [()]
@@ -887,23 +731,23 @@ class CrossTalkModel:
             reaction_name = re.findall('^\w+', reaction)
 
             if reaction_name == []:
-                s += '\t\t' + reaction +'\n'
+                s += '\t\t' + reaction + '\n'
                 # continue
 
             elif reaction_name[0] in replacements:
                 # get index of the reaction we want to replace
                 idx = replacements.index(reaction_name[0])
                 replacement_reaction = hypotheses_needed[idx]
-                s += '\t\t', str(replacement_reaction) + '\n'
+                s += '\t\t' + str(replacement_reaction) + '\n'
             elif reaction_name[0] not in replacements:
-                s += '\t\t' + reaction +'\n'
+                s += '\t\t' + reaction + '\n'
             else:
                 raise ValueError('This should not happen')
 
         # now add the additional extention hypotheses marked as additive
         for i in hypotheses_needed:
             if i.mode == 'additive':
-                s += str(i) +'\n'
+                s += str(i) + '\n'
         return s
 
     def get_all_parameters_as_list(self):
@@ -929,10 +773,8 @@ class CrossTalkModel:
         s += self._build_reactions()
 
         if best_parameters is False:
-            print('best parameters is False')
             s += self._default_parameter_str()
         elif best_parameters is True:
-            print('best parameters is True')
             s += self.get_best_model_parameters_as_antimony()
             # LOG.debug('The best parameters are \n{}'.format(self.get_best_model_parameters_as_antimony()))
             # elif isinstance(best_parameters, str):
@@ -944,17 +786,12 @@ class CrossTalkModel:
         s += self._units()
         s += "\nend"
 
-        ## now remove any parameters that belong to other models
-        all_parameters = self._default_parameter_str().split('\n')
-        all_parameters = [i.strip() for i in all_parameters]
-        all_parameters = [re.findall('^\w+', i) for i in all_parameters]
-        all_parameters = [i for i in all_parameters if i != []]
-        all_parameters = [i[0] for i in all_parameters]
-        # print(all_parameters)
+        # we now need to remove any global parameters that are not used in the current model topology
+        exclude_list = ['Cell', 'ExperimentIndicator']  # we want to keep these
         for useless_parameter in self.get_all_parameters_as_list():
             if useless_parameter not in self._build_reactions():
-                s = re.sub(".*{}.*".format(useless_parameter), "", s)
-
+                if useless_parameter not in exclude_list:
+                    s = re.sub(useless_parameter + '.*\n', '', s)
         return s
 
     def _default_parameter_set_as_dict(self):
@@ -1061,14 +898,14 @@ class CrossTalkModel:
         TGFbR2: pSmad2 => Smad2 ; _kSmad2Dephos*pSmad2;
 
         //MAPK module
-        MAPKR1: Erk => pErk ; kErkPhosByGF*GrowthFactors;
+        MAPKR1: Erk => pErk ; kErkPhosByGF*Erk*GrowthFactors;
         MAPKR2: Erk => pErk ; CompetitiveInhibitionWithKcat(_kErkPhosByTGFb_km, _kErkPhosByTGFb_ki, _kErkPhosByTGFb_kcat, TGFb, AZD, Erk);     //(km, ki, kcat, E, I, S)
         MAPKR3: pErk => Erk ; _kErkDephos*pErk;
 
         //Akt Module
-        PI3KR1: Akt => pAkt ; kAktPhosByGF*GrowthFactors; 
+        PI3KR1: Akt => pAkt ; kAktPhosByGF*Akt*GrowthFactors; 
         PI3KR2: Akt => pAkt ; NonCompetitiveInhibitionWithKcat(_kAktPhosByTGFb_km, _kAktPhosByTGFb_km, _kAktPhosByTGFb_kcat, TGFb, 1, MK2206, Akt);  //(km, ki, kcat, E, n, I, S)
-        PI3KR3: pAkt => Akt  ; _kAktDephos*Akt*pS6K;
+        PI3KR3: pAkt => Akt  ; _kAktDephos*pAkt*pS6K;
         PI3KR4: S6K => pS6K ; CompetitiveInhibitionWithKcat(_kS6KPhosByAkt_km, _kS6KPhosByAkt_ki, _kS6KPhosByAkt_kcat, pAkt, Everolimus, S6K); //(km, ki, kcat, E, I, S)
         PI3KR5: pS6K => S6K ; _kS6KDephos*pS6K;
 
@@ -1477,8 +1314,8 @@ class CrossTalkModel:
 
 if __name__ == '__main__':
 
-    # problem 61 is the model selection problem where we reduced the network
-    for i in range(61, 62):
+    # problem 62 is the model selection problem where we reduced the network
+    for i in range(63, 64):
 
         PROBLEM = i
         ## Which model is the current focus of analysis
@@ -1511,7 +1348,7 @@ if __name__ == '__main__':
         PLOT_CURRENT_SIMULATION_GRAPHS_WITH_DEAULT_PARAMETERS = False
 
         ## extract best RSS per model and compute AICc
-        AICs = False
+        AICs = True
 
         ## Plot likelihood ranks plots
         LIKELIHOOD_RANKS = False
@@ -1524,6 +1361,9 @@ if __name__ == '__main__':
 
         ## open the model currently pointed to by CURRENT_MODEL_ID with the best estimated parameters from FIT
         OPEN_WITH_COPASI_WITH_BEST_PARAMETERS = False
+
+        ##
+        OPEN_WITH_COPASI_AND_CONFIGURE_PARAMETER_ESTIMATION_BUT_DONT_RUN = False
 
         ## Produce the parameters already present in the COPASI model pointed to by CURRENT_MODEL_ID in antimony format.
         GET_PARAMETERS_FROM_COPASI = False
@@ -1546,6 +1386,7 @@ if __name__ == '__main__':
 
         if CLUSTER == 'slurm':
             WORKING_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel'
+            DATA_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel/data/CopasiDataFiles/all_data'
             PROBLEM_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(
                 PROBLEM)
 
@@ -1555,21 +1396,22 @@ if __name__ == '__main__':
 
         elif CLUSTER == False:
             WORKING_DIRECTORY = r'/mnt/nfs/home/b3053674/WorkingDirectory/CrossTalkModel'
+            DATA_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/data/CopasiDataFiles/all_data'
             PROBLEM_DIRECTORY = r'/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelectionProblems/Problem{}'.format(
                 PROBLEM)
 
         else:
             raise ValueError
 
-        C = CrossTalkModel(PROBLEM_DIRECTORY, fit=FIT,
+        C = CrossTalkModel(PROBLEM_DIRECTORY, DATA_DIRECTORY, fit=FIT,
                            mutually_exclusive_reactions=[('CrossTalkR1', 'CrossTalkR2')],
-                           method='genetic_algorithm_sr',
-                           copy_number=4,
+                           method='particle_swarm',
+                           copy_number=48,
                            run_mode=RUN_MODE,
                            iteration_limit=3000,
                            swarm_size=75,
-                           population_size=200,
-                           number_of_generations=600,
+                           population_size=50,
+                           number_of_generations=300,
                            overwrite_config_file=True,
                            lower_bound=0.000001,
                            upper_bound=1000000,
@@ -1625,6 +1467,11 @@ if __name__ == '__main__':
 
             mod.open()
 
+        if OPEN_WITH_COPASI_AND_CONFIGURE_PARAMETER_ESTIMATION_BUT_DONT_RUN:
+            pe = C[CURRENT_MODEL_ID]._configure_PE_for_viz()
+            pe.model.open()
+
+
         if RUN_PARAMETER_ESTIMATION:
             for model_id in C:
                 C[model_id].run_parameter_estimation()
@@ -1642,7 +1489,7 @@ if __name__ == '__main__':
             for model_id in range(len(C)):
                 LOG.info('plotting model {}'.format(model_id))
                 # try:
-                C[model_id].plot_bargraphs2(best_parameters=True)
+                C[model_id].plot_bargraphs(best_parameters=True)
                 # except ValueError:
                 #     LOG.info("model '{}' skipped! No data to plot".format(model_id))
                 #     continue
@@ -1652,11 +1499,11 @@ if __name__ == '__main__':
 
         if PLOT_CURRENT_SIMULATION_GRAPHS:
             LOG.info('fit dir: {}'.format(C[CURRENT_MODEL_ID].fit_dir))
-            C[CURRENT_MODEL_ID].plot_bargraphs2(best_parameters=True)
+            C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=True)
 
         if PLOT_CURRENT_SIMULATION_GRAPHS_WITH_DEAULT_PARAMETERS:
             LOG.info('fit dir', C[CURRENT_MODEL_ID].fit_dir)
-            C[CURRENT_MODEL_ID].plot_bargraphs2(best_parameters=False)
+            C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=False)
 
         # if PLOT_CURRENT_SIMULATION_GRAPHS_WITH_COPASI_PARAMETERS:
         #     copasi_file = '/home/ncw135/Documents/MesiSTRAT/CrossTalkModel/ModelSelectionProblems/Problem3/ModelSelection/Topology77/Fit1/topology77_for_playing_with.cps'
@@ -1700,7 +1547,7 @@ if __name__ == '__main__':
             prev_best_params = C[CURRENT_MODEL_ID].get_best_parameters_from_last_fit(LAST_FIT)
             C[CURRENT_MODEL_ID].insert_parameters(prev_best_params)
             current_best_params = C[CURRENT_MODEL_ID].get_best_model_parameters_as_antimony()
-            C[CURRENT_MODEL_ID].plot_bargraphs2(best_parameters=current_best_params)
+            C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=current_best_params)
 
         if ANALYSE_CORRELATIONS:
             C[CURRENT_MODEL_ID].analyse_correlations()
