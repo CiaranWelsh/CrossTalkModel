@@ -1319,7 +1319,7 @@ if __name__ == '__main__':
 
         PROBLEM = i
         ## Which model is the current focus of analysis
-        CURRENT_MODEL_ID = 3
+        CURRENT_MODEL_ID = 10
 
         FIT = '1'
 
@@ -1342,13 +1342,18 @@ if __name__ == '__main__':
         PLOT_PERFORMANCE_MATRIX = False
 
         ## plot comparison between model and simulation for the current model ID
-        PLOT_CURRENT_SIMULATION_GRAPHS = False
+        PLOT_ALL_BARGRAPHS_WITH_BEST_PARAMETERS = False
 
         ## Plot current simulation graphs with the default parameter instead of best estimated
         PLOT_CURRENT_SIMULATION_GRAPHS_WITH_DEAULT_PARAMETERS = False
 
+        # Use CURRENT_MODEL_ID to determine which time series is plotted
+        PLOT_TIMESERIES_WITH_CURRENT_MODEL = False
+        # Use CURRENT_MODEL_ID to determine which time series is plotted
+        PLOT_ALL_TIMESERIES_WITH_BEST_PARAMETERS = True
+
         ## extract best RSS per model and compute AICc
-        AICs = True
+        AICs = False
 
         ## Plot likelihood ranks plots
         LIKELIHOOD_RANKS = False
@@ -1376,7 +1381,6 @@ if __name__ == '__main__':
         ## analyse correlations
         ANALYSE_CORRELATIONS = False
 
-        PLOT_TIMESERIES_WITH_CURRENT_MODEL = False
 
         PLOT_COMPETITIVE_INHIBITION_RATE_LAW = False
 
@@ -1497,7 +1501,7 @@ if __name__ == '__main__':
                 #     LOG.info("model '{}' skipped! RunTimeError".format(model_id))
                 #     continue
 
-        if PLOT_CURRENT_SIMULATION_GRAPHS:
+        if PLOT_ALL_BARGRAPHS_WITH_BEST_PARAMETERS:
             LOG.info('fit dir: {}'.format(C[CURRENT_MODEL_ID].fit_dir))
             C[CURRENT_MODEL_ID].plot_bargraphs(best_parameters=True)
 
@@ -1554,5 +1558,9 @@ if __name__ == '__main__':
 
         if PLOT_TIMESERIES_WITH_CURRENT_MODEL:
             C[CURRENT_MODEL_ID].plot_timecourse()
+
+        if PLOT_ALL_TIMESERIES_WITH_BEST_PARAMETERS:
+            for i in C:
+                C[i].plot_timecourse()
 
 # make sure you are simulating from start condition. add reset to appriopriate plate .
