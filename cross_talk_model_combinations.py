@@ -994,11 +994,19 @@ class CrossTalkModel:
             to_repalce=None
         )
 
-    def extension_hypothesis_AktActivateS6K(self):
+    def extension_hypothesis_S6KActivateErk(self):
         return HypothesisExtension(
             name='CrossTalkR4',
             reaction='Erk => pErk',
             rate_law='_kS6KActivateErk*Erk*pS6K',
+            mode='additive',
+            to_repalce=None
+        )
+    def extension_hypothesis_ErkActivatesS6K(self):
+        return HypothesisExtension(
+            name='CrossTalkR5',
+            reaction='S6K => pS6K',
+            rate_law='_ErkActivateS6K*pErk*S6K',
             mode='additive',
             to_repalce=None
         )
@@ -1284,7 +1292,7 @@ class CrossTalkModel:
 if __name__ == '__main__':
 
     # problem 62 is the model selection problem where we reduced the network
-    for i in range(64, 68):
+    for i in range(68, 69):
 
         PROBLEM = i
         ## Which model is the current focus of analysis
@@ -1326,7 +1334,7 @@ if __name__ == '__main__':
         AICs = False
 
         ## Plot likelihood ranks plots
-        LIKELIHOOD_RANKS = False
+        LIKELIHOOD_RANKS = True
 
         ## get the best parameter set as a dict and antimony format from the model pointed to by CURRENT_MODEL_ID
         GET_BEST_PARAMETERS = False
@@ -1354,7 +1362,7 @@ if __name__ == '__main__':
 
         PLOT_COMPETITIVE_INHIBITION_RATE_LAW = False
 
-        EXTRACT_GRAPHS = True
+        EXTRACT_GRAPHS = False
 
         ##===========================================================================================
 
@@ -1380,7 +1388,7 @@ if __name__ == '__main__':
         C = CrossTalkModel(PROBLEM_DIRECTORY, DATA_DIRECTORY, fit=FIT,
                            mutually_exclusive_reactions=[('CrossTalkR1', 'CrossTalkR2')],
                            method='particle_swarm',
-                           copy_number=50,
+                           copy_number=100,
                            run_mode=RUN_MODE,
                            iteration_limit=3000,
                            swarm_size=100,
