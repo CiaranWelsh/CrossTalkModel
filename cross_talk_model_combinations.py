@@ -1158,6 +1158,7 @@ class CrossTalkModel:
         df.to_csv(fname)
         LOG.info('filtered correlations now in "{}"'.format(fname))
 
+
     def plot_timecourse(self, selection=['pAkt', 'pErk', 'pS6K', 'pSmad2']):
         """
 
@@ -1167,50 +1168,18 @@ class CrossTalkModel:
         matplotlib.use('Qt5Agg')
         seaborn.set_context('talk')
         df = self.simulate_conditions(selection=selection, best_parameters=True)
-
-        conditions = set(list(df.index.get_level_values(0)))
-
-        mk_cond = ['D', 'T', 'E', 'E_M_72', 'E_M_48', 'E_M_24',
-                   'E_M_1.25', 'M_72', 'M_48', 'M_24', 'M_1.25']
-
-        azd_cond = ['D', 'T', 'E', 'E_A_72', 'E_A_48', 'E_A_24',
-                    'E_A_1.25', 'A_72', 'A_48', 'A_24', 'A_1.25']
-
-        both = ['E_A_M_24', 'E_A_M_48', 'E_A_M_72']
-
-        cond_dct = {'MK': mk_cond,
-                    'AZD': azd_cond,
-                    'Both': both}
-
-        cols = seaborn.color_palette("hls", len(selection))
-        cols = iter(cols)
-
-        from matplotlib import gridspec
-
-        for v in range(len(selection)):
-            for cond in cond_dct:
-                f = cond_dct[cond]
-                fig = plt.figure(constrained_layout=True, figsize=(10, 15))
-                spec = gridspec.GridSpec(nrows=len(f), ncols=1, figure=fig)
-                ax_num = 0
-
-                for cond in f:
-                    df_selection = df.loc[cond]
-
-                    ax = fig.add_subplot(spec[ax_num, 0])
-                    seaborn.despine(ax=ax, top=True, right=True)
-                    ax_num += 1
-                    plt.plot(list(df_selection.index), df_selection[selection[v]], label=cond)
-                    plt.setp(ax.get_xticklabels(), visible=False)
-                    plt.title(cond)
-
-                plt.setp(ax.get_xticklabels(), visible=True)
-                plt.suptitle(selection[v])
-                plt.xlabel('Time(h)')
-                plt.ylabel('Conc.')
-                fname = os.path.join(self.time_course_graphs, "{}_{}.png".format(cond, selection[v]))
-                fig.savefig(fname, bbox_inches='tight', dpi=100)
-                LOG.info('saving "{}"'.format(fname))
+        cond = sorted(list(set(df.index.get_level_values(0))))
+        proteins = df.columns
+        for c in cond:
+            fig = plt.figure()
+            plt.title(c)
+            for p in proteins:
+                plt.plot(df.loc[c].index, df.loc[c, p], label=p)
+            plt.legend(loc=(1, 0.1))
+            seaborn.despine(fig=fig, top=True, right=True)
+            fname = os.path.join(self.graphs_dir, 'timeseries_{}.png'.format(c))
+            fig.savefig(fname, dpi=200, bbox_inches='tight')
+            LOG.info('saving timeseries object to "{}"'.format(fname))
 
     def get_euclidean(self, best_parameters=True):
         exp = self.get_experimental_data()
@@ -1315,7 +1284,7 @@ class CrossTalkModel:
 if __name__ == '__main__':
 
     # problem 62 is the model selection problem where we reduced the network
-    for i in range(63, 64):
+    for i in range(64, 68):
 
         PROBLEM = i
         ## Which model is the current focus of analysis
@@ -1349,8 +1318,9 @@ if __name__ == '__main__':
 
         # Use CURRENT_MODEL_ID to determine which time series is plotted
         PLOT_TIMESERIES_WITH_CURRENT_MODEL = False
-        # Use CURRENT_MODEL_ID to determine which time series is plotted
-        PLOT_ALL_TIMESERIES_WITH_BEST_PARAMETERS = True
+
+        #
+        PLOT_ALL_TIMESERIES_WITH_BEST_PARAMETERS = False
 
         ## extract best RSS per model and compute AICc
         AICs = False
@@ -1384,7 +1354,7 @@ if __name__ == '__main__':
 
         PLOT_COMPETITIVE_INHIBITION_RATE_LAW = False
 
-        EXTRACT_GRAPHS = False
+        EXTRACT_GRAPHS = True
 
         ##===========================================================================================
 
@@ -1410,10 +1380,10 @@ if __name__ == '__main__':
         C = CrossTalkModel(PROBLEM_DIRECTORY, DATA_DIRECTORY, fit=FIT,
                            mutually_exclusive_reactions=[('CrossTalkR1', 'CrossTalkR2')],
                            method='particle_swarm',
-                           copy_number=48,
+                           copy_number=50,
                            run_mode=RUN_MODE,
                            iteration_limit=3000,
-                           swarm_size=75,
+                           swarm_size=100,
                            population_size=50,
                            number_of_generations=300,
                            overwrite_config_file=True,
